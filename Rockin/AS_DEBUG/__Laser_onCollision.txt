@@ -1,0 +1,21 @@
+void Laser_onCollision(ScriptComponent@, Entity@)
+
+Temps: 
+
+Variables: 
+ 000: ScriptComponent@ p
+ -001: Entity@ collider
+
+
+- 14,2 -
+               VarDecl  0
+               VarDecl  1
+    0   0 *    SUSPEND
+    1   0 *    PshVPtr  v0
+    2   1 *    CALLSYS  75           (void ScriptComponent::despawn())
+- 15,2 -
+    4   0 *    SUSPEND
+            0:
+    5   0 *    FREE     v0, 196297368
+    7   0 *    FREE     v-1, 196286936
+    9   0 *    RET      2

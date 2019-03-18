@@ -1,0 +1,162 @@
+void main(ScriptComponent@)
+
+Temps: 1, 3, 4, 5, 6, 14, 21
+
+Variables: 
+ 000: ScriptComponent@ p
+ 002: (heap) const Vector2f@ vec
+ 007: (heap) ScriptComponent@ newp
+ 003: (heap) Vector2f {noname}
+ 006: (heap) ScriptComponent {noname}
+ 014: string {noname}
+ 021: string {noname}
+
+
+- 3,2 -
+               VarDecl  0
+    0  21 *    SUSPEND
+    1  21 *    PGA      27055368
+    3  22 *    PshVPtr  v0
+    4  23 *    CALLSYS  69           (void ScriptComponent::log(const string&in))
+- 4,2 -
+    6  21 *    SUSPEND
+            1:
+    7  21 *    SetV1    v1, 0x1
+    9  21 *    CpyVtoR4 v1
+   10  21 *    JLowZ    +155              (d:167)
+   12  21 *    SUSPEND
+- 6,3 -
+            {
+   13  21 *    SUSPEND
+               VarDecl  1
+   14  21 *    PshVPtr  v0
+   15  22 *    CALLSYS  72           (const Vector2f& ScriptComponent::position())
+   17  21 *    PshRPtr
+   18  22 *    RefCpyV  v3, 211494176
+   20  22 *    PopPtr
+   21  21 *    PshVPtr  v3
+   22  22 *    RefCpyV  v2, 211494176
+   24  22 *    FREE     v3, 211494176
+   26  22 *    PopPtr
+- 8,3 -
+   27  21 *    SUSPEND
+   28  21 *    LoadRObjR v2, v0, 67108878
+   31  21 *    RDR4     v1
+   32  21 *    CMPIf    v1, -50.000000
+   34  21 *    JNS      +4              (d:40)
+   36  21 *    SetV1    v5, 0x1
+   38  21 *    JMP      +10              (d:50)
+            4:
+   40  21 *    LoadRObjR v2, v0, 67108878
+   43  21 *    RDR4     v4
+   44  21 *    CMPIf    v4, 850.000000
+   46  21 *    TP
+   47  21 *    CpyRtoV4 v4
+   48  21 *    CpyVtoV4 v5, v4
+            5:
+   50  21 *    CpyVtoR4 v5
+   51  21 *    JLowZ    +4              (d:57)
+   53  21 *    SetV1    v4, 0x1
+   55  21 *    JMP      +10              (d:67)
+            6:
+   57  21 *    LoadRObjR v2, v4, 67108878
+   60  21 *    RDR4     v1
+   61  21 *    CMPIf    v1, -50.000000
+   63  21 *    TS
+   64  21 *    CpyRtoV4 v1
+   65  21 *    CpyVtoV4 v4, v1
+            7:
+   67  21 *    CpyVtoR4 v4
+   68  21 *    JLowZ    +4              (d:74)
+   70  21 *    SetV1    v1, 0x1
+   72  21 *    JMP      +10              (d:84)
+            8:
+   74  21 *    LoadRObjR v2, v4, 67108878
+   77  21 *    RDR4     v5
+   78  21 *    CMPIf    v5, 650.000000
+   80  21 *    TP
+   81  21 *    CpyRtoV4 v5
+   82  21 *    CpyVtoV4 v1, v5
+            9:
+   84  21 *    CpyVtoR4 v1
+   85  21 *    JLowZ    +72              (d:159)
+- 10,4 -
+            {
+   87  21 *    SUSPEND
+               VarDecl  2
+   88  21 *    PGA      27055456
+   90  22 *    PshVPtr  v0
+   91  23 *    CALLSYS  74           (ScriptComponent@ ScriptComponent::spawn(const string&in))
+   93  21 *    FREE     v7, 211494560
+   95  21 *    STOREOBJ v7
+- 11,4 -
+   96  21 *    SUSPEND
+   97  21 *    ClrVPtr  v6
+   98  21 *    CmpPtr   v7, v6
+  100  21 *    TNZ
+  101  21 *    CpyRtoV4 v4
+  102  21 *    FREE     v6, 211494560
+  104  21 *    CpyVtoR4 v4
+  105  21 *    JLowZ    +46              (d:153)
+- 13,5 -
+            {
+  107  21 *    SUSPEND
+  108  21 *    PshC4    0x42480000          (i:1112014848, f:50)
+  110  22 *    PshC4    0x42480000          (i:1112014848, f:50)
+  112  23 *    PshVPtr  v7
+  113  24 *    CALLSYS  73           (void ScriptComponent::setPosition(float, float))
+- 14,5 -
+  115  21 *    SUSPEND
+  116  21 *    PshC4    0x3f800000          (i:1065353216, f:1)
+  118  22 *    PshC4    0x3f800000          (i:1065353216, f:1)
+  120  23 *    PshVPtr  v7
+  121  24 *    CALLSYS  77           (void ScriptComponent::setMomentum(float, float))
+- 15,5 -
+  123  21 *    SUSPEND
+  124  21 *    PGA      27057040
+  126  22 *    PSF      v14
+  127  23 *    CALLSYS  20           (string::string(const string&in))
+               ObjInfo  v14, 1
+  129  21 *    PshVPtr  v7
+  130  22 *    CALLSYS  76           (const Vector2f& ScriptComponent::momentum())
+  132  21 *    PshRPtr
+  133  22 *    ADDSi    v0, 67108878
+  135  22 *    PopRPtr
+  136  21 *    RDR4     v1
+  137  21 *    PshV4    v1
+  138  22 *    PSF      v21
+  139  23 *    PSF      v14
+  140  24 *    CALLSYS  38           (string string::opAdd(float) const)
+               ObjInfo  v21, 1
+  142  21 *    PSF      v14
+  143  22 *    CALLSYS  21           (string::~string())
+               ObjInfo  v14, 0
+  145  21 *    VAR      v21
+  146  22 *    PshVPtr  v0
+  147  23 *    GETREF   1
+  148  23 *    CALLSYS  69           (void ScriptComponent::log(const string&in))
+  150  21 *    PSF      v21
+  151  22 *    CALLSYS  21           (string::~string())
+- 17,4 -
+               ObjInfo  v21, 0
+            }
+            10:
+  153  21 *    SUSPEND
+  154  21 *    PshVPtr  v0
+  155  22 *    CALLSYS  75           (void ScriptComponent::despawn())
+  157  21 *    FREE     v7, 211494560
+- 20,3 -
+            }
+            3:
+  159  21 *    SUSPEND
+  160  21 *    PshVPtr  v0
+  161  22 *    CALLSYS  68           (void ScriptComponent::suspend())
+  163  21 *    FREE     v2, 211494176
+            }
+  165  21 *    JMP      -160              (d:7)
+- 22,2 -
+            2:
+  167  21 *    SUSPEND
+            0:
+  168  21 *    FREE     v0, 211494560
+  170  21 *    RET      1

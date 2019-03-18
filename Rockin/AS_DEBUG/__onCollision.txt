@@ -1,0 +1,17 @@
+void onCollision(ScriptComponent@, Entity@)
+
+Temps: 
+
+Variables: 
+ 000: ScriptComponent@ p
+ -001: Entity@ collider
+
+
+- 27,2 -
+               VarDecl  0
+               VarDecl  1
+    0   0 *    SUSPEND
+            0:
+    1   0 *    FREE     v0, 211494560
+    3   0 *    FREE     v-1, 211488312
+    5   0 *    RET      2

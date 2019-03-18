@@ -1,0 +1,180 @@
+void Meteor_main(ScriptComponent@)
+
+Temps: 1, 3, 4, 5, 6
+
+Variables: 
+ 000: ScriptComponent@ p
+ 002: (heap) const Vector2f@ vec
+ 007: (heap) ScriptComponent@ newp
+ 008: int px
+ 009: int py
+ 010: int mx
+ 011: int my
+ 003: (heap) Vector2f {noname}
+ 006: (heap) ScriptComponent {noname}
+
+
+- 3,2 -
+               VarDecl  0
+    0  11 *    SUSPEND
+            1:
+    1  11 *    SetV1    v1, 0x1
+    3  11 *    CpyVtoR4 v1
+    4  11 *    JLowZ    +180              (d:186)
+    6  11 *    SUSPEND
+- 5,3 -
+            {
+    7  11 *    SUSPEND
+               VarDecl  1
+    8  11 *    PshVPtr  v0
+    9  12 *    CALLSYS  72           (const Vector2f& ScriptComponent::position())
+   11  11 *    PshRPtr
+   12  12 *    RefCpyV  v3, 196296600
+   14  12 *    PopPtr
+   15  11 *    PshVPtr  v3
+   16  12 *    RefCpyV  v2, 196296600
+   18  12 *    FREE     v3, 196296600
+   20  12 *    PopPtr
+- 7,3 -
+   21  11 *    SUSPEND
+   22  11 *    LoadRObjR v2, v0, 67108878
+   25  11 *    RDR4     v1
+   26  11 *    CMPIf    v1, -50.000000
+   28  11 *    JNS      +4              (d:34)
+   30  11 *    SetV1    v5, 0x1
+   32  11 *    JMP      +10              (d:44)
+            4:
+   34  11 *    LoadRObjR v2, v0, 67108878
+   37  11 *    RDR4     v4
+   38  11 *    CMPIf    v4, 850.000000
+   40  11 *    TP
+   41  11 *    CpyRtoV4 v4
+   42  11 *    CpyVtoV4 v5, v4
+            5:
+   44  11 *    CpyVtoR4 v5
+   45  11 *    JLowZ    +4              (d:51)
+   47  11 *    SetV1    v4, 0x1
+   49  11 *    JMP      +10              (d:61)
+            6:
+   51  11 *    LoadRObjR v2, v4, 67108878
+   54  11 *    RDR4     v1
+   55  11 *    CMPIf    v1, -50.000000
+   57  11 *    TS
+   58  11 *    CpyRtoV4 v1
+   59  11 *    CpyVtoV4 v4, v1
+            7:
+   61  11 *    CpyVtoR4 v4
+   62  11 *    JLowZ    +4              (d:68)
+   64  11 *    SetV1    v1, 0x1
+   66  11 *    JMP      +10              (d:78)
+            8:
+   68  11 *    LoadRObjR v2, v4, 67108878
+   71  11 *    RDR4     v5
+   72  11 *    CMPIf    v5, 650.000000
+   74  11 *    TP
+   75  11 *    CpyRtoV4 v5
+   76  11 *    CpyVtoV4 v1, v5
+            9:
+   78  11 *    CpyVtoR4 v1
+   79  11 *    JLowZ    +95              (d:176)
+- 9,4 -
+            {
+   81  11 *    SUSPEND
+               VarDecl  2
+   82  11 *    PGA      52468408
+   84  12 *    PshVPtr  v0
+   85  13 *    CALLSYS  74           (ScriptComponent@ ScriptComponent::spawn(const string&in))
+   87  11 *    FREE     v7, 196297368
+   89  11 *    STOREOBJ v7
+- 10,4 -
+   90  11 *    SUSPEND
+   91  11 *    ClrVPtr  v6
+   92  11 *    CmpPtr   v7, v6
+   94  11 *    TNZ
+   95  11 *    CpyRtoV4 v4
+   96  11 *    FREE     v6, 196297368
+   98  11 *    CpyVtoR4 v4
+   99  11 *    JLowZ    +69              (d:170)
+- 12,5 -
+            {
+  101  11 *    SUSPEND
+               VarDecl  3
+  102  11 *    PshC4    0x2ef          (i:751, f:1.05238e-42)
+  104  12 *    PshC4    0x32          (i:50, f:7.00649e-44)
+  106  13 *    PshVPtr  v0
+  107  14 *    CALLSYS  78           (int ScriptComponent::randomRange(int, int))
+  109  11 *    CpyRtoV4 v5
+  110  11 *    CpyVtoV4 v8, v5
+- 13,5 -
+  112  11 *    SUSPEND
+               VarDecl  4
+  113  11 *    SetV4    v9, 0xffffffd8          (i:-40, f:-nan)
+- 14,5 -
+  115  11 *    SUSPEND
+               VarDecl  5
+  116  11 *    PshC4    0x3          (i:3, f:4.2039e-45)
+  118  12 *    PshC4    0x1          (i:1, f:1.4013e-45)
+  120  13 *    PshVPtr  v0
+  121  14 *    CALLSYS  78           (int ScriptComponent::randomRange(int, int))
+  123  11 *    CpyRtoV4 v4
+  124  11 *    CpyVtoV4 v10, v4
+- 15,5 -
+  126  11 *    SUSPEND
+               VarDecl  6
+  127  11 *    PshC4    0x3          (i:3, f:4.2039e-45)
+  129  12 *    PshC4    0x1          (i:1, f:1.4013e-45)
+  131  13 *    PshVPtr  v0
+  132  14 *    CALLSYS  78           (int ScriptComponent::randomRange(int, int))
+  134  11 *    CpyRtoV4 v1
+  135  11 *    CpyVtoV4 v11, v1
+- 16,5 -
+  137  11 *    SUSPEND
+  138  11 *    CMPIi    v8, 400
+  140  11 *    JNP      +4              (d:146)
+- 17,6 -
+  142  11 *    SUSPEND
+  143  11 *    MULIi    v10, v10, -1
+- 18,5 -
+            11:
+  146  11 *    SUSPEND
+  147  11 *    CpyVtoV4 v5, v9
+  149  11 *    iTOf     v5
+  150  11 *    PshV4    v5
+  151  12 *    CpyVtoV4 v1, v8
+  153  12 *    iTOf     v1
+  154  12 *    PshV4    v1
+  155  13 *    PshVPtr  v7
+  156  14 *    CALLSYS  73           (void ScriptComponent::setPosition(float, float))
+- 19,5 -
+  158  11 *    SUSPEND
+  159  11 *    CpyVtoV4 v4, v11
+  161  11 *    iTOf     v4
+  162  11 *    PshV4    v4
+  163  12 *    CpyVtoV4 v1, v10
+  165  12 *    iTOf     v1
+  166  12 *    PshV4    v1
+  167  13 *    PshVPtr  v7
+  168  14 *    CALLSYS  77           (void ScriptComponent::setMomentum(float, float))
+- 21,4 -
+            }
+            10:
+  170  11 *    SUSPEND
+  171  11 *    PshVPtr  v0
+  172  12 *    CALLSYS  75           (void ScriptComponent::despawn())
+  174  11 *    FREE     v7, 196297368
+- 24,3 -
+            }
+            3:
+  176  11 *    SUSPEND
+  177  11 *    PshC4    0xc8          (i:200, f:2.8026e-43)
+  179  12 *    PshVPtr  v0
+  180  13 *    CALLSYS  68           (void ScriptComponent::suspend(int = 0))
+  182  11 *    FREE     v2, 196296600
+            }
+  184  11 *    JMP      -185              (d:1)
+- 26,2 -
+            2:
+  186  11 *    SUSPEND
+            0:
+  187  11 *    FREE     v0, 196297368
+  189  11 *    RET      1

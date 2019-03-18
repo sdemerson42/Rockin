@@ -1,0 +1,56 @@
+void Laser_main(ScriptComponent@)
+
+Temps: 1, 3, 4
+
+Variables: 
+ 000: ScriptComponent@ p
+ 002: (heap) const Vector2f@ pos
+ 003: (heap) Vector2f {noname}
+
+
+- 3,2 -
+               VarDecl  0
+    0   4 *    SUSPEND
+            1:
+    1   4 *    SetV1    v1, 0x1
+    3   4 *    CpyVtoR4 v1
+    4   4 *    JLowZ    +38              (d:44)
+    6   4 *    SUSPEND
+- 5,3 -
+            {
+    7   4 *    SUSPEND
+               VarDecl  1
+    8   4 *    PshVPtr  v0
+    9   5 *    CALLSYS  72           (const Vector2f& ScriptComponent::position())
+   11   4 *    PshRPtr
+   12   5 *    RefCpyV  v3, 196296600
+   14   5 *    PopPtr
+   15   4 *    PshVPtr  v3
+   16   5 *    RefCpyV  v2, 196296600
+   18   5 *    FREE     v3, 196296600
+   20   5 *    PopPtr
+- 6,3 -
+   21   4 *    SUSPEND
+   22   4 *    LoadRObjR v2, v4, 67108878
+   25   4 *    RDR4     v1
+   26   4 *    CMPIf    v1, -10.000000
+   28   4 *    JNS      +4              (d:34)
+- 6,20 -
+   30   4 *    SUSPEND
+   31   4 *    PshVPtr  v0
+   32   5 *    CALLSYS  75           (void ScriptComponent::despawn())
+- 7,3 -
+            3:
+   34   4 *    SUSPEND
+   35   4 *    PshC4    0x3c          (i:60, f:8.40779e-44)
+   37   5 *    PshVPtr  v0
+   38   6 *    CALLSYS  68           (void ScriptComponent::suspend(int = 0))
+   40   4 *    FREE     v2, 196296600
+            }
+   42   4 *    JMP      -43              (d:1)
+- 9,2 -
+            2:
+   44   4 *    SUSPEND
+            0:
+   45   4 *    FREE     v0, 196297368
+   47   4 *    RET      1

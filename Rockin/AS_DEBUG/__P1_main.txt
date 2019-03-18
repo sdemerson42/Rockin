@@ -1,0 +1,202 @@
+void P1_main(ScriptComponent@)
+
+Temps: 2, 7, 8, 9, 10, 13
+
+Variables: 
+ 000: ScriptComponent@ p
+ 001: float speed
+ 003: float laserSpeed
+ 004: int laserCooldown
+ 005: int laserTimer
+ 006: (heap) const InputEvent@ i
+ 011: (heap) ScriptComponent@ las
+ 012: (heap) const Vector2f@ ppos
+ 007: (heap) InputEvent {noname}
+ 010: (heap) ScriptComponent {noname}
+ 013: (heap) Vector2f {noname}
+
+
+- 3,2 -
+               VarDecl  0
+    0  13 *    SUSPEND
+               VarDecl  1
+    1  13 *    SetV4    v1, 0x40900000          (i:1083179008, f:4.5)
+- 4,2 -
+    3  13 *    SUSPEND
+               VarDecl  2
+    4  13 *    SetV4    v3, 0x40c00000          (i:1086324736, f:6)
+- 5,2 -
+    6  13 *    SUSPEND
+               VarDecl  3
+    7  13 *    SetV4    v4, 0x23          (i:35, f:4.90454e-44)
+- 6,2 -
+    9  13 *    SUSPEND
+               VarDecl  4
+   10  13 *    SetV4    v5, 0x0          (i:0, f:0)
+- 8,2 -
+   12  13 *    SUSPEND
+            1:
+   13  13 *    SetV1    v2, 0x1
+   15  13 *    CpyVtoR4 v2
+   16  13 *    JLowZ    +192              (d:210)
+   18  13 *    SUSPEND
+- 10,3 -
+            {
+   19  13 *    SUSPEND
+   20  13 *    CMPIi    v5, 0
+   22  13 *    JNP      +2              (d:26)
+- 10,23 -
+   24  13 *    SUSPEND
+   25  13 *    DecVi    v5
+- 12,3 -
+            3:
+   26  13 *    SUSPEND
+               VarDecl  5
+   27  13 *    PshVPtr  v0
+   28  14 *    CALLSYS  79           (const InputEvent& ScriptComponent::input())
+   30  13 *    PshRPtr
+   31  14 *    RefCpyV  v7, 196296984
+   33  14 *    PopPtr
+   34  13 *    PshVPtr  v7
+   35  14 *    RefCpyV  v6, 196296984
+   37  14 *    FREE     v7, 196296984
+   39  14 *    PopPtr
+- 13,3 -
+   40  13 *    SUSPEND
+   41  13 *    LoadRObjR v6, v4, 67108879
+   44  13 *    RDR4     v2
+   45  13 *    CMPIf    v2, 0.000000
+   47  13 *    JNS      +10              (d:59)
+- 13,21 -
+   49  13 *    SUSPEND
+   50  13 *    PshC4    0x0          (i:0, f:0)
+   52  14 *    MULIf    v2, v1, -1.000000
+   55  14 *    PshV4    v2
+   56  15 *    PshVPtr  v0
+   57  16 *    CALLSYS  77           (void ScriptComponent::setMomentum(float, float))
+- 14,3 -
+            4:
+   59  13 *    SUSPEND
+   60  13 *    LoadRObjR v6, v4, 67108879
+   63  13 *    RDR4     v8
+   64  13 *    CMPIf    v8, 0.000000
+   66  13 *    JNZ      +8              (d:76)
+- 14,22 -
+   68  13 *    SUSPEND
+   69  13 *    PshC4    0x0          (i:0, f:0)
+   71  14 *    PshC4    0x0          (i:0, f:0)
+   73  15 *    PshVPtr  v0
+   74  16 *    CALLSYS  77           (void ScriptComponent::setMomentum(float, float))
+- 15,3 -
+            5:
+   76  13 *    SUSPEND
+   77  13 *    LoadRObjR v6, v4, 67108879
+   80  13 *    RDR4     v8
+   81  13 *    CMPIf    v8, 0.000000
+   83  13 *    JNP      +10              (d:95)
+- 15,21 -
+   85  13 *    SUSPEND
+   86  13 *    PshC4    0x0          (i:0, f:0)
+   88  14 *    MULIf    v2, v1, 1.000000
+   91  14 *    PshV4    v2
+   92  15 *    PshVPtr  v0
+   93  16 *    CALLSYS  77           (void ScriptComponent::setMomentum(float, float))
+- 16,3 -
+            6:
+   95  13 *    SUSPEND
+   96  13 *    LoadRObjR v6, v12, 67108879
+   99  13 *    RDR1     v8
+  100  13 *    CpyVtoR4 v8
+  101  13 *    JLowNZ   +4              (d:107)
+  103  13 *    SetV4    v9, 0x0          (i:0, f:0)
+  105  13 *    JMP      +6              (d:113)
+            8:
+  107  13 *    CMPIi    v5, 0
+  109  13 *    TZ
+  110  13 *    CpyRtoV4 v2
+  111  13 *    CpyVtoV4 v9, v2
+            9:
+  113  13 *    CpyVtoR4 v9
+  114  13 *    JLowZ    +84              (d:200)
+- 18,4 -
+            {
+  116  13 *    SUSPEND
+               VarDecl  6
+  117  13 *    PGA      196394952
+  119  14 *    PshVPtr  v0
+  120  15 *    CALLSYS  74           (ScriptComponent@ ScriptComponent::spawn(const string&in))
+  122  13 *    FREE     v11, 196297368
+  124  13 *    STOREOBJ v11
+- 19,4 -
+  125  13 *    SUSPEND
+  126  13 *    ClrVPtr  v10
+  127  13 *    CmpPtr   v11, v10
+  129  13 *    TNZ
+  130  13 *    CpyRtoV4 v8
+  131  13 *    FREE     v10, 196297368
+  133  13 *    CpyVtoR4 v8
+  134  13 *    JLowZ    +62              (d:198)
+- 21,5 -
+            {
+  136  13 *    SUSPEND
+               VarDecl  7
+  137  13 *    PshVPtr  v0
+  138  14 *    CALLSYS  72           (const Vector2f& ScriptComponent::position())
+  140  13 *    PshRPtr
+  141  14 *    RefCpyV  v13, 196296600
+  143  14 *    PopPtr
+  144  13 *    PshVPtr  v13
+  145  14 *    RefCpyV  v12, 196296600
+  147  14 *    FREE     v13, 196296600
+  149  14 *    PopPtr
+- 22,5 -
+  150  13 *    SUSPEND
+  151  13 *    LoadRObjR v12, v4, 67108878
+  154  13 *    RDR4     v9
+  155  13 *    SUBIf    v8, v9, 18.000000
+  158  13 *    PshV4    v8
+  159  14 *    LoadRObjR v12, v0, 67108878
+  162  14 *    RDR4     v2
+  163  14 *    ADDIf    v2, v2, 12.000000
+  166  14 *    PshV4    v2
+  167  15 *    PshVPtr  v11
+  168  16 *    CALLSYS  73           (void ScriptComponent::setPosition(float, float))
+- 23,5 -
+  170  13 *    SUSPEND
+  171  13 *    MULIf    v2, v3, -1.000000
+  174  13 *    PshV4    v2
+  175  14 *    PshC4    0x0          (i:0, f:0)
+  177  15 *    PshVPtr  v11
+  178  16 *    CALLSYS  77           (void ScriptComponent::setMomentum(float, float))
+- 24,5 -
+  180  13 *    SUSPEND
+  181  13 *    CpyVtoV4 v5, v4
+- 25,5 -
+  183  13 *    SUSPEND
+  184  13 *    PshC4    0x1          (i:1, f:1.4013e-45)
+  186  14 *    SetV1    v9, 0x0
+  188  14 *    PshV4    v9
+  189  15 *    PshC4    0x41f00000          (i:1106247680, f:30)
+  191  16 *    PGA      196394952
+  193  17 *    PshVPtr  v0
+  194  18 *    CALLSYS  80           (void ScriptComponent::playSound(const string&in, float, bool, int))
+  196  13 *    FREE     v12, 196296600
+            }
+            10:
+  198  13 *    FREE     v11, 196297368
+- 28,3 -
+            }
+            7:
+  200  13 *    SUSPEND
+  201  13 *    PshC4    0x0          (i:0, f:0)
+  203  14 *    PshVPtr  v0
+  204  15 *    CALLSYS  68           (void ScriptComponent::suspend(int = 0))
+  206  13 *    FREE     v6, 196296984
+            }
+  208  13 *    JMP      -197              (d:13)
+- 30,2 -
+            2:
+  210  13 *    SUSPEND
+            0:
+  211  13 *    FREE     v0, 196297368
+  213  13 *    RET      1
