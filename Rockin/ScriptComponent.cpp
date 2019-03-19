@@ -3,6 +3,7 @@
 #include "ScriptComponent.h"
 #include "TransformComponent.h"
 #include "PhysicsComponent.h"
+#include "AnimationComponent.h"
 #include "Sim.h"
 
 namespace Core
@@ -155,6 +156,21 @@ namespace Core
 		}
 		return nullptr;
 	}
+
+	void ScriptComponent::playAnimation(const std::string &name)
+	{
+		auto ac = parent()->getComponent<AnimationComponent>();
+		if (!ac) return;
+		ac->play(name);
+	}
+	void ScriptComponent::stopAnimation()
+	{
+		auto ac = parent()->getComponent<AnimationComponent>();
+		if (!ac) return;
+		ac->stop();
+	}
+
+
 
 	void ScriptComponent::setReg(const std::string &reg, int val)
 	{

@@ -9,6 +9,7 @@ namespace Core
 	class RenderComponent : public sde::ComponentBase, public sde::AutoList<RenderComponent>
 	{
 		friend class Renderer;
+		friend class AnimationComponent;
 	public:
 		RenderComponent(sde::Entity *parent, float tx, float ty, float w, float h) :
 			ComponentBase{ parent }, m_tPos{ tx, ty }, m_tSize{ w, h }

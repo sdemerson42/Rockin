@@ -48,6 +48,8 @@ namespace Core
 		const InputEvent &input();
 		void playSound(const std::string &tag, float volume, bool loop, int priority);
 		ScriptComponent *getScriptByTag(const std::string &tag);
+		void playAnimation(const std::string &name);
+		void stopAnimation();
 
 		void setReg(const std::string &reg, int value);
 		int getReg(const std::string &reg);

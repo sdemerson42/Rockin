@@ -154,6 +154,8 @@
   <ItemGroup>
     <ClCompile Include="..\AngelScript\add_on\scriptbuilder\scriptbuilder.cpp" />
     <ClCompile Include="..\AngelScript\add_on\scriptstdstring\scriptstdstring.cpp" />
+    <ClCompile Include="AnimationComponent.cpp" />
+    <ClCompile Include="Animator.cpp" />
     <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="InputSystem.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -165,6 +167,8 @@
     <ClCompile Include="SoundSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnimationComponent.h" />
+    <ClInclude Include="Animator.h" />
     <ClInclude Include="EntityFactory.h" />
     <ClInclude Include="Events.h" />
     <ClInclude Include="InputSystem.h" />

@@ -4,11 +4,13 @@
 #include "ScriptSystem.h"
 #include "InputSystem.h"
 #include "SoundSystem.h"
+#include "Animator.h"
 
 #include "TransformComponent.h"
 #include "RenderComponent.h"
 #include "PhysicsComponent.h"
 #include "ScriptComponent.h"
+#include "AnimationComponent.h"
 
 #include "../../add_on/scriptbuilder/scriptbuilder.h"
 #include "../../add_on/scriptstdstring/scriptstdstring.h"
@@ -26,7 +28,7 @@ namespace Core
 		// Create Systems
 
 		systemsSetup();
-		
+
 		// Create and prepare script engine
 
 		scriptEngineSetup();
@@ -40,7 +42,7 @@ namespace Core
 
 		m_entityFactory = std::make_unique<EntityFactory>(&m_entity, m_scriptEngine);
 		m_entityFactory->loadBlueprintData("Data/Blueprints.dat");
-		
+
 		// Test Entities
 
 		m_entityFactory->createEntity("Master", true);
@@ -75,6 +77,7 @@ namespace Core
 		m_system.push_back(std::make_unique<Physics>());
 		m_system.push_back(std::make_unique<ScriptSystem>());
 		m_system.push_back(std::make_unique<SoundSystem>());
+		m_system.push_back(std::make_unique<Animator>());
 		m_system.push_back(std::make_unique<Renderer>(&m_window, "Assets/Sprites.png"));
 	}
 
@@ -134,6 +137,10 @@ namespace Core
 			asMETHOD(ScriptComponent, ScriptComponent::getReg), asCALL_THISCALL);
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void modReg(const string &in, int val)",
 			asMETHOD(ScriptComponent, ScriptComponent::modReg), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void playAnimation(const string &in)",
+			asMETHOD(ScriptComponent, ScriptComponent::playAnimation), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void stopAnimation()",
+			asMETHOD(ScriptComponent, ScriptComponent::stopAnimation), asCALL_THISCALL);
 	}
 
 	void Sim::compileScripts()
