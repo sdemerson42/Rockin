@@ -12,10 +12,12 @@ namespace Core
 	{
 		m_comp.clear();
 		m_staticComp.clear();
+		m_messageGroup.clear();
 
 		applyMomentum();
 		processStatics();
 		resolveCollisions();
+		sendCollisionEvents();
 	}
 
 	void Physics::applyMomentum()
@@ -66,33 +68,9 @@ namespace Core
 					if (a->m_solid && b->m_solid)
 					{
 						adjustMomentum(&collision);
-						
-						// Adjust position if static objects are involved
-
-						if (a->m_static || b->m_static) applyCorrection(&collision);
+						applyCorrection(&collision);
 					}
-					
-					// Alert scripts if applicable
-
-					auto ae = a->parent();
-					auto asc = ae->getComponent<ScriptComponent>();
-					auto be = b->parent();
-					auto bsc = be->getComponent<ScriptComponent>();
-
-					if (asc)
-					{
-						CollisionEvent ce;
-						ce.collider = be;
-						ce.receiver = asc;
-						broadcast(&ce);
-					}
-					if (bsc)
-					{
-						CollisionEvent ce;
-						ce.collider = ae;
-						ce.receiver = bsc;
-						broadcast(&ce);
-					}
+					m_messageGroup.push_back(collision);
 				}
 			}
 		}
@@ -199,17 +177,20 @@ namespace Core
 				if (aBoxPos.x + aSize.x > bBoxPos.x && aBoxPos.x < bBoxPos.x + bSize.x &&
 					aBoxPos.y + aSize.y > bBoxPos.y && aBoxPos.y < bBoxPos.y + bSize.y)
 				{
-					// Simple for now
-					// To do: Collision events
 					if (a->m_momentum.x > 0.0f)
 					{
-						atc->setPosition(bBoxPos.x - aSize.x - a->m_AABBOffset.x - 0.1f, atc->position().y);
+						float diff = bBoxPos.x - (aBoxPos.x + aSize.x);
+						float dist = (a->m_momentum.x - diff) * e;
+						atc->setPosition(bBoxPos.x - aSize.x - a->m_AABBOffset.x - dist - 0.1f, atc->position().y);
 					}
 					else
 					{
-						atc->setPosition(bBoxPos.x + bSize.x - a->m_AABBOffset.x + 0.1f, atc->position().y);
+						float diff = aBoxPos.x - (bBoxPos.x + bSize.x);
+						float dist = (a->m_momentum.x + diff) * e;
+						atc->setPosition(bBoxPos.x + bSize.x - a->m_AABBOffset.x - dist + 0.1f, atc->position().y);
 					}
 					a->m_momentum.x *= -1.0f * e;
+					m_messageGroup.push_back(Collision{ a,b });
 				}
 			
 			}
@@ -238,18 +219,53 @@ namespace Core
 				if (aBoxPos.x + aSize.x > bBoxPos.x && aBoxPos.x < bBoxPos.x + bSize.x &&
 					aBoxPos.y + aSize.y > bBoxPos.y && aBoxPos.y < bBoxPos.y + bSize.y)
 				{
-					// Simple for now
-					// To do: Collision events
 					if (a->m_momentum.y > 0.0f)
 					{
-						atc->setPosition(atc->position().x, bBoxPos.y - aSize.y - a->m_AABBOffset.y - 0.1f );
+						float diff = bBoxPos.y - (aBoxPos.y + aSize.y);
+						float dist = (a->m_momentum.y - diff) * e;
+						atc->setPosition(atc->position().x, bBoxPos.y - aSize.y - a->m_AABBOffset.y - dist - 0.1f );
 					}
 					else
 					{
-						atc->setPosition(atc->position().x, bBoxPos.y + bSize.y - a->m_AABBOffset.y + 0.1f);
+						float diff = aBoxPos.y - (bBoxPos.y + bSize.y);
+						float dist = (a->m_momentum.y + diff) * e;
+						atc->setPosition(atc->position().x, bBoxPos.y + bSize.y - a->m_AABBOffset.y - dist + 0.1f);
 					}
 					a->m_momentum.y *= -1.0f * e;
+					if (find_if(std::begin(m_messageGroup), std::end(m_messageGroup), [=](const Collision &col)
+					{
+						return col.a == a && col.b == b;
+					}) == std::end(m_messageGroup)) m_messageGroup.push_back(Collision{ a,b });
 				}
+			}
+		}
+	}
+
+	void Physics::sendCollisionEvents()
+	{
+		// Alert scripts if applicable
+
+		for (const auto &c : m_messageGroup)
+		{
+
+			auto ae = c.a->parent();
+			auto asc = ae->getComponent<ScriptComponent>();
+			auto be = c.b->parent();
+			auto bsc = be->getComponent<ScriptComponent>();
+
+			if (asc)
+			{
+				CollisionEvent ce;
+				ce.collider = be;
+				ce.receiver = asc;
+				broadcast(&ce);
+			}
+			if (bsc)
+			{
+				CollisionEvent ce;
+				ce.collider = ae;
+				ce.receiver = bsc;
+				broadcast(&ce);
 			}
 		}
 	}
