@@ -2,6 +2,7 @@
 
 #include "sde.h"
 #include "SFML\Graphics.hpp"
+#include <vector>
 
 namespace Core
 {
@@ -24,10 +25,13 @@ namespace Core
 			sf::Vector2f normal;
 			float penetration;
 		};
+		std::vector<PhysicsComponent *> m_comp;
+		std::vector<PhysicsComponent *> m_staticComp;
 		void applyMomentum();
 		void resolveCollisions();
 		void adjustMomentum(Collision *c);
 		void applyCorrection(Collision *c);
 		bool detectCollision(Collision *c);
+		void processStatics();
 	};
 }

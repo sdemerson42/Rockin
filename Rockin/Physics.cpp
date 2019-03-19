@@ -10,7 +10,11 @@ namespace Core
 	
 	void Physics::execute()
 	{
+		m_comp.clear();
+		m_staticComp.clear();
+
 		applyMomentum();
+		processStatics();
 		resolveCollisions();
 	}
 
@@ -20,25 +24,30 @@ namespace Core
 		for (size_t i = 0; i < sz; ++i)
 		{
 			auto pc = sde::AutoList<PhysicsComponent>::get(i);
-			if (!pc->active() || pc->m_static) continue;
+			if (!pc->active()) continue;
+			if (pc->m_static)
+			{
+				m_staticComp.push_back(pc);
+				continue;
+			}
 			auto tc = pc->parent()->getComponent<TransformComponent>();
 			if (!tc) continue;
 			float x = tc->position().x + pc->m_momentum.x;
 			float y = tc->position().y + pc->m_momentum.y;
 			tc->setPosition(x, y);
+			m_comp.push_back(pc);
 		}
 	}
 
 	void Physics::resolveCollisions()
 	{
-		auto sz = sde::AutoList<PhysicsComponent>::size();
-		for (size_t i = 0; i < sz; ++i)
+		for (size_t i = 0; i < m_comp.size(); ++i)
 		{
-			auto a = sde::AutoList<PhysicsComponent>::get(i);
+			auto a = m_comp[i];
 			if (!a->active()) continue;
-			for (size_t k = i + 1; k < sz; ++k)
+			for (size_t k = i + 1; k < m_comp.size(); ++k)
 			{
-				auto b = sde::AutoList<PhysicsComponent>::get(k);
+				auto b = m_comp[k];
 				if (!b->active()) continue;
 
 				// Escape conditions
@@ -160,5 +169,88 @@ namespace Core
 			}
 		}
 		return false;
+	}
+
+	void Physics::processStatics()
+	{
+		// For collisions involving static objects,
+		// process axis by axis and adjust position accordingly.
+
+		// X
+
+		for (int i = 0; i < m_comp.size(); ++i)
+		{
+			auto a = m_comp[i];
+			auto atc = a->parent()->getComponent<TransformComponent>();
+			if (!atc) continue;
+			for (int j = 0; j < m_staticComp.size(); ++j)
+			{
+				auto b = m_staticComp[j];
+				auto btc = b->parent()->getComponent<TransformComponent>();
+				if (!btc) continue;
+
+				float e = (a->m_elasticity + b->m_elasticity) / 2.0f;
+
+				sf::Vector2f aBoxPos{ atc->position().x + a->m_AABBOffset.x, atc->position().y + a->m_AABBOffset.y - a->m_momentum.y };
+				sf::Vector2f bBoxPos{ btc->position().x + b->m_AABBOffset.x, btc->position().y + b->m_AABBOffset.y };
+				sf::Vector2f aSize{ a->m_AABBSize };
+				sf::Vector2f bSize{ b->m_AABBSize };
+
+				if (aBoxPos.x + aSize.x > bBoxPos.x && aBoxPos.x < bBoxPos.x + bSize.x &&
+					aBoxPos.y + aSize.y > bBoxPos.y && aBoxPos.y < bBoxPos.y + bSize.y)
+				{
+					// Simple for now
+					// To do: Collision events
+					if (a->m_momentum.x > 0.0f)
+					{
+						atc->setPosition(bBoxPos.x - aSize.x - a->m_AABBOffset.x - 0.1f, atc->position().y);
+					}
+					else
+					{
+						atc->setPosition(bBoxPos.x + bSize.x - a->m_AABBOffset.x + 0.1f, atc->position().y);
+					}
+					a->m_momentum.x *= -1.0f * e;
+				}
+			
+			}
+		}
+
+		// Y
+
+		for (int i = 0; i < m_comp.size(); ++i)
+		{
+			auto a = m_comp[i];
+			auto atc = a->parent()->getComponent<TransformComponent>();
+			if (!atc) continue;
+			for (int j = 0; j < m_staticComp.size(); ++j)
+			{
+				auto b = m_staticComp[j];
+				auto btc = b->parent()->getComponent<TransformComponent>();
+				if (!btc) continue;
+
+				float e = (a->m_elasticity + b->m_elasticity) / 2.0f;
+
+				sf::Vector2f aBoxPos{ atc->position().x + a->m_AABBOffset.x, atc->position().y + a->m_AABBOffset.y };
+				sf::Vector2f bBoxPos{ btc->position().x + b->m_AABBOffset.x, btc->position().y + b->m_AABBOffset.y };
+				sf::Vector2f aSize{ a->m_AABBSize };
+				sf::Vector2f bSize{ b->m_AABBSize };
+
+				if (aBoxPos.x + aSize.x > bBoxPos.x && aBoxPos.x < bBoxPos.x + bSize.x &&
+					aBoxPos.y + aSize.y > bBoxPos.y && aBoxPos.y < bBoxPos.y + bSize.y)
+				{
+					// Simple for now
+					// To do: Collision events
+					if (a->m_momentum.y > 0.0f)
+					{
+						atc->setPosition(atc->position().x, bBoxPos.y - aSize.y - a->m_AABBOffset.y - 0.1f );
+					}
+					else
+					{
+						atc->setPosition(atc->position().x, bBoxPos.y + bSize.y - a->m_AABBOffset.y + 0.1f);
+					}
+					a->m_momentum.y *= -1.0f * e;
+				}
+			}
+		}
 	}
 }

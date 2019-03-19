@@ -63,3 +63,11 @@ Tag{RightWall}
 Transform{800.0, 0.0}
 Physics{0.0, 0.0, 20.0, 600.0, 0.0, 0.0, 0.0, 1.0, true, true, false}
 }
+
+Wall
+{
+Tag{Wall}
+Transform{0.0,0.0}
+Render{32.0,0.0,32.0,32.0}
+Physics{0.0,0.0,32.0,32.0,0.0,0.0,0.0,0.0,true,true,false}
+}
