@@ -3,7 +3,7 @@ void P1_main(ScriptComponent @p)
 	float speed = 4.5f;
 	float laserSpeed = 6;
 	int laserCooldown = 35;
-	int laserTimer = 0;
+	int laserTimer = 0;	
 
 	while(true)
 	{
