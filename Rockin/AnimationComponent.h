@@ -35,7 +35,6 @@ namespace Core
 		void play(const std::string &name);
 		void stop();
 		bool playing();
-		void setDefaultAnimation(const std::string &name);
 		void setCurrentRenderFrame();
 	private:
 		std::vector<Animation> m_animation;
@@ -43,6 +42,6 @@ namespace Core
 		int m_currentFrameIndex;
 		AnimationState m_currentState;
 		int m_frameCounter;
-		std::string m_defaultAnimation;
+		bool m_defaultAnimation;
 	};
 }

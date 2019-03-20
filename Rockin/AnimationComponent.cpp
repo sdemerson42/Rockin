@@ -7,19 +7,24 @@ namespace Core
 	AnimationComponent::AnimationComponent(sde::Entity *parent) :
 		sde::ComponentBase{ parent }, m_currentAnimationIndex{ -1 },
 		m_currentFrameIndex{ 0 }, m_currentState{ AnimationState::Stopped }, m_frameCounter{ 0 },
-		m_defaultAnimation{ "none" }
+		m_defaultAnimation{ false }
 	{
 	}
 
 	void AnimationComponent::initialize()
 	{
-		if (m_defaultAnimation == "none") stop();
-		else play(m_defaultAnimation);
+		if (!m_defaultAnimation) stop();
+		else play("default");
 	}
 
 	void AnimationComponent::addAnimation(const Animation &a)
 	{
 		m_animation.push_back(a);
+		if (a.name == "default") 
+		{
+			m_defaultAnimation = true;
+			play(a.name);
+		}
 	}
 	void AnimationComponent::play(const std::string &name)
 	{
@@ -38,7 +43,7 @@ namespace Core
 			m_currentState = AnimationState::Playing;
 			m_frameCounter = 0;
 			setCurrentRenderFrame();
-		}	
+		}
 	}
 	void AnimationComponent::stop()
 	{
@@ -48,11 +53,6 @@ namespace Core
 	bool AnimationComponent::playing()
 	{
 		return m_currentState == AnimationState::Playing;
-	}
-
-	void AnimationComponent::setDefaultAnimation(const std::string &name)
-	{
-		m_defaultAnimation = name;
 	}
 
 	void AnimationComponent::setCurrentRenderFrame()

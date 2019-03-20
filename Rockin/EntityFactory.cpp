@@ -7,6 +7,7 @@
 #include "RenderComponent.h"
 #include "PhysicsComponent.h"
 #include "ScriptComponent.h"
+#include "AnimationComponent.h"
 
 namespace Core
 {
@@ -53,6 +54,32 @@ namespace Core
 			else if (data.component == "Script")
 			{
 				e->addComponent<ScriptComponent>(e, m_engine, data.valuePair[0].value);
+			}
+			else if (data.component == "Animation")
+			{
+				auto ac = e->getComponent<AnimationComponent>();
+				if (!ac)
+				{
+					e->addComponent<AnimationComponent>(e);
+					ac = e->getComponent<AnimationComponent>();
+				}
+				AnimationComponent::Animation a;
+				a.name = data.valuePair[0].value;
+				a.frameDelay = std::stoi(data.valuePair[1].value);
+				a.loop = data.valuePair[2].value == "true" ? true : false;
+				
+				int totalFrames = std::stoi(data.valuePair[3].value);
+				int j = 4;
+				for (int i = 0; i < totalFrames; ++i)
+				{
+					AnimationComponent::Frame frame;
+					frame.position.x = std::stof(data.valuePair[j++].value);
+					frame.position.y = std::stof(data.valuePair[j++].value);
+					frame.size.x = std::stof(data.valuePair[j++].value);
+					frame.size.y = std::stof(data.valuePair[j++].value);
+					a.frame.push_back(frame);
+				}
+				ac->addAnimation(a);
 			}
 		}
 		e->setActive(active);
