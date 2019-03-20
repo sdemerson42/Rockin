@@ -63,7 +63,11 @@ namespace Core
 		}
 
 		m_entityFactory->createEntity("LeftWall", true);
+		auto p = m_entity.back().get();
+		p->setPosition(-20.0f, 0.0f);
 		m_entityFactory->createEntity("RightWall", true);
+		p = m_entity.back().get();
+		p->setPosition(800.0f, 0.0f);
 	}
 
 	Sim::~Sim()
@@ -191,7 +195,7 @@ namespace Core
 	{
 		ScriptComponent *r = nullptr;
 
-		auto iter = std::find_if(std::begin(m_entity), std::end(m_entity), [&](std::unique_ptr<sde::Entity> &up)
+		auto iter = std::find_if(std::begin(m_entity), std::end(m_entity), [&](std::unique_ptr<CoreEntity> &up)
 		{
 			return up->hasTag(tag) && !up->active();
 		});

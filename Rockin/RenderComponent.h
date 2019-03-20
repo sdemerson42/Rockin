@@ -1,18 +1,18 @@
 #pragma once
 
-#include "sde.h"
+#include "CoreComponentBase.h"
 #include <string>
 #include "SFML\Graphics.hpp"
 
 namespace Core
 {
-	class RenderComponent : public sde::ComponentBase, public sde::AutoList<RenderComponent>
+	class RenderComponent : public CoreComponentBase, public sde::AutoList<RenderComponent>
 	{
 		friend class Renderer;
 		friend class AnimationComponent;
 	public:
-		RenderComponent(sde::Entity *parent, float tx, float ty, float w, float h) :
-			ComponentBase{ parent }, m_tPos{ tx, ty }, m_tSize{ w, h }
+		RenderComponent(CoreEntity *parent, float tx, float ty, float w, float h) :
+			CoreComponentBase{ parent }, m_tPos{ tx, ty }, m_tSize{ w, h }
 		{}
 	private:
 		sf::Vector2f m_tPos;

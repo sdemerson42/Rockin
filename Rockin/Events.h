@@ -1,6 +1,6 @@
 #pragma once
 
-#include "sde.h"
+#include "CoreEntity.h"
 #include <string>
 
 namespace Core
@@ -10,7 +10,7 @@ namespace Core
 	struct CollisionEvent : public sde::EventBase
 	{
 		ScriptComponent *receiver;
-		sde::Entity *collider;
+		CoreEntity *collider;
 	};
 
 	struct InputEvent : public sde::EventBase
@@ -23,7 +23,8 @@ namespace Core
 
 	struct SoundEvent : public sde::EventBase
 	{
-		SoundEvent();
+		SoundEvent()
+		{}
 		SoundEvent(const std::string &tag, float volume, bool loop, int priority) :
 			tag{ tag }, volume{ volume }, loop{ loop }, priority{ priority }
 		{}

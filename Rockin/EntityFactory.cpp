@@ -11,7 +11,7 @@
 
 namespace Core
 {
-	EntityFactory::EntityFactory(std::vector<std::unique_ptr<sde::Entity>> *eVec, asIScriptEngine *engine) :
+	EntityFactory::EntityFactory(std::vector<std::unique_ptr<CoreEntity>> *eVec, asIScriptEngine *engine) :
 		m_entity{ eVec }, m_engine{ engine }
 	{
 	}
@@ -25,20 +25,20 @@ namespace Core
 
 		if (bpIter == std::end(m_blueprint)) return;
 
-		m_entity->push_back(std::make_unique<sde::Entity>());
-		sde::Entity *e = m_entity->back().get();
+		m_entity->push_back(std::make_unique<CoreEntity>());
+		auto e = m_entity->back().get();
 
 		for (const std::string &tag : bpIter->tag) e->addTag(tag);
 		for (const auto &data : bpIter->data)
 		{
 			// Construct components
 
-			if (data.component == "Transform")
+			/*if (data.component == "Transform")
 			{
 				e->addComponent<TransformComponent>(e, std::stof(data.valuePair[0].value),
 					std::stof(data.valuePair[1].value));
-			}
-			else if (data.component == "Physics")
+			}*/
+			if (data.component == "Physics")
 			{	
 				e->addComponent<PhysicsComponent>(e, std::stof(data.valuePair[0].value), std::stof(data.valuePair[1].value),
 					std::stof(data.valuePair[2].value), std::stof(data.valuePair[3].value), std::stof(data.valuePair[4].value),

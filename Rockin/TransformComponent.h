@@ -1,18 +1,18 @@
 #pragma once
 
-#include "sde.h"
+#include "CoreComponentBase.h"
 #include "SFML\Graphics.hpp"
 
 namespace Core
 {
-	class TransformComponent : public sde::ComponentBase, public sde::AutoList<TransformComponent>
+	class TransformComponent : public CoreComponentBase, public sde::AutoList<TransformComponent>
 	{
 	public:
-		TransformComponent(sde::Entity *parent) :
-			ComponentBase{ parent }, m_position { 0.0f, 0.0f }
+		TransformComponent(CoreEntity *parent) :
+			CoreComponentBase{ parent }, m_position { 0.0f, 0.0f }
 		{}
-		TransformComponent(sde::Entity *parent, float x, float y) :
-			ComponentBase{ parent }, m_position{ x, y }
+		TransformComponent(CoreEntity *parent, float x, float y) :
+			CoreComponentBase{ parent }, m_position{ x, y }
 		{}
 		const sf::Vector2f &position() const
 		{

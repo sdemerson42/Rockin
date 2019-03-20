@@ -3,6 +3,7 @@
 #include "TransformComponent.h"
 #include "ScriptComponent.h"
 #include "Events.h"
+#include "CoreEntity.h"
 #include <algorithm>
 
 namespace Core

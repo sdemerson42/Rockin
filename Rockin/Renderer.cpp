@@ -1,6 +1,7 @@
 #include "Renderer.h"
 #include "RenderComponent.h"
 #include "TransformComponent.h"
+#include "CoreEntity.h"
 
 namespace Core
 {

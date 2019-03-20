@@ -1,11 +1,12 @@
 #include "AnimationComponent.h"
 #include "RenderComponent.h"
+#include "CoreEntity.h"
 #include <algorithm>
 
 namespace Core
 {
-	AnimationComponent::AnimationComponent(sde::Entity *parent) :
-		sde::ComponentBase{ parent }, m_currentAnimationIndex{ -1 },
+	AnimationComponent::AnimationComponent(CoreEntity *parent) :
+		CoreComponentBase{ parent }, m_currentAnimationIndex{ -1 },
 		m_currentFrameIndex{ 0 }, m_currentState{ AnimationState::Stopped }, m_frameCounter{ 0 },
 		m_defaultAnimation{ false }
 	{

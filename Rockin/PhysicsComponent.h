@@ -1,17 +1,17 @@
 #pragma once
 
-#include "sde.h"
+#include "CoreComponentBase.h"
 #include "SFML\Graphics.hpp"
 
 namespace Core
 {
-	class PhysicsComponent : public sde::ComponentBase, public sde::AutoList<PhysicsComponent>
+	class PhysicsComponent : public CoreComponentBase, public sde::AutoList<PhysicsComponent>
 	{
 		friend class Physics;
 	public:
-		PhysicsComponent(sde::Entity *parent, float ox, float oy, float w, float h, float mx, float my,
+		PhysicsComponent(CoreEntity *parent, float ox, float oy, float w, float h, float mx, float my,
 			float mass, float elasticity, bool solid = true, bool stat = false, bool noCollision = false) :
-			ComponentBase{ parent }, m_AABBOffset{ ox, oy }, m_AABBSize{ w, h },
+			CoreComponentBase{ parent }, m_AABBOffset{ ox, oy }, m_AABBSize{ w, h },
 			m_momentum{ mx, my }, m_mass{ mass }, m_elasticity{ elasticity }, m_solid{ solid }, m_static{ stat }, m_noCollision{ noCollision }
 		{
 			if (mass == 0.0f) m_inverseMass = 0.0f;

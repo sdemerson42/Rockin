@@ -5,6 +5,7 @@
 #include "PhysicsComponent.h"
 #include "AnimationComponent.h"
 #include "Sim.h"
+#include "CoreEntity.h"
 
 namespace Core
 {
@@ -21,8 +22,8 @@ namespace Core
 		m_input = *event;
 	}
 
-	ScriptComponent::ScriptComponent(sde::Entity *parent, asIScriptEngine *engine, const std::string &tag) :
-		sde::ComponentBase{ parent }, m_engine{ engine }, m_sleep{ false }, m_suspensionCycles{ 0 }, m_prefix{ tag }
+	ScriptComponent::ScriptComponent(CoreEntity *parent, asIScriptEngine *engine, const std::string &tag) :
+		CoreComponentBase{ parent }, m_engine{ engine }, m_sleep{ false }, m_suspensionCycles{ 0 }, m_prefix{ tag }
 	{
 		// Prepare scripting functions and contexts
 
@@ -91,7 +92,7 @@ namespace Core
 		m_sleep = b;
 	}
 
-	bool ScriptComponent::entityHasTag(sde::Entity *e, const std::string &tag)
+	bool ScriptComponent::entityHasTag(CoreEntity *e, const std::string &tag)
 	{
 		return e->hasTag(tag);
 	}

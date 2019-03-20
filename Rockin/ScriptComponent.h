@@ -1,6 +1,6 @@
 #pragma once
 
-#include "sde.h"
+#include "CoreComponentBase.h"
 #include "angelscript.h"
 #include <string>
 #include "SFML\Graphics.hpp"
@@ -11,12 +11,12 @@
 namespace Core
 {
 
-	class ScriptComponent : public sde::ComponentBase, public sde::AutoList<ScriptComponent>
+	class ScriptComponent : public CoreComponentBase, public sde::AutoList<ScriptComponent>
 	{
 		friend class ScriptSystem;
 		friend class Sim;
 	public:
-		ScriptComponent(sde::Entity *parent, asIScriptEngine *engine, const std::string &tag);
+		ScriptComponent(CoreEntity *parent, asIScriptEngine *engine, const std::string &tag);
 		~ScriptComponent();
 		static void setSim(Sim *);
 		static void setInput(const InputEvent *);
@@ -37,7 +37,7 @@ namespace Core
 		void log(const std::string &msg);
 		void suspend(int cycles);
 		void setSleep(bool b);
-		bool entityHasTag(sde::Entity *e, const std::string &tag);
+		bool entityHasTag(CoreEntity *e, const std::string &tag);
 		const sf::Vector2f &position();
 		void setPosition(float x, float y);
 		ScriptComponent *spawn(const std::string &tag);

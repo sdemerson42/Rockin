@@ -1,6 +1,6 @@
 #pragma once
 
-#include "sde.h"
+#include "CoreEntity.h"
 #include <vector>
 #include <string>
 #include <memory>
@@ -11,7 +11,7 @@ namespace Core
 	class EntityFactory
 	{
 	public:
-		EntityFactory(std::vector<std::unique_ptr<sde::Entity>> *, asIScriptEngine *);
+		EntityFactory(std::vector<std::unique_ptr<CoreEntity>> *, asIScriptEngine *);
 		void createEntity(const std::string &name, bool active = false);
 		void loadBlueprintData(const std::string &fName);
 	private:
@@ -32,7 +32,7 @@ namespace Core
 			std::vector<std::string> tag;
 			std::vector<ComponentData> data;
 		};
-		std::vector<std::unique_ptr<sde::Entity>> *m_entity;
+		std::vector<std::unique_ptr<CoreEntity>> *m_entity;
 		asIScriptEngine *m_engine;
 		std::vector<Blueprint> m_blueprint;
 

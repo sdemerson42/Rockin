@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <memory>
+#include "CoreEntity.h"
 #include "sde.h"
 #include "SFML\Graphics.hpp"
 #include "angelscript.h"
@@ -23,7 +24,7 @@ namespace Core
 		void scriptEngineSetup();
 		void compileScripts();
 
-		std::vector<std::unique_ptr<sde::Entity>> m_entity;
+		std::vector<std::unique_ptr<CoreEntity>> m_entity;
 		std::vector<std::unique_ptr<sde::ISystem>> m_system;
 		std::unique_ptr<EntityFactory> m_entityFactory;
 		sf::RenderWindow m_window;

@@ -1,13 +1,13 @@
 #pragma once
 
-#include "sde.h"
+#include "CoreComponentBase.h"
 #include "SFML\Graphics.hpp"
 #include <string>
 #include <vector>
 
 namespace Core
 {
-	class AnimationComponent : public sde::ComponentBase, public sde::AutoList<AnimationComponent>
+	class AnimationComponent : public CoreComponentBase, public sde::AutoList<AnimationComponent>
 	{
 		friend class Animator;
 	public:
@@ -30,7 +30,7 @@ namespace Core
 			bool loop;
 		};
 		void initialize() override;
-		AnimationComponent(sde::Entity *parent);
+		AnimationComponent(CoreEntity *parent);
 		void addAnimation(const Animation &a);
 		void play(const std::string &name);
 		void stop();
