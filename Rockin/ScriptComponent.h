@@ -40,6 +40,7 @@ namespace Core
 		bool entityHasTag(CoreEntity *e, const std::string &tag);
 		const sf::Vector2f &position();
 		void setPosition(float x, float y);
+		const sf::Vector2f &spriteSize();
 		ScriptComponent *spawn(const std::string &tag);
 		void despawn();
 		const sf::Vector2f &momentum();
@@ -60,5 +61,6 @@ namespace Core
 		bool m_sleep;
 		int m_suspensionCycles;
 		std::map<std::string, int> m_registers;
+		sf::Vector2f m_defaultVector2f;
 	};
 }

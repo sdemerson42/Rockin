@@ -4,6 +4,7 @@
 #include "TransformComponent.h"
 #include "PhysicsComponent.h"
 #include "AnimationComponent.h"
+#include "RenderComponent.h"
 #include "Sim.h"
 #include "CoreEntity.h"
 
@@ -107,6 +108,13 @@ namespace Core
 		parent()->getComponent<TransformComponent>()->setPosition(x, y);
 	}
 
+	const sf::Vector2f &ScriptComponent::spriteSize()
+	{
+		auto rc = parent()->getComponent<RenderComponent>();
+		if (rc) return rc->tSize();
+		return m_defaultVector2f;
+	}
+
 	ScriptComponent *ScriptComponent::spawn(const std::string &tag)
 	{
 		return m_sim->spawn(tag);
@@ -121,7 +129,7 @@ namespace Core
 	{
 		auto pc = parent()->getComponent<PhysicsComponent>();
 		if (pc) return pc->momentum();
-		return sf::Vector2f{ 0.0f, 0.0f };
+		return m_defaultVector2f;
 	}
 
 	void ScriptComponent::setMomentum(float x, float y)

@@ -14,6 +14,10 @@ namespace Core
 		RenderComponent(CoreEntity *parent, float tx, float ty, float w, float h) :
 			CoreComponentBase{ parent }, m_tPos{ tx, ty }, m_tSize{ w, h }
 		{}
+		const sf::Vector2f &tSize()
+		{
+			return m_tSize;
+		}
 	private:
 		sf::Vector2f m_tPos;
 		sf::Vector2f m_tSize;

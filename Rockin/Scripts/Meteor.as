@@ -29,66 +29,7 @@ void Meteor_onCollision(ScriptComponent @p, Entity @collider)
 {
 	if (collider.hasTag("Laser"))
 	{
-		p.playSound("Boom", 20.0f, false, 1);
-		auto pos = p.position();
-
-		auto d = p.spawn("Debris");
-		if (d !is null)
-		{
-			
-			d.setPosition(pos.x + 16, pos.y + 16);
-			d.setMomentum(-2, -2);
-		}
-		@d = p.spawn("Debris");
-		if (d !is null)
-		{
-			
-			d.setPosition(pos.x + 16, pos.y + 16);
-			d.setMomentum(2, 2);
-		}
-		@d = p.spawn("Debris");
-		if (d !is null)
-		{
-			
-			d.setPosition(pos.x + 16, pos.y + 16);
-			d.setMomentum(-2, 2);
-		}
-		@d = p.spawn("Debris");
-		if (d !is null)
-		{
-			
-			d.setPosition(pos.x + 16, pos.y + 16);
-			d.setMomentum(2, -2);
-		}
-		@d = p.spawn("Debris");
-		if (d !is null)
-		{
-			
-			d.setPosition(pos.x + 16, pos.y + 16);
-			d.setMomentum(0, 2.8);
-		}
-		@d = p.spawn("Debris");
-		if (d !is null)
-		{
-			
-			d.setPosition(pos.x + 16, pos.y + 16);
-			d.setMomentum(0, -2.8);
-		}
-		@d = p.spawn("Debris");
-		if (d !is null)
-		{
-			
-			d.setPosition(pos.x + 16, pos.y + 16);
-			d.setMomentum(2.8, 0);
-		}
-		@d = p.spawn("Debris");
-		if (d !is null)
-		{
-			
-			d.setPosition(pos.x + 16, pos.y + 16);
-			d.setMomentum(-2.8, 0);
-		}
-
+		Master_explosion(p);
 		auto masterHandle = p.getScriptByTag("Master");
 		if (masterHandle !is null) Master_incScore(masterHandle);
 
@@ -100,3 +41,4 @@ void Meteor_onCollision(ScriptComponent @p, Entity @collider)
 		p.playSound("Boom", 5.0f, false, 1);
 	}
 }
+

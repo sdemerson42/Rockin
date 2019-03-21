@@ -34,5 +34,8 @@ void P1_main(ScriptComponent @p)
 void P1_onCollision(ScriptComponent @p, Entity @collider)
 {
 	if (collider.hasTag("Meteor"))
+	{	
+		Master_explosion(p);
 		p.despawn();
+	}
 }

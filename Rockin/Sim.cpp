@@ -117,6 +117,8 @@ namespace Core
 			asMETHOD(ScriptComponent, ScriptComponent::entityHasTag), asCALL_THISCALL);
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "const Vector2f &position()",
 			asMETHOD(ScriptComponent, ScriptComponent::position), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "const Vector2f &spriteSize()",
+			asMETHOD(ScriptComponent, ScriptComponent::spriteSize), asCALL_THISCALL);
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void setPosition(float x, float y)",
 			asMETHOD(ScriptComponent, ScriptComponent::setPosition), asCALL_THISCALL);
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "ScriptComponent @spawn(const string &in)",
