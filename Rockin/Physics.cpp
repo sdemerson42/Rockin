@@ -28,17 +28,19 @@ namespace Core
 		{
 			auto pc = sde::AutoList<PhysicsComponent>::get(i);
 			if (!pc->active()) continue;
-			if (pc->m_static)
+
+			if (!pc->m_static)
 			{
-				m_staticComp.push_back(pc);
-				continue;
+				auto e = pc->parent();
+				float x = e->position().x + pc->m_momentum.x;
+				float y = e->position().y + pc->m_momentum.y;
+				e->setPosition(x, y);
 			}
-			auto tc = pc->parent()->getComponent<TransformComponent>();
-			if (!tc) continue;
-			float x = tc->position().x + pc->m_momentum.x;
-			float y = tc->position().y + pc->m_momentum.y;
-			tc->setPosition(x, y);
-			m_comp.push_back(pc);
+
+			if (pc->m_noCollision) continue;
+
+			if (pc->m_static) m_staticComp.push_back(pc);
+			else m_comp.push_back(pc);
 		}
 	}
 
@@ -47,12 +49,9 @@ namespace Core
 		for (size_t i = 0; i < m_comp.size(); ++i)
 		{
 			auto a = m_comp[i];
-			if (!a->active()) continue;
 			for (size_t k = i + 1; k < m_comp.size(); ++k)
 			{
 				auto b = m_comp[k];
-				if (!b->active()) continue;
-
 				// Escape conditions
 
 				if (a->m_momentum.x == 0.0f && a->m_momentum.y == 0.0f &&
@@ -60,8 +59,6 @@ namespace Core
 					continue;
 
 				if (a->m_inverseMass == 0.0f && b->m_inverseMass == 0.0f) continue;
-
-				if (a->m_noCollision || b->m_noCollision) continue;
 
 				Collision collision{ a, b };
 				if (detectCollision(&collision))
