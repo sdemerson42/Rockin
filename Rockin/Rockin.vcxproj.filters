@@ -63,6 +63,9 @@
     <ClCompile Include="CoreEntity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SceneFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
@@ -111,6 +114,9 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="CoreEntity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

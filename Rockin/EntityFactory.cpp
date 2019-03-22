@@ -16,7 +16,8 @@ namespace Core
 	{
 	}
 
-	void EntityFactory::createEntity(const std::string &name, bool active)
+	void EntityFactory::createEntity(const std::string &name, bool active, const std::string &layer,
+		float x, float y)
 	{
 		auto bpIter = std::find_if(std::begin(m_blueprint), std::end(m_blueprint), [&](const Blueprint &bp)
 		{
@@ -27,6 +28,8 @@ namespace Core
 
 		m_entity->push_back(std::make_unique<CoreEntity>());
 		auto e = m_entity->back().get();
+
+		e->setPosition(x, y);
 
 		for (const std::string &tag : bpIter->tag) e->addTag(tag);
 		for (const auto &data : bpIter->data)
@@ -49,7 +52,8 @@ namespace Core
 			else if (data.component == "Render")
 			{
 				e->addComponent<RenderComponent>(e, std::stof(data.valuePair[0].value), std::stof(data.valuePair[1].value),
-					std::stof(data.valuePair[2].value), std::stof(data.valuePair[3].value));
+					std::stof(data.valuePair[2].value), std::stof(data.valuePair[3].value),
+					data.valuePair[4].value, layer);
 			}
 			else if (data.component == "Script")
 			{

@@ -3,6 +3,8 @@
 #include "sde.h"
 #include "SFML\Graphics.hpp"
 #include <string>
+#include <map>
+#include "Events.h"
 
 namespace Core
 {
@@ -15,5 +17,7 @@ namespace Core
 		sf::RenderWindow *m_window;
 		sf::Texture m_texture;
 		sf::RenderStates m_states;
+
+		void onNewScene(const NewSceneEvent *event);
 	};
 }

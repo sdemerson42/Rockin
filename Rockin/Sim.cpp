@@ -18,6 +18,7 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm>
+#include <typeindex>
 
 namespace Core
 {
@@ -33,7 +34,6 @@ namespace Core
 
 		scriptEngineSetup();
 
-
 		// Compile scripts
 
 		compileScripts();
@@ -42,6 +42,10 @@ namespace Core
 
 		m_entityFactory = std::make_unique<EntityFactory>(&m_entity, m_scriptEngine);
 		m_entityFactory->loadBlueprintData("Data/Blueprints.dat");
+
+		// Create and prepare SceneFactory
+
+		m_sceneFactory = std::make_unique<SceneFactory>(m_entityFactory.get());
 
 		// Test Entities
 

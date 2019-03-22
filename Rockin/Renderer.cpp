@@ -2,6 +2,7 @@
 #include "RenderComponent.h"
 #include "TransformComponent.h"
 #include "CoreEntity.h"
+#include <iostream>
 
 namespace Core
 {
@@ -10,6 +11,8 @@ namespace Core
 	{
 		m_texture.loadFromFile(texF);
 		m_states.texture = &m_texture;
+
+		registerFunc(this, &Renderer::onNewScene);
 	}
 
 	void Renderer::execute()
@@ -42,5 +45,11 @@ namespace Core
 		m_window->clear(sf::Color::Black);
 		m_window->draw(va, m_states);
 		m_window->display();
+	}
+
+	void Renderer::onNewScene(const NewSceneEvent *event)
+	{
+		for (const auto &s : event->layer)
+			std::cout << s << "\n";
 	}
 }

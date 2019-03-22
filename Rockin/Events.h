@@ -2,6 +2,7 @@
 
 #include "CoreEntity.h"
 #include <string>
+#include <vector>
 
 namespace Core
 {
@@ -32,5 +33,11 @@ namespace Core
 		float volume;
 		bool loop;
 		int priority;
+	};
+
+	struct NewSceneEvent : public sde::EventBase
+	{
+		std::vector<std::string> layer;
+		std::vector<bool> isStatic;
 	};
 }
