@@ -1,6 +1,6 @@
 Meteor
 {
-Tag{ Meteor }
+Tag{ Meteor Hazard }
 Render{32.0, 0.0, 32.0, 32.0, sprites}
 Physics{2.0, 2.0, 28.0, 28.0, 0.0, 0.0, 4.0, 1.0, true, false, false}
 Script{ Meteor }
@@ -8,7 +8,7 @@ Script{ Meteor }
 
 SmallMeteor
 {
-Tag{ Meteor }
+Tag{ SmallMeteor Hazard}
 Render{64.0, 0.0, 16.0, 16.0, sprites}
 Physics{2.0, 2.0, 12.0, 12.0, 0.0, 0.0, 1.0, 1.0, true, false, false}
 Script{ Meteor }
@@ -52,7 +52,6 @@ Script{Debris}
 LeftWall
 {
 Tag{LeftWall}
-Transform{-20.0, 0.0}
 Physics{0.0, 0.0, 20.0, 600.0, 0.0, 0.0, 0.0, 1.0, true, true, false}
 }
 
@@ -60,4 +59,11 @@ RightWall
 {
 Tag{RightWall}
 Physics{0.0, 0.0, 20.0, 600.0, 0.0, 0.0, 0.0, 1.0, true, true, false}
+}
+
+Clouds
+{
+Tag{Clouds}
+Render{0.0, 0.0, 800.0, 600.0, clouds}
+Script{Clouds}
 }

@@ -6,10 +6,11 @@
 
 namespace Core
 {
-	Renderer::Renderer(sf::RenderWindow *window, const std::string &texF) :
-		m_window{ window }
+	Renderer::Renderer(sf::RenderWindow *window, float vx, float vy, float vw, float vh) :
+		m_window{ window }, m_view{ sf::FloatRect{vx, vy, vw, vh} }
 	{
 		registerFunc(this, &Renderer::onNewScene);
+		registerFunc(this, &Renderer::onSetCenter);
 	}
 
 	void Renderer::execute()
@@ -56,6 +57,10 @@ namespace Core
 			for (auto &pr : ld.vaMap)
 			{
 				m_states.texture = pr.first;
+				
+				if (ld.isStatic) m_window->setView(m_window->getDefaultView());
+				else m_window->setView(m_view);
+				
 				m_window->draw(pr.second, m_states);
 				pr.second.clear();
 			}
@@ -73,5 +78,10 @@ namespace Core
 			m_layerOrder.push_back(event->layer[i]);
 			m_layerMap[event->layer[i]].isStatic = event->isStatic[i];
 		}
+	}
+
+	void Renderer::onSetCenter(const SetViewCenterEvent *event)
+	{
+		m_view.setCenter(event->x, event->y);
 	}
 }

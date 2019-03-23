@@ -12,11 +12,12 @@ namespace Core
 	class Renderer : public sde::ISystem
 	{
 	public:
-		Renderer(sf::RenderWindow *window, const std::string &texF);
+		Renderer(sf::RenderWindow *window, float vx, float vy, float vw, float vh);
 		void execute() override;
 	private:
 		sf::RenderWindow *m_window;
 		sf::RenderStates m_states;
+		sf::View m_view;
 		std::map<std::string, sf::Texture> m_texureMap;
 		struct LayerData
 		{
@@ -27,5 +28,6 @@ namespace Core
 		std::vector<std::string> m_layerOrder;
 
 		void onNewScene(const NewSceneEvent *event);
+		void onSetCenter(const SetViewCenterEvent *event);
 	};
 }

@@ -15,6 +15,7 @@ namespace Core
 	{
 	public:
 		SceneFactory(EntityFactory *eFactory, std::vector<std::unique_ptr<CoreEntity>> *eVec);
+		void buildScene();
 		void buildScene(const std::string &name);
 	private:
 		struct EntityData

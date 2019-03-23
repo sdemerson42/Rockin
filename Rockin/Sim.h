@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <memory>
+#include <string>
 #include "CoreEntity.h"
 #include "sde.h"
 #include "SFML\Graphics.hpp"
@@ -16,7 +17,7 @@ namespace Core
 	class Sim
 	{
 	public:
-		Sim();
+		Sim(unsigned int w, unsigned int h, const std::string &name);
 		~Sim();
 		void execute();
 		ScriptComponent *spawn(const std::string &tag);

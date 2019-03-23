@@ -22,8 +22,8 @@
 
 namespace Core
 {
-	Sim::Sim() :
-		m_window{ sf::VideoMode{800, 600}, "Rockin'" }
+	Sim::Sim(unsigned int w, unsigned int h, const std::string &name) :
+		m_window{ sf::VideoMode{w, h}, name }
 	{
 
 		// Create Systems
@@ -47,7 +47,7 @@ namespace Core
 
 		m_sceneFactory = std::make_unique<SceneFactory>(m_entityFactory.get(), &m_entity);
 
-		m_sceneFactory->buildScene("Scene1");
+		m_sceneFactory->buildScene();
 	}
 
 	Sim::~Sim()
@@ -62,7 +62,7 @@ namespace Core
 		m_system.push_back(std::make_unique<ScriptSystem>());
 		m_system.push_back(std::make_unique<SoundSystem>());
 		m_system.push_back(std::make_unique<Animator>());
-		m_system.push_back(std::make_unique<Renderer>(&m_window, "Assets/Sprites.png"));
+		m_system.push_back(std::make_unique<Renderer>(&m_window, 0.0f, 0.0f, m_window.getSize().x, m_window.getSize().y));
 	}
 
 	void Sim::scriptEngineSetup()
@@ -127,6 +127,9 @@ namespace Core
 			asMETHOD(ScriptComponent, ScriptComponent::playAnimation), asCALL_THISCALL);
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void stopAnimation()",
 			asMETHOD(ScriptComponent, ScriptComponent::stopAnimation), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void setViewCenter(float x, float y)",
+			asMETHOD(ScriptComponent, ScriptComponent::setViewCenter), asCALL_THISCALL);
+
 	}
 
 	void Sim::compileScripts()

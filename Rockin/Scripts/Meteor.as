@@ -6,18 +6,6 @@ void Meteor_main(ScriptComponent @p)
 		
 		if (vec.x < -50 or vec.x > 850 or vec.y < -50 or vec.y > 650)
 		{
-			auto newp = p.spawn("Meteor");
-			if (newp !is null)
-			{
-				auto px = p.randomRange(50, 751);
-				int py = -40;
-				auto mx = p.randomRange(1, 3);
-				auto my = p.randomRange(1, 3);
-				if (px > 400)
-					mx *= -1; 
-				newp.setPosition(px, py);
-				newp.setMomentum(mx, my);
-			}
 			p.despawn();
 		}
 
@@ -36,7 +24,7 @@ void Meteor_onCollision(ScriptComponent @p, Entity @collider)
 		p.despawn();
 	}
 	
-	if (collider.hasTag("Meteor"))
+	if (collider.hasTag("Hazard"))
 	{
 		p.playSound("Boom", 5.0f, false, 1);
 	}

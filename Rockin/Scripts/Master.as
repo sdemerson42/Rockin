@@ -4,15 +4,22 @@ void Master_main(ScriptComponent @p)
 	auto p1Handle = p.spawn("P1");
 	p1Handle.setPosition(390.0, 568.0);
 
+	auto clouds = p.spawn("Clouds");
+	clouds.setPosition(0.0, 0.0);
+	@clouds = p.spawn("Clouds");
+	clouds.setPosition(0.0, -600.0);
+
 	while(true)
 	{
-		p.suspend(90);
+		p.suspend(50);
 		auto x = p.randomRange(0, 761);
-		float y = -50;
-		auto mx = p.randomRange(1, 4);
-		auto my = p.randomRange(-3, 4);
+		float y = -35;
+		auto mx = p.randomRange(-3, 4);
+		auto my = p.randomRange(1, 4);
 		if (x > 400) mx *= -1;
-		auto handle = p.spawn("Meteor");
+		string tag = "SmallMeteor";
+		if (p.randomRange(1,3) == 1) tag = "Meteor";
+		auto handle = p.spawn(tag);
 		if (handle !is null)
 		{
 			handle.setPosition(x,y);

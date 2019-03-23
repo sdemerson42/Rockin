@@ -51,6 +51,7 @@ namespace Core
 		ScriptComponent *getScriptByTag(const std::string &tag);
 		void playAnimation(const std::string &name);
 		void stopAnimation();
+		void setViewCenter(float x, float y);
 
 		void setReg(const std::string &reg, int value);
 		int getReg(const std::string &reg);

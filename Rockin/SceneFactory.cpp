@@ -13,6 +13,12 @@ namespace Core
 		readSceneData();
 	}
 
+	void SceneFactory::buildScene()
+	{
+		if (m_sceneData.size() > 0) buildScene(m_sceneData[0].name);
+		else std::cerr << "WARNING: Default scene data not found.\n";
+	}
+
 	void SceneFactory::buildScene(const std::string &name)
 	{
 		NewSceneEvent nse;

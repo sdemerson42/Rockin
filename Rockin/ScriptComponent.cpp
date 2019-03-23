@@ -7,6 +7,7 @@
 #include "RenderComponent.h"
 #include "Sim.h"
 #include "CoreEntity.h"
+#include "Events.h"
 
 namespace Core
 {
@@ -179,6 +180,11 @@ namespace Core
 		ac->stop();
 	}
 
+	void ScriptComponent::setViewCenter(float x, float y)
+	{
+		SetViewCenterEvent sve{ x,y };
+		broadcast(&sve);
+	}
 
 
 	void ScriptComponent::setReg(const std::string &reg, int val)

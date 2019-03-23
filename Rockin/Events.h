@@ -40,4 +40,15 @@ namespace Core
 		std::vector<std::string> layer;
 		std::vector<bool> isStatic;
 	};
+
+	struct SetViewCenterEvent : public sde::EventBase
+	{
+		SetViewCenterEvent()
+		{}
+		SetViewCenterEvent(float _x, float _y) :
+			x{ _x }, y{ _y }
+		{}
+		float x;
+		float y;
+	};
 }
