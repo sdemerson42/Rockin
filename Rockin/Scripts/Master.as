@@ -37,7 +37,7 @@ void Master_onCollision(ScriptComponent @p, Entity @collider)
 void Master_incScore(ScriptComponent @p)
 {
 	p.modReg("score", 1);
-	p.log("Score: " + p.getReg("score"));
+	p.setTextString("Score: " + p.getReg("score"));
 }
 
 void Master_explosion(ScriptComponent @p)

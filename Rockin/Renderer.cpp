@@ -3,6 +3,7 @@
 #include "TransformComponent.h"
 #include "CoreEntity.h"
 #include <iostream>
+#include "TextComponent.h"
 
 namespace Core
 {
@@ -33,7 +34,7 @@ namespace Core
 
 			if (m_texureMap.find(rc->m_texFile) == std::end(m_texureMap))
 			{
-				m_texureMap[rc->m_texFile].loadFromFile("Assets/" + rc->m_texFile + ".png");
+				m_texureMap[rc->m_texFile].loadFromFile("Assets/Textures/" + rc->m_texFile + ".png");
 				m_layerMap[rc->m_layer].vaMap[&m_texureMap[rc->m_texFile]].setPrimitiveType(sf::Quads);
 			}
 
@@ -67,6 +68,18 @@ namespace Core
 			va.append(sf::Vertex{ sf::Vector2f{ x, y + h }, sf::Vector2f{ tx, ty + h } });
 		}
 
+		// Add TextComponents
+
+		sz = sde::AutoList<TextComponent>::size();
+		for (int i = 0; i < sz; ++i)
+		{
+			auto txc = sde::AutoList<TextComponent>::get(i);
+			if (!txc->active()) continue;
+			const auto &txcParentPos = txc->parent()->position();
+			txc->m_text.setPosition(txcParentPos.x + txc->m_offset.x, txcParentPos.y + txc->m_offset.y);
+			m_layerMap[txc->m_layer].text.push_back(&txc->m_text);
+		}
+
 		m_window->clear(sf::Color::Black);
 		
 		// Draw layers in proper order
@@ -74,6 +87,9 @@ namespace Core
 		for (const auto &layerName : m_layerOrder)
 		{
 			auto &ld = m_layerMap[layerName];
+
+			// Draw vertices
+
 			for (auto &pr : ld.vaMap)
 			{
 				m_states.texture = pr.first;
@@ -84,6 +100,16 @@ namespace Core
 				m_window->draw(pr.second, m_states);
 				pr.second.clear();
 			}
+
+			// Draw text
+
+			for (auto txp : ld.text)
+			{
+				if (ld.isStatic) m_window->setView(m_window->getDefaultView());
+				else m_window->setView(m_view);
+				m_window->draw(*txp);
+			}
+			ld.text.clear();
 		}
 	
 		m_window->display();

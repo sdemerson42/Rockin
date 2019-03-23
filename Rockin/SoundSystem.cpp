@@ -16,9 +16,9 @@ namespace Core
 		// Load sound buffers
 
 		m_buffer["Laser"] = sf::SoundBuffer{};
-		m_buffer["Laser"].loadFromFile("Assets/Laser.wav");
+		m_buffer["Laser"].loadFromFile("Assets/Sounds/Laser.wav");
 		m_buffer["Boom"] = sf::SoundBuffer{};
-		m_buffer["Boom"].loadFromFile("Assets/Boom.wav");
+		m_buffer["Boom"].loadFromFile("Assets/Sounds/Boom.wav");
 	}
 
 	void SoundSystem::execute()

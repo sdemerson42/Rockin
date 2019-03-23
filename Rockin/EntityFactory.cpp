@@ -8,6 +8,7 @@
 #include "PhysicsComponent.h"
 #include "ScriptComponent.h"
 #include "AnimationComponent.h"
+#include "TextComponent.h"
 
 namespace Core
 {
@@ -84,6 +85,14 @@ namespace Core
 					a.frame.push_back(frame);
 				}
 				ac->addAnimation(a);
+			}
+			else if (data.component == "Text")
+			{
+				e->addComponent<TextComponent>(e, data.valuePair[0].value, data.valuePair[1].value,
+					layer, std::stof(data.valuePair[2].value),
+					std::stof(data.valuePair[3].value), std::stoi(data.valuePair[4].value),
+					std::stoi(data.valuePair[5].value), std::stoi(data.valuePair[6].value),
+					std::stoi(data.valuePair[7].value), std::stoi(data.valuePair[8].value));
 			}
 		}
 		e->setActive(active);

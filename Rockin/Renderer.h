@@ -23,6 +23,7 @@ namespace Core
 		{
 			bool isStatic;
 			std::map<sf::Texture *, sf::VertexArray> vaMap;
+			std::vector<sf::Text *> text;
 		};
 		std::map<std::string, LayerData> m_layerMap;
 		std::vector<std::string> m_layerOrder;

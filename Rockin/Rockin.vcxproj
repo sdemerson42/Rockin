@@ -167,6 +167,7 @@
     <ClCompile Include="ScriptSystem.cpp" />
     <ClCompile Include="Sim.cpp" />
     <ClCompile Include="SoundSystem.cpp" />
+    <ClCompile Include="TextComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationComponent.h" />
@@ -185,6 +186,7 @@
     <ClInclude Include="ScriptSystem.h" />
     <ClInclude Include="Sim.h" />
     <ClInclude Include="SoundSystem.h" />
+    <ClInclude Include="TextComponent.h" />
     <ClInclude Include="TransformComponent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

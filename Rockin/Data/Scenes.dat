@@ -2,7 +2,7 @@ Scene1
 {
 Layer {main, free}
 Layer {overlay, static}
-Entity {Master, 1, true, main, 0.0, 0.0}
+Entity {Master, 1, true, overlay, 0.0, 0.0}
 Entity {P1, 1, false, main}
 Entity {Meteor, 10, false, main}
 Entity {SmallMeteor, 10, false, main}

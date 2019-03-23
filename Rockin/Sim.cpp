@@ -129,6 +129,8 @@ namespace Core
 			asMETHOD(ScriptComponent, ScriptComponent::stopAnimation), asCALL_THISCALL);
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void setViewCenter(float x, float y)",
 			asMETHOD(ScriptComponent, ScriptComponent::setViewCenter), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void setTextString(const string &in)",
+			asMETHOD(ScriptComponent, ScriptComponent::setTextString), asCALL_THISCALL);
 
 	}
 

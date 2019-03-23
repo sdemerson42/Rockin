@@ -31,6 +31,7 @@ Master
 {
 Tag{Master}
 Script{Master}
+Text{Score, sansation, 0.0, 0.0, 50, 200, 15, 15, 255}
 }
 
 Laser

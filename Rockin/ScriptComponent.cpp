@@ -5,6 +5,7 @@
 #include "PhysicsComponent.h"
 #include "AnimationComponent.h"
 #include "RenderComponent.h"
+#include "TextComponent.h"
 #include "Sim.h"
 #include "CoreEntity.h"
 #include "Events.h"
@@ -184,6 +185,12 @@ namespace Core
 	{
 		SetViewCenterEvent sve{ x,y };
 		broadcast(&sve);
+	}
+
+	void ScriptComponent::setTextString(const std::string &s)
+	{
+		auto tc = parent()->getComponent<TextComponent>();
+		if (tc) tc->setString(s);
 	}
 
 
