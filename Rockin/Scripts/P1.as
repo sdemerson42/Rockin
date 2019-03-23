@@ -27,7 +27,7 @@ void P1_main(ScriptComponent @p)
 			}
 		}	
 		p.suspend();
-	}	
+	}
 }
 
 

@@ -8,7 +8,7 @@ void Master_main(ScriptComponent @p)
 	clouds.setPosition(0.0, 0.0);
 	@clouds = p.spawn("Clouds");
 	clouds.setPosition(0.0, -600.0);
-
+	
 	while(true)
 	{
 		p.suspend(50);

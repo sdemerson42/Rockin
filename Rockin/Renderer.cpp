@@ -15,6 +15,13 @@ namespace Core
 
 	void Renderer::execute()
 	{
+		// View dimensions
+
+		float viewL = m_view.getCenter().x - m_view.getSize().x / 2.0f;
+		float viewR = m_view.getCenter().x + m_view.getSize().x / 2.0f;
+		float viewT = m_view.getCenter().y - m_view.getSize().y / 2.0f;
+		float viewB = m_view.getCenter().y + m_view.getSize().y / 2.0f;
+
 		auto sz = sde::AutoList<RenderComponent>::size();
 		for (size_t i = 0; i < sz; ++i)
 		{
@@ -28,6 +35,19 @@ namespace Core
 			{
 				m_texureMap[rc->m_texFile].loadFromFile("Assets/" + rc->m_texFile + ".png");
 				m_layerMap[rc->m_layer].vaMap[&m_texureMap[rc->m_texFile]].setPrimitiveType(sf::Quads);
+			}
+
+			// Exclude from the vertex array if out of view
+
+			if (!m_layerMap[rc->m_layer].isStatic)
+			{
+				float entL = tc->position().x;
+				float entR = entL + rc->m_tSize.x;
+				float entT = tc->position().y;
+				float entB = entT + rc->m_tSize.y;
+
+				if (entR < viewL || entL > viewR ||
+					entB < viewT || entT > viewB) continue;
 			}
 
 			// Fill vertex array in proper layer / texture
@@ -50,7 +70,7 @@ namespace Core
 		m_window->clear(sf::Color::Black);
 		
 		// Draw layers in proper order
-
+		
 		for (const auto &layerName : m_layerOrder)
 		{
 			auto &ld = m_layerMap[layerName];
