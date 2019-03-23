@@ -45,33 +45,9 @@ namespace Core
 
 		// Create and prepare SceneFactory
 
-		m_sceneFactory = std::make_unique<SceneFactory>(m_entityFactory.get());
+		m_sceneFactory = std::make_unique<SceneFactory>(m_entityFactory.get(), &m_entity);
 
-		// Test Entities
-
-		m_entityFactory->createEntity("Master", true);
-		m_entityFactory->createEntity("P1");
-		for (int i = 0; i < 10; ++i)
-		{
-			m_entityFactory->createEntity("Meteor");
-			m_entityFactory->createEntity("SmallMeteor");
-		}
-		for (int i = 0; i < 5; ++i)
-		{
-			m_entityFactory->createEntity("Laser");
-		}
-
-		for (int i = 0; i < 30; ++i)
-		{
-			m_entityFactory->createEntity("Debris");
-		}
-
-		m_entityFactory->createEntity("LeftWall", true);
-		auto p = m_entity.back().get();
-		p->setPosition(-20.0f, 0.0f);
-		m_entityFactory->createEntity("RightWall", true);
-		p = m_entity.back().get();
-		p->setPosition(800.0f, 0.0f);
+		m_sceneFactory->buildScene("Scene1");
 	}
 
 	Sim::~Sim()

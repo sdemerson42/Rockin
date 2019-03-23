@@ -1,12 +1,61 @@
 #include "SceneFactory.h"
+#include "CoreEntity.h"
 #include <iostream>
+#include "Events.h"
+#include <algorithm>
+#include "EntityFactory.h"
 
 namespace Core
 {
-	SceneFactory::SceneFactory(EntityFactory *eFactory) :
-		m_eFactory{ eFactory }
+	SceneFactory::SceneFactory(EntityFactory *eFactory, std::vector<std::unique_ptr<CoreEntity>> *eVec) :
+		m_eFactory{ eFactory }, m_eVec{ eVec }
 	{
 		readSceneData();
+	}
+
+	void SceneFactory::buildScene(const std::string &name)
+	{
+		NewSceneEvent nse;
+		
+		// TO-DO: persistence
+
+		m_eVec->clear();
+
+		// Find SceneData
+
+		auto sd = std::find_if(std::begin(m_sceneData), std::end(m_sceneData), [&](const SceneData &sd)
+		{
+			return sd.name == name;
+		});
+		if (sd == std::end(m_sceneData))
+		{
+			std::cerr << "WARNING: Scene not found. Construction aborted.\n";
+			return;
+		}
+
+		// Get layer data
+
+		for (const LayerData &ld : sd->layer)
+		{
+			nse.layer.push_back(ld.name);
+			nse.isStatic.push_back(ld.isStatic);
+		}
+
+		// Create entities
+
+		for (const EntityData &ed : sd->entity)
+		{
+			for (int i = 0; i < ed.total; ++i)
+			{
+				m_eFactory->createEntity(ed.name, ed.active, ed.layer, ed.x, ed.y);
+			}
+		}
+
+		// Broadcast NewSceneEvent
+
+		broadcast(&nse);
+
+		std::cout << name << " built successfully.\n";
 	}
 
 	void SceneFactory::readSceneData()

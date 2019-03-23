@@ -9,25 +9,29 @@ namespace Core
 	Renderer::Renderer(sf::RenderWindow *window, const std::string &texF) :
 		m_window{ window }
 	{
-		m_texture.loadFromFile(texF);
-		m_states.texture = &m_texture;
-
 		registerFunc(this, &Renderer::onNewScene);
 	}
 
 	void Renderer::execute()
 	{
-		sf::VertexArray va;
-		va.setPrimitiveType(sf::PrimitiveType::Quads);
 		auto sz = sde::AutoList<RenderComponent>::size();
-
 		for (size_t i = 0; i < sz; ++i)
 		{
 			auto rc = sde::AutoList<RenderComponent>::get(i);
 			if (!rc->active()) continue;
-
 			auto tc = rc->parent()->getComponent<TransformComponent>();
-			if (tc == nullptr) continue;
+
+			// Load texture if necessary
+
+			if (m_texureMap.find(rc->m_texFile) == std::end(m_texureMap))
+			{
+				m_texureMap[rc->m_texFile].loadFromFile("Assets/" + rc->m_texFile + ".png");
+				m_layerMap[rc->m_layer].vaMap[&m_texureMap[rc->m_texFile]].setPrimitiveType(sf::Quads);
+			}
+
+			// Fill vertex array in proper layer / texture
+
+			sf::VertexArray &va = m_layerMap[rc->m_layer].vaMap[&m_texureMap[rc->m_texFile]];
 
 			float x = tc->position().x;
 			float y = tc->position().y;
@@ -43,13 +47,31 @@ namespace Core
 		}
 
 		m_window->clear(sf::Color::Black);
-		m_window->draw(va, m_states);
+		
+		// Draw layers in proper order
+
+		for (const auto &layerName : m_layerOrder)
+		{
+			auto &ld = m_layerMap[layerName];
+			for (auto &pr : ld.vaMap)
+			{
+				m_states.texture = pr.first;
+				m_window->draw(pr.second, m_states);
+				pr.second.clear();
+			}
+		}
+	
 		m_window->display();
 	}
 
 	void Renderer::onNewScene(const NewSceneEvent *event)
 	{
-		for (const auto &s : event->layer)
-			std::cout << s << "\n";
+		m_layerMap.clear();
+		m_layerOrder.clear();
+		for (int i = 0; i < event->isStatic.size(); ++i)
+		{
+			m_layerOrder.push_back(event->layer[i]);
+			m_layerMap[event->layer[i]].isStatic = event->isStatic[i];
+		}
 	}
 }

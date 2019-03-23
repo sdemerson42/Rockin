@@ -3,15 +3,19 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <memory>
+#include "sde.h"
 
 namespace Core
 {
 	class EntityFactory;
-	
-	class SceneFactory
+	class CoreEntity;
+
+	class SceneFactory : public sde::EventHandler
 	{
 	public:
-		SceneFactory(EntityFactory *eFactory);
+		SceneFactory(EntityFactory *eFactory, std::vector<std::unique_ptr<CoreEntity>> *eVec);
+		void buildScene(const std::string &name);
 	private:
 		struct EntityData
 		{
@@ -34,7 +38,9 @@ namespace Core
 			std::vector<EntityData> entity;
 		};
 		std::vector<SceneData> m_sceneData;
+		
 		EntityFactory *m_eFactory;
+		std::vector<std::unique_ptr<CoreEntity>> *m_eVec;
 
 		void readSceneData();
 		bool readScene(std::istream &ist, SceneData &sd);
