@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include "Events.h"
 #include "sde.h"
 
 namespace Core
@@ -37,6 +38,8 @@ namespace Core
 			std::string name;
 			std::vector<LayerData> layer;
 			std::vector<EntityData> entity;
+			sf::Vector2i sceneSize;
+			sf::Vector2i cellSize;
 		};
 		std::vector<SceneData> m_sceneData;
 		

@@ -57,6 +57,9 @@ namespace Core
 			}
 		}
 
+		nse.sceneSize = sd->sceneSize;
+		nse.cellSize = sd->cellSize;
+
 		// Broadcast NewSceneEvent
 
 		broadcast(&nse);
@@ -173,6 +176,22 @@ namespace Core
 				t = nextToken(ist);
 				ed.y = std::stof(t);
 				sd.entity.push_back(ed);
+				t = nextToken(ist);
+			}
+			else if (t == "Physics")
+			{
+				t = nextToken(ist);
+				t = nextToken(ist);
+				sd.sceneSize.x = std::stoi(t);
+				t = nextToken(ist);
+				t = nextToken(ist);
+				sd.sceneSize.y = std::stoi(t);
+				t = nextToken(ist);
+				t = nextToken(ist);
+				sd.cellSize.x = std::stoi(t);
+				t = nextToken(ist);
+				t = nextToken(ist);
+				sd.cellSize.y = std::stoi(t);
 				t = nextToken(ist);
 			}
 			else if (t == "}")

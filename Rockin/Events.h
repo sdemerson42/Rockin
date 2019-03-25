@@ -39,6 +39,8 @@ namespace Core
 	{
 		std::vector<std::string> layer;
 		std::vector<bool> isStatic;
+		sf::Vector2i sceneSize;
+		sf::Vector2i cellSize;
 	};
 
 	struct SetViewCenterEvent : public sde::EventBase

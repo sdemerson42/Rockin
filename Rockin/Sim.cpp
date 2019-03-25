@@ -166,7 +166,7 @@ namespace Core
 
 			// Main loop
 
-			if (clock.getElapsedTime().asMilliseconds() > framerate)
+             			if (clock.getElapsedTime().asMilliseconds() > framerate)
 			{
 				// Execute Systems
 

@@ -1,5 +1,6 @@
 Scene1
 {
+Physics {800, 600, 100, 100}
 Layer {main, free}
 Layer {overlay, static}
 Entity {Master, 1, true, overlay, 0.0, 0.0}
@@ -9,6 +10,6 @@ Entity {SmallMeteor, 10, false, main}
 Entity {Laser, 5, false, main}
 Entity {Debris, 30, false, main}
 Entity {LeftWall, 1, true, main, -20.0, 0.0}
-Entity {RightWall, 1, true, main, 800.0, 0.0}
+Entity {RightWall, 1, true, main, 799.0, 0.0}
 Entity {Clouds, 2, false, overlay}
 }

@@ -2,22 +2,55 @@
 #include "PhysicsComponent.h"
 #include "TransformComponent.h"
 #include "ScriptComponent.h"
-#include "Events.h"
 #include "CoreEntity.h"
 #include <algorithm>
+#include <iostream>
 
 namespace Core
 {
-	
+	Physics::Physics()
+	{
+		registerFunc(this, &Physics::onNewScene);
+	}
+
 	void Physics::execute()
 	{
-		m_comp.clear();
-		m_staticComp.clear();
+		m_collisionPair.clear();
+		for (auto &vv : m_pcNonstaticMap)
+		{
+			for (auto &v : vv)
+			{
+				v.clear();
+			}
+		}
+
+		auto sz = sde::AutoList<PhysicsComponent>::size();
+		for (size_t i = 0; i < sz; ++i)
+		{
+			auto pc = sde::AutoList<PhysicsComponent>::get(i);
+			if (!pc->m_static && pc->active() && !pc->m_noCollision) proxPlace(pc, m_pcNonstaticMap);
+		}
+		
 		m_messageGroup.clear();
 
 		applyMomentum();
-		processStatics();
-		resolveCollisions();
+
+		for (int i = 0; i < m_pcStaticMap.size(); ++i)
+		{
+			for (int j = 0; j < m_pcStaticMap[0].size(); ++j)
+			{
+				processStatics(m_pcStaticMap[i][j], m_pcNonstaticMap[i][j]);
+			}
+		}
+
+		for (int i = 0; i < m_pcNonstaticMap.size(); ++i)
+		{
+			for (int j = 0; j < m_pcNonstaticMap[0].size(); ++j)
+			{
+				resolveCollisions(m_pcNonstaticMap[i][j]);
+			}
+		}
+	
 		sendCollisionEvents();
 	}
 
@@ -27,39 +60,36 @@ namespace Core
 		for (size_t i = 0; i < sz; ++i)
 		{
 			auto pc = sde::AutoList<PhysicsComponent>::get(i);
-			if (!pc->active()) continue;
-
-			if (!pc->m_static)
+			if (pc->active() && !pc->m_static)
 			{
 				auto e = pc->parent();
 				float x = e->position().x + pc->m_momentum.x;
 				float y = e->position().y + pc->m_momentum.y;
 				e->setPosition(x, y);
 			}
-
-			if (pc->m_noCollision) continue;
-
-			if (pc->m_static) m_staticComp.push_back(pc);
-			else m_comp.push_back(pc);
 		}
 	}
 
-	void Physics::resolveCollisions()
+	void Physics::resolveCollisions(std::vector<PhysicsComponent *> &v)
 	{
-		for (size_t i = 0; i < m_comp.size(); ++i)
+		for (size_t i = 0; i < v.size(); ++i)
 		{
-			auto a = m_comp[i];
-			for (size_t k = i + 1; k < m_comp.size(); ++k)
+			auto a = v[i];
+			for (size_t k = i + 1; k <v.size(); ++k)
 			{
-				auto b = m_comp[k];
+				auto b = v[k];
 				// Escape conditions
+
+				CollisionPair cp{ a,b };
+				if (std::find(std::begin(m_collisionPair), std::end(m_collisionPair), cp) != std::end(m_collisionPair)) continue;
+				m_collisionPair.push_back(cp);
 
 				if (a->m_momentum.x == 0.0f && a->m_momentum.y == 0.0f &&
 					b->m_momentum.x == 0.0f && b->m_momentum.y == 0.0f)
 					continue;
 
 				if (a->m_inverseMass == 0.0f && b->m_inverseMass == 0.0f) continue;
-
+			
 				Collision collision{ a, b };
 				if (detectCollision(&collision))
 				{
@@ -147,24 +177,26 @@ namespace Core
 		return false;
 	}
 
-	void Physics::processStatics()
+	void Physics::processStatics(std::vector<PhysicsComponent *> &sv, std::vector<PhysicsComponent *> &nsv)
 	{
 		// For collisions involving static objects,
 		// process axis by axis and adjust position accordingly.
 
 		// X
 
-		for (int i = 0; i < m_comp.size(); ++i)
+		for (int i = 0; i < nsv.size(); ++i)
 		{
-			auto a = m_comp[i];
+			auto a = nsv[i];
 			auto atc = a->parent()->getComponent<TransformComponent>();
-			if (!atc) continue;
-			for (int j = 0; j < m_staticComp.size(); ++j)
+			for (int j = 0; j < sv.size(); ++j)
 			{
-				auto b = m_staticComp[j];
+				auto b = sv[j];
 				auto btc = b->parent()->getComponent<TransformComponent>();
-				if (!btc) continue;
-
+				
+				CollisionPair cp{ a,b };
+				if (std::find(std::begin(m_collisionPair), std::end(m_collisionPair), cp) != std::end(m_collisionPair)) continue;
+				m_collisionPair.push_back(cp);
+				
 				float e = (a->m_elasticity + b->m_elasticity) / 2.0f;
 
 				sf::Vector2f aBoxPos{ atc->position().x + a->m_AABBOffset.x, atc->position().y + a->m_AABBOffset.y - a->m_momentum.y };
@@ -196,14 +228,14 @@ namespace Core
 
 		// Y
 
-		for (int i = 0; i < m_comp.size(); ++i)
+		for (int i = 0; i < nsv.size(); ++i)
 		{
-			auto a = m_comp[i];
+			auto a = nsv[i];
 			auto atc = a->parent()->getComponent<TransformComponent>();
-			if (!atc) continue;
-			for (int j = 0; j < m_staticComp.size(); ++j)
+			
+			for (int j = 0; j < sv.size(); ++j)
 			{
-				auto b = m_staticComp[j];
+				auto b = sv[j];
 				auto btc = b->parent()->getComponent<TransformComponent>();
 				if (!btc) continue;
 
@@ -265,6 +297,57 @@ namespace Core
 				ce.receiver = bsc;
 				broadcast(&ce);
 			}
+		}
+	}
+
+	void Physics::proxPlace(PhysicsComponent *pc, std::vector<std::vector<std::vector<PhysicsComponent *>>> &v)
+	{
+		int l = (int)pc->parent()->position().x + (int)pc->m_AABBOffset.x;
+		int t = (int)pc->parent()->position().y + (int)pc->m_AABBOffset.y;
+		int r = l + (int)pc->m_AABBSize.x + (int)pc->m_momentum.x + 1;
+		int b = t + (int)pc->m_AABBSize.y + (int)pc->m_momentum.y + 1;
+
+		int xSz = v.size();
+		int ySz = v[0].size();
+
+		int xMin = std::max(0, l / m_cellSize.x);
+		int xMax = std::min(r / m_cellSize.y, xSz - 1);
+		int yMin = std::max(0, t / m_cellSize.y);
+		int yMax = std::min(b / m_cellSize.y, ySz - 1);
+
+		for (int i = xMin; i <= xMax; ++i)
+		{
+			for (int j = yMin; j <= yMax; ++j)
+			{
+				v[i][j].push_back(pc);
+			}
+		}
+	}
+
+	void Physics::onNewScene(const NewSceneEvent *event)
+	{
+		m_cellSize = event->cellSize;
+		m_pcStaticMap.clear();
+		m_pcNonstaticMap.clear();
+
+		int xSize = event->sceneSize.x / event->cellSize.x +
+			(event->sceneSize.x % event->cellSize.x == 0 ? 0 : 1);
+		int ySize = event->sceneSize.y / event->cellSize.y +
+			(event->sceneSize.y % event->cellSize.y == 0 ? 0 : 1);
+
+		m_pcNonstaticMap.resize(xSize);
+		for (auto &vv : m_pcNonstaticMap) vv.resize(ySize);
+
+		m_pcStaticMap.resize(xSize);
+		for (auto &vv : m_pcStaticMap) vv.resize(ySize);
+
+		// Add statics to map
+
+		auto sz = sde::AutoList<PhysicsComponent>::size();
+		for (size_t i = 0; i < sz; ++i)
+		{
+			auto pc = sde::AutoList<PhysicsComponent>::get(i);
+			if (pc->m_static) proxPlace(pc, m_pcStaticMap);
 		}
 	}
 }
