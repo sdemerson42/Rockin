@@ -35,7 +35,6 @@ namespace Core
 			if (m_texureMap.find(rc->m_texFile) == std::end(m_texureMap))
 			{
 				m_texureMap[rc->m_texFile].loadFromFile("Assets/Textures/" + rc->m_texFile + ".png");
-				m_layerMap[rc->m_layer].vaMap[&m_texureMap[rc->m_texFile]].setPrimitiveType(sf::Quads);
 			}
 
 			// Exclude from the vertex array if out of view
@@ -54,6 +53,7 @@ namespace Core
 			// Fill vertex array in proper layer / texture
 
 			sf::VertexArray &va = m_layerMap[rc->m_layer].vaMap[&m_texureMap[rc->m_texFile]];
+			va.setPrimitiveType(sf::PrimitiveType::Quads);
 
 			float x = tc->position().x;
 			float y = tc->position().y;
@@ -80,7 +80,7 @@ namespace Core
 			m_layerMap[txc->m_layer].text.push_back(&txc->m_text);
 		}
 
-		m_window->clear(sf::Color::Black);
+		m_window->clear();
 		
 		// Draw layers in proper order
 		
