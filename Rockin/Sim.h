@@ -24,7 +24,6 @@ namespace Core
 	private:
 		void systemsSetup();
 		void scriptEngineSetup();
-		void compileScripts();
 
 		std::vector<std::unique_ptr<CoreEntity>> m_entity;
 		std::vector<std::unique_ptr<sde::ISystem>> m_system;

@@ -1,5 +1,6 @@
 void Master_main(ScriptComponent @p)
 {
+	p.log("Master OK");
 	p.setReg("score", 0);
 	auto p1Handle = p.spawn("P1");
 	p1Handle.setPosition(390.0, 568.0);

@@ -10,7 +10,7 @@ namespace Core
 	{
 		if (m_sFont.find(fontFile) == std::end(m_sFont))
 		{
-			m_sFont[fontFile].loadFromFile("Assets/Fonts/" + fontFile + ".ttf");
+			m_sFont[fontFile].loadFromFile(fontFile);
 		}
 		m_text.setString(s);
 		m_text.setFont(m_sFont[fontFile]);

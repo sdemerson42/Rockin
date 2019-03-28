@@ -12,7 +12,6 @@
 #include "ScriptComponent.h"
 #include "AnimationComponent.h"
 
-#include "../../add_on/scriptbuilder/scriptbuilder.h"
 #include "../../add_on/scriptstdstring/scriptstdstring.h"
 
 #include <iostream>
@@ -26,17 +25,9 @@ namespace Core
 		m_window{ sf::VideoMode{w, h}, name }
 	{
 
-		// Create Systems
-
-		systemsSetup();
-
 		// Create and prepare script engine
 
 		scriptEngineSetup();
-
-		// Compile scripts
-
-		compileScripts();
 
 		// Create and prepare EntityFactory
 
@@ -46,6 +37,10 @@ namespace Core
 		// Create and prepare SceneFactory
 
 		m_sceneFactory = std::make_unique<SceneFactory>(m_entityFactory.get(), &m_entity);
+
+		// Create Systems
+
+		systemsSetup();
 
 		m_sceneFactory->buildScene();
 	}
@@ -67,9 +62,9 @@ namespace Core
 
 	void Sim::scriptEngineSetup()
 	{
-		ScriptComponent::setSim(this);
-
 		m_scriptEngine = asCreateScriptEngine();
+
+		ScriptComponent::setSim(this);
 
 		RegisterStdString(m_scriptEngine);
 
@@ -132,23 +127,6 @@ namespace Core
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void setTextString(const string &in)",
 			asMETHOD(ScriptComponent, ScriptComponent::setTextString), asCALL_THISCALL);
 
-	}
-
-	void Sim::compileScripts()
-	{
-		CScriptBuilder builder;
-		builder.StartNewModule(m_scriptEngine, "Behavior");
-
-		std::ifstream ifs{ "Data/Scripts.dat" };
-		while(true)
-		{
-			std::string fName;
-			ifs >> fName;
-			if (!ifs) break;
-			builder.AddSectionFromFile(fName.c_str());
-		}
-
-		builder.BuildModule();
 	}
 
 	void Sim::execute()

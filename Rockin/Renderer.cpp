@@ -34,7 +34,7 @@ namespace Core
 
 			if (m_texureMap.find(rc->m_texFile) == std::end(m_texureMap))
 			{
-				m_texureMap[rc->m_texFile].loadFromFile("Assets/Textures/" + rc->m_texFile + ".png");
+				m_texureMap[rc->m_texFile].loadFromFile(rc->m_texFile);
 			}
 
 			// Exclude from the vertex array if out of view

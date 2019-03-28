@@ -214,6 +214,7 @@ namespace Core
 		std::string token;
 		char c = ' ';
 		char type;
+		bool quotes{ false };
 
 		// Skip whitespace and newline...
 		while (' ' == c || '\n' == c)
@@ -229,13 +230,19 @@ namespace Core
 		// Deduce token type
 
 		if (isalpha(c)) type = 's';
+		else if (c == '\"')
+		{
+			type = 's';
+			quotes = true;
+		}
 		else if (isdigit(c) || c == '-' || c == '.') type = '#';
 		else
 		{
 			token += c;
 			return token;
 		}
-		token += c;
+		if (c != '\"')
+			token += c;
 
 		while (true)
 		{
@@ -247,11 +254,22 @@ namespace Core
 
 			if ('s' == type)
 			{
-				if (isalnum(c)) token += c;
+				if (quotes)
+				{
+					if (c == '\"')
+					{
+						break;
+					}
+					token += c;
+				}
 				else
 				{
-					ist.putback(c);
-					break;
+					if (isalnum(c)) token += c;
+					else
+					{
+						ist.putback(c);
+						break;
+					}
 				}
 			}
 			else if ('#' == type)
@@ -268,4 +286,4 @@ namespace Core
 		}
 		return token;
 	}
-};
+}

@@ -10,6 +10,8 @@
 #include "AnimationComponent.h"
 #include "TextComponent.h"
 
+#include "../../add_on/scriptbuilder/scriptbuilder.h"
+
 namespace Core
 {
 	EntityFactory::EntityFactory(std::vector<std::unique_ptr<CoreEntity>> *eVec, asIScriptEngine *engine) :
@@ -114,6 +116,18 @@ namespace Core
 				break;
 			m_blueprint.push_back(bp);
 		}
+
+		// Compile scripts
+
+		CScriptBuilder builder;
+		builder.StartNewModule(m_engine, "Behavior");
+
+		for (const auto &fName : m_compiledScripts)
+		{
+			builder.AddSectionFromFile(fName.c_str());
+		}
+
+		builder.BuildModule();
 	}
 
 	bool EntityFactory::readBlueprint(std::istream &ist, Blueprint &bp)
@@ -164,6 +178,14 @@ namespace Core
 				ComponentData cd;
 				cd.component = token;
 				if (readComponentData(ist, cd)) bp.data.push_back(cd);
+
+				// Add script path if necessary
+
+				if (cd.component == "Script")
+				{
+					if (std::find(std::begin(m_compiledScripts), std::end(m_compiledScripts), cd.valuePair[1].value) == std::end(m_compiledScripts))
+						m_compiledScripts.push_back(cd.valuePair[1].value);
+				}
 			}
 		}
 
@@ -213,6 +235,7 @@ namespace Core
 		std::string token;
 		char c = ' ';
 		char type;
+		bool quotes{ false };
 
 		// Skip whitespace and newline...
 		while (' ' == c || '\n' == c)
@@ -226,15 +249,21 @@ namespace Core
 		}
 
 		// Deduce token type
-		
+
 		if (isalpha(c)) type = 's';
+		else if (c == '\"')
+		{
+			type = 's';
+			quotes = true;
+		}
 		else if (isdigit(c) || c == '-' || c == '.') type = '#';
 		else
 		{
 			token += c;
 			return token;
 		}
-		token += c;
+		if (c != '\"')
+			token += c;
 
 		while (true)
 		{
@@ -246,11 +275,22 @@ namespace Core
 
 			if ('s' == type)
 			{
-				if (isalnum(c)) token += c;
+				if (quotes)
+				{
+					if (c == '\"')
+					{
+						break;
+					}
+					token += c;
+				}
 				else
 				{
-					ist.putback(c);
-					break;
+					if (isalnum(c)) token += c;
+					else
+					{
+						ist.putback(c);
+						break;
+					}
 				}
 			}
 			else if ('#' == type)
@@ -259,6 +299,8 @@ namespace Core
 				else
 				{
 					ist.putback(c);
+					if (token[0] == '.') token = "0" + token;
+					else if (token[0] == '-' && token[1] == '.') token.insert(std::begin(token) + 1, '0');
 					break;
 				}
 			}
