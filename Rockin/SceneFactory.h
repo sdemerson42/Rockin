@@ -41,13 +41,23 @@ namespace Core
 			sf::Vector2i sceneSize;
 			sf::Vector2i cellSize;
 		};
+		struct TilesetData
+		{
+			std::string name;
+			std::string texture;
+			sf::Vector2i textureSize;
+			sf::Vector2i tileSize;
+			std::vector<int> staticTile;
+		};
 		std::vector<SceneData> m_sceneData;
-		
+		std::vector<TilesetData> m_tilesetData;
+
 		EntityFactory *m_eFactory;
 		std::vector<std::unique_ptr<CoreEntity>> *m_eVec;
 
 		void readSceneData();
 		bool readScene(std::istream &ist, SceneData &sd);
+		void readTilesetData();
 		std::string nextToken(std::istream &ist);
 	};
 }

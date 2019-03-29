@@ -11,6 +11,7 @@ namespace Core
 		m_eFactory{ eFactory }, m_eVec{ eVec }
 	{
 		readSceneData();
+		readTilesetData();
 	}
 
 	void SceneFactory::buildScene()
@@ -204,9 +205,49 @@ namespace Core
 				return false;
 			}
 		}
+	}
 
+	void SceneFactory::readTilesetData()
+	{
+		std::ifstream ifs{ "Data/Tilesets.dat" };
+		if (!ifs)
+		{
+			std::cerr << "WARNING: Tileset data not found.\n";
+			return;
+		}
 
+		while (true)
+		{
+			auto t = nextToken(ifs);
 
+			if (t == " ") break;
+			
+			TilesetData td;
+			td.name = t;
+			nextToken(ifs);
+			td.texture = nextToken(ifs);
+			nextToken(ifs);
+			int x = std::stoi(nextToken(ifs));
+			nextToken(ifs);
+			int y = std::stoi(nextToken(ifs));
+			td.textureSize = { x, y };
+
+			nextToken(ifs);
+			int tx = std::stoi(nextToken(ifs));
+			nextToken(ifs);
+			int ty = std::stoi(nextToken(ifs));
+			td.tileSize = { tx, ty };
+			t = nextToken(ifs);
+			if (t != "}")
+			{
+				do
+				{
+					td.staticTile.push_back(std::stoi(nextToken(ifs)));
+					t = nextToken(ifs);
+				} while (t != "}");
+			}
+			m_tilesetData.push_back(td);
+		}
 	}
 
 	std::string SceneFactory::nextToken(std::istream &ist)
