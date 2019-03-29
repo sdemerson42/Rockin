@@ -76,24 +76,77 @@ namespace Core
 			e->setActive(true);
 			e->setPosition(0.0f, 0.0f);
 
+			// Simplify geometry
+
+			std::vector<sf::IntRect> AABB;
+			int mapX = nse.tilemapSize.x;
+			int mapY = nse.tilemapSize.y;
+			int tileX = nse.tilesetData->tileSize.x;
+			int tileY = nse.tilesetData->tileSize.y;
+			std::vector<std::vector<int>> physMap;
+			physMap.resize(nse.tilemapSize.x);
+			for (auto &v : physMap)
+			{
+				v.resize(nse.tilemapSize.y);
+			}
+
 			for (int i = 0; i < nse.tilemap.size(); ++i)
 			{
 				int tVal = nse.tilemap[i];
 				if (std::find(std::begin(sd->tilesetData->staticTile),
 					std::end(sd->tilesetData->staticTile), tVal) != std::end(sd->tilesetData->staticTile))
 				{
-					int mapX = nse.tilemapSize.x;
-					int mapY = nse.tilemapSize.y;
-					int tileX = nse.tilesetData->tileSize.x;
-					int tileY = nse.tilesetData->tileSize.y;
-					int x = (i % mapX) * tileX;
-					int y = (i / mapX) * tileY;
-					
-					e->addComponent<PhysicsComponent>(e, (float)x, (float)y,
-						(float)tileX, (float)tileY, 0.0f, 0.0f, 0.0f, 0.0f, true, true, false);
+					int x = (i % mapX);
+					int y = (i / mapX);
+					physMap[x][y] = 1;
 				}
 			}
 
+			for (int j = 0; j < nse.tilemapSize.y; ++j)
+			{
+				for (int i = 0; i < nse.tilemapSize.x; ++i)
+				{
+					if (physMap[i][j] == 1)
+					{
+						int m = i + 1;
+						while (m < nse.tilemapSize.x && physMap[m][j] == 1) ++m;
+						int n = j + 1;
+						while (true)
+						{
+							bool rowFlag = true;
+							for (int k = i; k < m; ++k)
+							{
+								if (n >= nse.tilemapSize.y || physMap[k][n] != 1)
+								{
+									rowFlag = false;
+									break;
+								}
+							}
+							if (!rowFlag) break;
+							++n;
+						}
+						// Remove this block from physMap and translate to Physics data
+
+						for (int ii = i; ii < m; ++ii)
+						{
+							for (int jj = j; jj < n; ++jj)
+							{
+								physMap[ii][jj] = -1;
+							}
+						}
+						AABB.push_back(sf::IntRect{ i, j, m - i, n - j });
+					}
+				}
+			}
+
+			// Create PhysicsComponents from data
+
+			for (const auto &aabb : AABB)
+			{
+				e->addComponent<PhysicsComponent>(e, (float)aabb.left * (float)tileX, (float)aabb.top * (float)tileY,
+					(float)aabb.width * (float)tileX, (float)aabb.height * (float)tileY, 
+					0.0f, 0.0f, 0.0f, 0.0f, true, true, false);
+			}
 		}
 		else sd->tilesetData = nullptr;
 
