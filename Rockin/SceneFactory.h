@@ -6,6 +6,7 @@
 #include <memory>
 #include "Events.h"
 #include "sde.h"
+#include "TilesetData.h"
 
 namespace Core
 {
@@ -35,19 +36,18 @@ namespace Core
 		};
 		struct SceneData
 		{
+			SceneData() :
+				tilesetData{ nullptr }
+			{}
 			std::string name;
 			std::vector<LayerData> layer;
 			std::vector<EntityData> entity;
 			sf::Vector2i sceneSize;
 			sf::Vector2i cellSize;
-		};
-		struct TilesetData
-		{
-			std::string name;
-			std::string texture;
-			sf::Vector2i textureSize;
-			sf::Vector2i tileSize;
-			std::vector<int> staticTile;
+			TilesetData *tilesetData;
+			sf::Vector2i tilemapSize;
+			std::vector<int> tilemap;
+			std::string tilemapLayer;
 		};
 		std::vector<SceneData> m_sceneData;
 		std::vector<TilesetData> m_tilesetData;

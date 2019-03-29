@@ -28,6 +28,11 @@ namespace Core
 		std::map<std::string, LayerData> m_layerMap;
 		std::vector<std::string> m_layerOrder;
 
+		sf::RenderTexture m_tilemapRenderTexture;
+		sf::Texture m_tilemapTexture;
+		sf::Sprite m_tilemapSprite;
+		std::string m_tilemapLayer;
+
 		void onNewScene(const NewSceneEvent *event);
 		void onSetCenter(const SetViewCenterEvent *event);
 	};

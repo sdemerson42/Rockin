@@ -4,14 +4,15 @@
 #include "Events.h"
 #include <algorithm>
 #include "EntityFactory.h"
+#include "PhysicsComponent.h"
 
 namespace Core
 {
 	SceneFactory::SceneFactory(EntityFactory *eFactory, std::vector<std::unique_ptr<CoreEntity>> *eVec) :
 		m_eFactory{ eFactory }, m_eVec{ eVec }
 	{
-		readSceneData();
 		readTilesetData();
+		readSceneData();
 	}
 
 	void SceneFactory::buildScene()
@@ -57,6 +58,44 @@ namespace Core
 				m_eFactory->createEntity(ed.name, ed.active, ed.layer, ed.x, ed.y);
 			}
 		}
+
+		// Copy tilemap data if present
+
+		if (sd->tilesetData)
+		{
+			nse.tilesetData = sd->tilesetData;
+			nse.tilemapSize = sd->tilemapSize;
+			nse.tilemap = sd->tilemap;
+			nse.tilemapLayer = sd->tilemapLayer;
+
+			// Create tilemap physics Entity
+
+			m_eVec->push_back(std::make_unique<CoreEntity>());
+			auto e = m_eVec->back().get();
+
+			e->setActive(true);
+			e->setPosition(0.0f, 0.0f);
+
+			for (int i = 0; i < nse.tilemap.size(); ++i)
+			{
+				int tVal = nse.tilemap[i];
+				if (std::find(std::begin(sd->tilesetData->staticTile),
+					std::end(sd->tilesetData->staticTile), tVal) != std::end(sd->tilesetData->staticTile))
+				{
+					int mapX = nse.tilemapSize.x;
+					int mapY = nse.tilemapSize.y;
+					int tileX = nse.tilesetData->tileSize.x;
+					int tileY = nse.tilesetData->tileSize.y;
+					int x = (i % mapX) * tileX;
+					int y = (i / mapX) * tileY;
+					
+					e->addComponent<PhysicsComponent>(e, (float)x, (float)y,
+						(float)tileX, (float)tileY, 0.0f, 0.0f, 0.0f, 0.0f, true, true, false);
+				}
+			}
+
+		}
+		else sd->tilesetData = nullptr;
 
 		nse.sceneSize = sd->sceneSize;
 		nse.cellSize = sd->cellSize;
@@ -195,16 +234,51 @@ namespace Core
 				sd.cellSize.y = std::stoi(t);
 				t = nextToken(ist);
 			}
-			else if (t == "}")
+			else if (t == "Tilemap")
 			{
-				return true;
+				nextToken(ist);
+				std::string tmName = nextToken(ist);
+
+				auto iter = std::find_if(std::begin(m_tilesetData), std::end(m_tilesetData), [&](const TilesetData &td)
+				{
+					return td.name == tmName;
+				});
+
+				if (iter == std::end(m_tilesetData))
+				{
+					std::cerr << "WARNING: Tileset not found.\n";
+					return false;
+				}
+
+				sd.tilesetData = &*iter;
+				t = nextToken(ist);
+				sd.tilemapLayer = nextToken(ist);
+				nextToken(ist);
+				sd.tilemapSize.x = std::stoi(nextToken(ist));
+				nextToken(ist);
+				sd.tilemapSize.y = std::stoi(nextToken(ist));
+
+				int sz = sd.tilemapSize.x * sd.tilemapSize.y;
+				for (int i = 0; i < sz; ++i)
+				{
+					nextToken(ist);
+					sd.tilemap.push_back(std::stoi(nextToken(ist)));
+				}
+
+				if (nextToken(ist) != "}")
+				{
+					std::cerr << "WARNING: Bad tilemap formatting.\n";
+					return false;
+				}
 			}
-			else
+			else if (t != "}")
 			{
 				std::cerr << "WARNING: Bad scene formatting.\n";
 				return false;
 			}
+			else break;
 		}
+		return true;
 	}
 
 	void SceneFactory::readTilesetData()

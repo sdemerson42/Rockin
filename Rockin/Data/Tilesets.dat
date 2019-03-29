@@ -1,4 +1,2 @@
-MainTiles
-{
-"assets/textures/u5.png", 1024, 512, 32, 32, 12, 13
-}
+U5Tiles
+{"assets/textures/u5.png", 1024, 512, 32, 32, 20, 21, 22}

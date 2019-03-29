@@ -4,6 +4,7 @@
 #include "CoreEntity.h"
 #include <iostream>
 #include "TextComponent.h"
+#include "TilesetData.h"
 
 namespace Core
 {
@@ -110,6 +111,15 @@ namespace Core
 				m_window->draw(*txp);
 			}
 			ld.text.clear();
+
+			// Draw tilemap
+
+			if (m_tilemapLayer == layerName)
+			{
+				if (ld.isStatic) m_window->setView(m_window->getDefaultView());
+				else m_window->setView(m_view);
+				m_window->draw(m_tilemapSprite);
+			}
 		}
 	
 		m_window->display();
@@ -123,6 +133,52 @@ namespace Core
 		{
 			m_layerOrder.push_back(event->layer[i]);
 			m_layerMap[event->layer[i]].isStatic = event->isStatic[i];
+		}
+
+		// Prepare renderTexture if tilemap data is present
+
+		if (event->tilesetData)
+		{
+			m_tilemapTexture.loadFromFile(event->tilesetData->texture);
+
+			int mapX = event->tilemapSize.x;
+			int mapY = event->tilemapSize.y;
+			int tileX = event->tilesetData->tileSize.x;
+			int tileY = event->tilesetData->tileSize.y;
+
+			m_tilemapRenderTexture.create(mapX * tileX, mapY * tileY);
+			m_tilemapRenderTexture.clear();
+			sf::VertexArray va;
+			va.setPrimitiveType(sf::Quads);
+
+			for (int i = 0; i < event->tilemap.size(); ++i)
+			{
+				int tVal = event->tilemap[i];
+				int x = (i % mapX) * tileX;
+				int y = (i / mapX) * tileY;
+				int tx = (tVal % (event->tilesetData->textureSize.x / tileX)) * tileX;
+				int ty = (tVal / (event->tilesetData->textureSize.x / tileX)) * tileY;
+
+				va.append(sf::Vertex{ sf::Vector2f{(float)x, (float)y}, sf::Vector2f{(float)tx, (float)ty} });
+				va.append(sf::Vertex{ sf::Vector2f{ (float)x + (float)tileX, (float)y },
+					sf::Vector2f{ (float)tx + (float)tileX, (float)ty } });
+				va.append(sf::Vertex{ sf::Vector2f{ (float)x + (float)tileX, (float)y + (float)tileY },
+					sf::Vector2f{ (float)tx + (float)tileX, (float)ty + (float)tileY } });
+				va.append(sf::Vertex{ sf::Vector2f{ (float)x, (float)y + (float)tileY },
+					sf::Vector2f{ (float)tx, (float)ty + (float)tileY } });
+			}
+
+			m_states.texture = &m_tilemapTexture;
+			m_tilemapRenderTexture.draw(va, m_states);
+			m_tilemapRenderTexture.display();
+
+			m_tilemapSprite.setTexture(m_tilemapRenderTexture.getTexture());
+
+			m_tilemapLayer = event->tilemapLayer;
+		}
+		else
+		{
+			m_tilemapLayer = "";
 		}
 	}
 

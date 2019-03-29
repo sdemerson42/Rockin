@@ -7,6 +7,7 @@
 namespace Core
 {
 	class ScriptComponent;
+	struct TilesetData;
 
 	struct CollisionEvent : public sde::EventBase
 	{
@@ -41,6 +42,10 @@ namespace Core
 		std::vector<bool> isStatic;
 		sf::Vector2i sceneSize;
 		sf::Vector2i cellSize;
+		TilesetData *tilesetData;
+		sf::Vector2i tilemapSize;
+		std::vector<int> tilemap;
+		std::string tilemapLayer;
 	};
 
 	struct SetViewCenterEvent : public sde::EventBase
