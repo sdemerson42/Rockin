@@ -19,7 +19,7 @@ namespace Core
 	{
 	}
 
-	void EntityFactory::createEntity(const std::string &name, bool active, const std::string &layer,
+	void EntityFactory::createEntity(const std::string &name, bool active, bool persistent, const std::string &layer,
 		float x, float y, const std::string &subsceneName)
 	{
 		auto bpIter = std::find_if(std::begin(m_blueprint), std::end(m_blueprint), [&](const Blueprint &bp)
@@ -100,6 +100,8 @@ namespace Core
 			}
 		}
 		e->setActive(active);
+		e->setPersistent(persistent);
+
 		auto alsp = e->getComponent<TextComponent>();
 		alsp->alsMoveRef(subsceneName);
 	}

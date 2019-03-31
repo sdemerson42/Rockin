@@ -30,6 +30,8 @@ namespace Core
 			std::string layer;
 			float x;
 			float y;
+			bool persistent;
+			bool persistentCreated;
 		};
 		struct LayerData
 		{
@@ -58,7 +60,8 @@ namespace Core
 
 		EntityFactory *m_eFactory;
 		std::vector<std::unique_ptr<CoreEntity>> *m_eVec;
-
+		
+		void moveEntityIntoScene(CoreEntity *e, const std::string &scene);
 		void readSceneData();
 		bool readScene(std::istream &ist, SceneData &sd);
 		void readTilesetData();

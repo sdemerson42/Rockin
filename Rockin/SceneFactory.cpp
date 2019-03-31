@@ -26,20 +26,33 @@ namespace Core
 		else std::cerr << "WARNING: Default scene data not found.\n";
 	}
 
-	void SceneFactory::buildScene(const std::string &name, bool isSubscene)
+	void SceneFactory::buildScene(const std::string &sceneName, bool isSubscene)
 	{
 		NewSceneEvent nse;
-		
-		// TO-DO: persistence
 
 		if (!isSubscene)
-			m_eVec->clear();
+		{
+			auto iter = std::begin(*m_eVec);
+			while (iter < std::end(*m_eVec))
+			{
+				if ((*iter)->persistent())
+				{
+					moveEntityIntoScene(iter->get(), sceneName);
+					++iter;
+				}
+				else
+				{
+					m_eVec->erase(iter, std::end(*m_eVec));
+					break;
+				}
+			}
+		}
 
 		// Find SceneData
 
 		auto sd = std::find_if(std::begin(m_sceneData), std::end(m_sceneData), [&](const SceneData &sd)
 		{
-			return sd.name == name;
+			return sd.name == sceneName;
 		});
 		if (sd == std::end(m_sceneData))
 		{
@@ -55,13 +68,28 @@ namespace Core
 			nse.isStatic.push_back(ld.isStatic);
 		}
 
-		// Create entities
+		// Create entities (persistent first)
+
+		for (EntityData &ed : sd->entity)
+		{
+			if (ed.persistent && !ed.persistentCreated)
+			{
+				for (int i = 0; i < ed.total; ++i)
+				{
+					m_eFactory->createEntity(ed.name, ed.active, ed.persistent, ed.layer, ed.x, ed.y, sceneName);
+					ed.persistentCreated = true;
+				}
+			}
+		}
 
 		for (const EntityData &ed : sd->entity)
 		{
-			for (int i = 0; i < ed.total; ++i)
+			if (!ed.persistent)
 			{
-				m_eFactory->createEntity(ed.name, ed.active, ed.layer, ed.x, ed.y, name);
+				for (int i = 0; i < ed.total; ++i)
+				{
+					m_eFactory->createEntity(ed.name, ed.active, ed.persistent, ed.layer, ed.x, ed.y, sceneName);
+				}
 			}
 		}
 
@@ -157,7 +185,7 @@ namespace Core
 			auto pcv = e->getComponents<PhysicsComponent>();
 			for (auto pc : pcv)
 			{
-				pc->alsMoveRef(name);
+				pc->alsMoveRef(sceneName);
 			}
 		}
 		else nse.tilesetData = nullptr;
@@ -167,19 +195,19 @@ namespace Core
 
 		// Broadcast NewSceneEvent
 
-		m_newSceneEventMap[name] = nse;
+		m_newSceneEventMap[sceneName] = nse;
 
 		// Build subscenes
 
 		if (!isSubscene)
-			setSubscene(name);
+			setSubscene(sceneName);
 
 		for (const auto &subsceneName : sd->subscene)
 		{
 			buildScene(subsceneName, true);
 		}
 
-		std::cout << name << " built successfully.\n";
+		std::cout << sceneName << " built successfully.\n";
 	}
 
 	void SceneFactory::setSubscene(const std::string &name)
@@ -191,6 +219,36 @@ namespace Core
 		AutoListScene<TextComponent>::alsSetScene(name);
 
 		broadcast(&m_newSceneEventMap[name]);
+	}
+
+	void SceneFactory::moveEntityIntoScene(CoreEntity *e, const std::string &name)
+	{
+		auto v = e->getComponents<AnimationComponent>();
+		for (auto cp : v)
+		{
+			cp->alsMoveRef(name);
+		}
+		
+		auto v2 = e->getComponents<PhysicsComponent>();
+		for (auto cp : v2)
+		{
+			cp->alsMoveRef(name);
+		}
+		auto v3 = e->getComponents<RenderComponent>();
+		for (auto cp : v3)
+		{
+			cp->alsMoveRef(name);
+		}
+		auto v4 = e->getComponents<ScriptComponent>();
+		for (auto cp : v4)
+		{
+			cp->alsMoveRef(name);
+		}
+		auto v5 = e->getComponents<TextComponent>();
+		for (auto cp : v5)
+		{
+			cp->alsMoveRef(name);
+		}
 	}
 
 	void SceneFactory::readSceneData()
@@ -258,11 +316,20 @@ namespace Core
 				}
 				sd.layer.push_back(ld);
 			}
-			else if (t == "Entity")
+			else if (t == "Entity" || t == "PersistentEntity")
 			{
 				// Read entity data
 
 				EntityData ed;
+
+				if (t == "PersistentEntity")
+				{
+					ed.persistent = true;
+					ed.persistentCreated = false;
+				}
+				else
+					ed.persistent = false;
+
 				t = nextToken(ist);
 				if (t != "{")
 				{
