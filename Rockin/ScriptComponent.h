@@ -7,11 +7,12 @@
 #include <iostream>
 #include "Events.h"
 #include <map>
+#include "AutoListScene.h"
 
 namespace Core
 {
 
-	class ScriptComponent : public CoreComponentBase, public sde::AutoList<ScriptComponent>
+	class ScriptComponent : public CoreComponentBase, public sde::AutoList<ScriptComponent>, public AutoListScene<ScriptComponent>
 	{
 		friend class ScriptSystem;
 		friend class Sim;
@@ -53,6 +54,8 @@ namespace Core
 		void stopAnimation();
 		void setViewCenter(float x, float y);
 		void setTextString(const std::string &s);
+		void changeScene(const std::string &scene);
+		void changeSubscene(const std::string &scene);
 
 		void setReg(const std::string &reg, int value);
 		int getReg(const std::string &reg);

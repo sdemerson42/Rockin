@@ -2,10 +2,11 @@
 
 #include "CoreComponentBase.h"
 #include "SFML\Graphics.hpp"
+#include "AutoListScene.h"
 
 namespace Core
 {
-	class PhysicsComponent : public CoreComponentBase, public sde::AutoList<PhysicsComponent>
+	class PhysicsComponent : public CoreComponentBase, public sde::AutoList<PhysicsComponent>, public AutoListScene<PhysicsComponent>
 	{
 		friend class Physics;
 	public:

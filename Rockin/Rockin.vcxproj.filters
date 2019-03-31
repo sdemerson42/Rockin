@@ -128,5 +128,8 @@
     <ClInclude Include="TilesetData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="AutoListScene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

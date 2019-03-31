@@ -4,7 +4,12 @@
 #include "Events.h"
 #include <algorithm>
 #include "EntityFactory.h"
+
 #include "PhysicsComponent.h"
+#include "AnimationComponent.h"
+#include "RenderComponent.h"
+#include "ScriptComponent.h"
+#include "TextComponent.h"
 
 namespace Core
 {
@@ -21,13 +26,14 @@ namespace Core
 		else std::cerr << "WARNING: Default scene data not found.\n";
 	}
 
-	void SceneFactory::buildScene(const std::string &name)
+	void SceneFactory::buildScene(const std::string &name, bool isSubscene)
 	{
 		NewSceneEvent nse;
 		
 		// TO-DO: persistence
 
-		m_eVec->clear();
+		if (!isSubscene)
+			m_eVec->clear();
 
 		// Find SceneData
 
@@ -55,7 +61,7 @@ namespace Core
 		{
 			for (int i = 0; i < ed.total; ++i)
 			{
-				m_eFactory->createEntity(ed.name, ed.active, ed.layer, ed.x, ed.y);
+				m_eFactory->createEntity(ed.name, ed.active, ed.layer, ed.x, ed.y, name);
 			}
 		}
 
@@ -147,17 +153,44 @@ namespace Core
 					(float)aabb.width * (float)tileX, (float)aabb.height * (float)tileY, 
 					0.0f, 0.0f, 0.0f, 0.0f, true, true, false);
 			}
+
+			auto pcv = e->getComponents<PhysicsComponent>();
+			for (auto pc : pcv)
+			{
+				pc->alsMoveRef(name);
+			}
 		}
-		else sd->tilesetData = nullptr;
+		else nse.tilesetData = nullptr;
 
 		nse.sceneSize = sd->sceneSize;
 		nse.cellSize = sd->cellSize;
 
 		// Broadcast NewSceneEvent
 
-		broadcast(&nse);
+		m_newSceneEventMap[name] = nse;
+
+		// Build subscenes
+
+		if (!isSubscene)
+			setSubscene(name);
+
+		for (const auto &subsceneName : sd->subscene)
+		{
+			buildScene(subsceneName, true);
+		}
 
 		std::cout << name << " built successfully.\n";
+	}
+
+	void SceneFactory::setSubscene(const std::string &name)
+	{
+		AutoListScene<AnimationComponent>::alsSetScene(name);
+		AutoListScene<PhysicsComponent>::alsSetScene(name);
+		AutoListScene<RenderComponent>::alsSetScene(name);
+		AutoListScene<ScriptComponent>::alsSetScene(name);
+		AutoListScene<TextComponent>::alsSetScene(name);
+
+		broadcast(&m_newSceneEventMap[name]);
 	}
 
 	void SceneFactory::readSceneData()
@@ -323,6 +356,12 @@ namespace Core
 					std::cerr << "WARNING: Bad tilemap formatting.\n";
 					return false;
 				}
+			}
+			else if (t == "Subscene")
+			{
+				nextToken(ist);
+				sd.subscene.push_back(nextToken(ist));
+				nextToken(ist);
 			}
 			else if (t != "}")
 			{

@@ -20,6 +20,7 @@ namespace Core
 		float stickX{ 0.0f };
 		float stickY{ 0.0f };
 		bool fire{ false };
+		bool esc{ false };
 	};
 
 
@@ -34,6 +35,12 @@ namespace Core
 		float volume;
 		bool loop;
 		int priority;
+	};
+
+	struct ChangeSceneEvent : public sde::EventBase
+	{
+		std::string sceneName;
+		bool subscene = false;
 	};
 
 	struct NewSceneEvent : public sde::EventBase

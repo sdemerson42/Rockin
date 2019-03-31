@@ -3,12 +3,13 @@
 #include "CoreComponentBase.h"
 #include <string>
 #include "SFML\Graphics.hpp"
+#include "AutoListScene.h"
 #include <map>
 
 namespace Core
 {
 	class CoreEntity;
-	class TextComponent : public CoreComponentBase, public sde::AutoList<TextComponent>
+	class TextComponent : public CoreComponentBase, public sde::AutoList<TextComponent>, public AutoListScene<TextComponent>
 	{
 		friend class Renderer;
 	public:

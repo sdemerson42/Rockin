@@ -13,7 +13,7 @@ namespace Core
 	public:
 		EntityFactory(std::vector<std::unique_ptr<CoreEntity>> *, asIScriptEngine *);
 		void createEntity(const std::string &name, bool active = false, const std::string &layer = "default",
-			float x = 0.0f, float y = 0.0f);
+			float x = 0.0f, float y = 0.0f, const std::string &subsceneName = "main");
 		void loadBlueprintData(const std::string &fName);
 	private:
 		enum class BType { Int, Float, Bool, String };

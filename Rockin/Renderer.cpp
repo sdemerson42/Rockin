@@ -24,10 +24,10 @@ namespace Core
 		float viewT = m_view.getCenter().y - m_view.getSize().y / 2.0f;
 		float viewB = m_view.getCenter().y + m_view.getSize().y / 2.0f;
 
-		auto sz = sde::AutoList<RenderComponent>::size();
+		auto sz = AutoListScene<RenderComponent>::alsCurrentSize();
 		for (size_t i = 0; i < sz; ++i)
 		{
-			auto rc = sde::AutoList<RenderComponent>::get(i);
+			auto rc = AutoListScene<RenderComponent>::alsCurrentGet(i);
 			if (!rc->active()) continue;
 			auto tc = rc->parent()->getComponent<TransformComponent>();
 
@@ -71,10 +71,10 @@ namespace Core
 
 		// Add TextComponents
 
-		sz = sde::AutoList<TextComponent>::size();
+		sz = AutoListScene<TextComponent>::alsCurrentSize();
 		for (int i = 0; i < sz; ++i)
 		{
-			auto txc = sde::AutoList<TextComponent>::get(i);
+			auto txc = AutoListScene<TextComponent>::alsCurrentGet(i);
 			if (!txc->active()) continue;
 			const auto &txcParentPos = txc->parent()->position();
 			txc->m_text.setPosition(txcParentPos.x + txc->m_offset.x, txcParentPos.y + txc->m_offset.y);

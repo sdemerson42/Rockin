@@ -20,7 +20,7 @@ namespace Core
 	}
 
 	void EntityFactory::createEntity(const std::string &name, bool active, const std::string &layer,
-		float x, float y)
+		float x, float y, const std::string &subsceneName)
 	{
 		auto bpIter = std::find_if(std::begin(m_blueprint), std::end(m_blueprint), [&](const Blueprint &bp)
 		{
@@ -37,13 +37,6 @@ namespace Core
 		for (const std::string &tag : bpIter->tag) e->addTag(tag);
 		for (const auto &data : bpIter->data)
 		{
-			// Construct components
-
-			/*if (data.component == "Transform")
-			{
-				e->addComponent<TransformComponent>(e, std::stof(data.valuePair[0].value),
-					std::stof(data.valuePair[1].value));
-			}*/
 			if (data.component == "Physics")
 			{	
 				e->addComponent<PhysicsComponent>(e, std::stof(data.valuePair[0].value), std::stof(data.valuePair[1].value),
@@ -51,16 +44,23 @@ namespace Core
 					std::stof(data.valuePair[5].value), std::stof(data.valuePair[6].value), std::stof(data.valuePair[7].value),
 					(data.valuePair[8].value == "true" ? true : false), (data.valuePair[9].value == "true" ? true : false),
 					(data.valuePair[10].value == "true" ? true : false));
+				
+				auto alsp = e->getComponent<PhysicsComponent>();
+				alsp->alsMoveRef(subsceneName);
 			}
 			else if (data.component == "Render")
 			{
 				e->addComponent<RenderComponent>(e, std::stof(data.valuePair[0].value), std::stof(data.valuePair[1].value),
 					std::stof(data.valuePair[2].value), std::stof(data.valuePair[3].value),
 					data.valuePair[4].value, layer);
+				auto alsp = e->getComponent<RenderComponent>();
+				alsp->alsMoveRef(subsceneName);
 			}
 			else if (data.component == "Script")
 			{
 				e->addComponent<ScriptComponent>(e, m_engine, data.valuePair[0].value);
+				auto alsp = e->getComponent<ScriptComponent>();
+				alsp->alsMoveRef(subsceneName);
 			}
 			else if (data.component == "Animation")
 			{
@@ -87,6 +87,8 @@ namespace Core
 					a.frame.push_back(frame);
 				}
 				ac->addAnimation(a);
+				auto alsp = e->getComponent<AnimationComponent>();
+				alsp->alsMoveRef(subsceneName);
 			}
 			else if (data.component == "Text")
 			{
@@ -98,6 +100,8 @@ namespace Core
 			}
 		}
 		e->setActive(active);
+		auto alsp = e->getComponent<TextComponent>();
+		alsp->alsMoveRef(subsceneName);
 	}
 
 	void EntityFactory::loadBlueprintData(const std::string &fName)

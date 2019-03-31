@@ -19,6 +19,8 @@ namespace Core
 			ie.stickY = 1.0f;
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 			ie.fire = true;
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+			ie.esc = true;
 
 		ScriptComponent::setInput(&ie);
 	}

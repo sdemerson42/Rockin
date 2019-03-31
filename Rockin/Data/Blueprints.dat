@@ -68,3 +68,10 @@ Tag{"Clouds"}
 Render{0.0, 0.0, 800.0, 600.0, "Assets/Textures/Clouds.png"}
 Script{"Clouds", "Scripts/Clouds.as"}
 }
+
+PauseLogic
+{
+Tag{"PauseLogic"}
+Script{"PauseLogic", "Scripts/Pause.as"}
+Text{"PAUSED", "Assets/Fonts/sansation.ttf", 0.0, 0.0, 50, 200, 15, 15, 255}
+}

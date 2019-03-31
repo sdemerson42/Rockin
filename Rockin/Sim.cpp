@@ -24,6 +24,7 @@ namespace Core
 	Sim::Sim(unsigned int w, unsigned int h, const std::string &name) :
 		m_window{ sf::VideoMode{w, h}, name }
 	{
+		registerFunc(this, &Sim::onChangeScene);
 
 		// Create and prepare script engine
 
@@ -41,6 +42,11 @@ namespace Core
 		// Create Systems
 
 		systemsSetup();
+
+		// Build scene and clear next scene
+
+		m_nextScene = "";
+		m_subsceneChange = false;
 
 		m_sceneFactory->buildScene();
 	}
@@ -80,6 +86,7 @@ namespace Core
 		m_scriptEngine->RegisterObjectProperty("InputEvent", "float stickX", asOFFSET(InputEvent, stickX));
 		m_scriptEngine->RegisterObjectProperty("InputEvent", "float stickY", asOFFSET(InputEvent, stickY));
 		m_scriptEngine->RegisterObjectProperty("InputEvent", "bool fire", asOFFSET(InputEvent, fire));
+		m_scriptEngine->RegisterObjectProperty("InputEvent", "bool esc", asOFFSET(InputEvent, esc));
 
 		m_scriptEngine->RegisterObjectType("ScriptComponent", 0, asOBJ_REF | asOBJ_NOCOUNT);
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void suspend(int cycles = 0)",
@@ -126,6 +133,10 @@ namespace Core
 			asMETHOD(ScriptComponent, ScriptComponent::setViewCenter), asCALL_THISCALL);
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void setTextString(const string &in)",
 			asMETHOD(ScriptComponent, ScriptComponent::setTextString), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void changeScene(const string &in)",
+			asMETHOD(ScriptComponent, ScriptComponent::changeScene), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void changeSubscene(const string &in)",
+			asMETHOD(ScriptComponent, ScriptComponent::changeSubscene), asCALL_THISCALL);
 
 	}
 
@@ -151,6 +162,15 @@ namespace Core
 				for (auto &up : m_system)
 					up->execute();
 
+				// Change scene if necessary
+
+				if (m_nextScene != "")
+				{
+					if (!m_subsceneChange) m_sceneFactory->buildScene(m_nextScene);
+					else m_sceneFactory->setSubscene(m_nextScene);
+					m_nextScene = "";
+				}
+
 				clock.restart();
 			}
 		}
@@ -173,5 +193,11 @@ namespace Core
 		}
 
 		return r;
+	}
+
+	void Sim::onChangeScene(const ChangeSceneEvent *event)
+	{
+		m_nextScene = event->sceneName;
+		m_subsceneChange = event->subscene;
 	}
 }

@@ -9,12 +9,13 @@
 #include "angelscript.h"
 #include "EntityFactory.h"
 #include "SceneFactory.h"
+#include "Events.h"
 
 namespace Core
 {
 	class ScriptComponent;
 
-	class Sim
+	class Sim : public sde::EventHandler
 	{
 	public:
 		Sim(unsigned int w, unsigned int h, const std::string &name);
@@ -31,5 +32,9 @@ namespace Core
 		std::unique_ptr<SceneFactory> m_sceneFactory;
 		sf::RenderWindow m_window;
 		asIScriptEngine *m_scriptEngine;
+		std::string m_nextScene;
+		bool m_subsceneChange;
+
+		void onChangeScene(const ChangeSceneEvent *cse);
 	};
 }

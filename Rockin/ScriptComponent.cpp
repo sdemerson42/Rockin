@@ -193,6 +193,22 @@ namespace Core
 		if (tc) tc->setString(s);
 	}
 
+	void ScriptComponent::changeScene(const std::string &scene)
+	{
+		ChangeSceneEvent cse;
+		cse.sceneName = scene;
+		cse.subscene = false;
+		broadcast(&cse);
+	}
+
+	void ScriptComponent::changeSubscene(const std::string &scene)
+	{
+		ChangeSceneEvent cse;
+		cse.sceneName = scene;
+		cse.subscene = true;
+		broadcast(&cse);
+	}
+
 
 	void ScriptComponent::setReg(const std::string &reg, int val)
 	{

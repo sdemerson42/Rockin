@@ -172,6 +172,7 @@
   <ItemGroup>
     <ClInclude Include="AnimationComponent.h" />
     <ClInclude Include="Animator.h" />
+    <ClInclude Include="AutoListScene.h" />
     <ClInclude Include="CoreComponentBase.h" />
     <ClInclude Include="CoreEntity.h" />
     <ClInclude Include="EntityFactory.h" />

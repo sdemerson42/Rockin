@@ -24,10 +24,10 @@ namespace Core
 			}
 		}
 
-		auto sz = sde::AutoList<PhysicsComponent>::size();
+		auto sz = AutoListScene<PhysicsComponent>::alsCurrentSize();
 		for (size_t i = 0; i < sz; ++i)
 		{
-			auto pc = sde::AutoList<PhysicsComponent>::get(i);
+			auto pc = AutoListScene<PhysicsComponent>::alsCurrentGet(i);
 			if (!pc->m_static && pc->active() && !pc->m_noCollision) proxPlace(pc, m_pcNonstaticMap);
 		}
 		
@@ -56,10 +56,10 @@ namespace Core
 
 	void Physics::applyMomentum()
 	{
-		auto sz = sde::AutoList<PhysicsComponent>::size();
+		auto sz = AutoListScene<PhysicsComponent>::alsCurrentSize();
 		for (size_t i = 0; i < sz; ++i)
 		{
-			auto pc = sde::AutoList<PhysicsComponent>::get(i);
+			auto pc = AutoListScene<PhysicsComponent>::alsCurrentGet(i);
 			if (pc->active() && !pc->m_static)
 			{
 				auto e = pc->parent();
@@ -343,10 +343,10 @@ namespace Core
 
 		// Add statics to map
 
-		auto sz = sde::AutoList<PhysicsComponent>::size();
+		auto sz = AutoListScene<PhysicsComponent>::alsCurrentSize();
 		for (size_t i = 0; i < sz; ++i)
 		{
-			auto pc = sde::AutoList<PhysicsComponent>::get(i);
+			auto pc = AutoListScene<PhysicsComponent>::alsCurrentGet(i);
 			if (pc->m_static) proxPlace(pc, m_pcStaticMap);
 		}
 	}

@@ -4,10 +4,11 @@
 #include "SFML\Graphics.hpp"
 #include <string>
 #include <vector>
+#include "AutoListScene.h"
 
 namespace Core
 {
-	class AnimationComponent : public CoreComponentBase, public sde::AutoList<AnimationComponent>
+	class AnimationComponent : public CoreComponentBase, public sde::AutoList<AnimationComponent>, public AutoListScene<AnimationComponent>
 	{
 		friend class Animator;
 	public:

@@ -7,6 +7,7 @@
 #include "Events.h"
 #include "sde.h"
 #include "TilesetData.h"
+#include <map>
 
 namespace Core
 {
@@ -18,7 +19,8 @@ namespace Core
 	public:
 		SceneFactory(EntityFactory *eFactory, std::vector<std::unique_ptr<CoreEntity>> *eVec);
 		void buildScene();
-		void buildScene(const std::string &name);
+		void buildScene(const std::string &name, bool isSubscene = false);
+		void setSubscene(const std::string &name);
 	private:
 		struct EntityData
 		{
@@ -48,9 +50,11 @@ namespace Core
 			sf::Vector2i tilemapSize;
 			std::vector<int> tilemap;
 			std::string tilemapLayer;
+			std::vector<std::string> subscene;
 		};
 		std::vector<SceneData> m_sceneData;
 		std::vector<TilesetData> m_tilesetData;
+		std::map<std::string, NewSceneEvent> m_newSceneEventMap;
 
 		EntityFactory *m_eFactory;
 		std::vector<std::unique_ptr<CoreEntity>> *m_eVec;

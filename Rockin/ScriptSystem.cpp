@@ -10,10 +10,10 @@ namespace Core
 
 	void ScriptSystem::execute()
 	{
-		auto sz = sde::AutoList<ScriptComponent>::size();
+		auto sz = AutoListScene<ScriptComponent>::alsCurrentSize();
 		for (size_t i = 0; i < sz; ++i)
 		{
-			auto sc = sde::AutoList<ScriptComponent>::get(i);
+			auto sc = AutoListScene<ScriptComponent>::alsCurrentGet(i);
 			if (sc->active() && !sc->m_sleep && sc->m_suspensionCycles <= 0) sc->m_contextMain->Execute();
 			if (sc->m_suspensionCycles > 0) --sc->m_suspensionCycles;
 		}

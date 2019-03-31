@@ -5,10 +5,10 @@ namespace Core
 {
 	void Animator::execute()
 	{
-		auto sz = sde::AutoList<AnimationComponent>::size();
+		auto sz = AutoListScene<AnimationComponent>::alsCurrentSize();
 		for (size_t i = 0; i < sz; ++i)
 		{
-			auto ac = sde::AutoList<AnimationComponent>::get(i);
+			auto ac = AutoListScene<AnimationComponent>::alsCurrentGet(i);
 			if (!ac->active() || !ac->playing()) continue;
 
 			auto anim = &ac->m_animation[ac->m_currentAnimationIndex];
