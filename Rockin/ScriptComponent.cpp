@@ -77,6 +77,11 @@ namespace Core
 		return m_prefix;
 	}
 
+	void ScriptComponent::addRegValue(const std::string &name, int val)
+	{
+		m_registers[name] = val;
+	}
+
 	// Script interface
 
 	void ScriptComponent::log(const std::string &msg)

@@ -5,6 +5,7 @@
 
 namespace Core
 {
+	class ScriptComponent;
 	class CoreEntity : public sde::EntityNoParent, public sde::AutoList<CoreEntity>
 	{
 	public:
@@ -16,6 +17,7 @@ namespace Core
 		void setPosition(float x, float y);
 		void adjustPosition(const sf::Vector2f &v);
 		void adjustPosition(float x, float y);
+		ScriptComponent *scriptComponent();
 	private:
 		bool m_persistent;
 	};

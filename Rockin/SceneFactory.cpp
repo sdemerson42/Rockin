@@ -77,6 +77,7 @@ namespace Core
 				for (int i = 0; i < ed.total; ++i)
 				{
 					m_eFactory->createEntity(ed.name, ed.active, ed.persistent, ed.layer, ed.x, ed.y, sceneName);
+					if (ed.data.size() > 0) m_eFactory->addInitData(ed.data);
 					ed.persistentCreated = true;
 				}
 			}
@@ -89,6 +90,7 @@ namespace Core
 				for (int i = 0; i < ed.total; ++i)
 				{
 					m_eFactory->createEntity(ed.name, ed.active, ed.persistent, ed.layer, ed.x, ed.y, sceneName);
+					if (ed.data.size() > 0) m_eFactory->addInitData(ed.data);
 				}
 			}
 		}
@@ -429,6 +431,20 @@ namespace Core
 				nextToken(ist);
 				sd.subscene.push_back(nextToken(ist));
 				nextToken(ist);
+			}
+			else if (t == "Data")
+			{
+				if (sd.entity.size() == 0) break;
+
+				EntityData &ed = sd.entity[sd.entity.size() - 1];
+				nextToken(ist);
+				while (true)
+				{
+					ed.data.push_back(nextToken(ist));
+					nextToken(ist);
+					ed.data.push_back(nextToken(ist));
+					if (nextToken(ist) == "}") break;
+				}
 			}
 			else if (t != "}")
 			{

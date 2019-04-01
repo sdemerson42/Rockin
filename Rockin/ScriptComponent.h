@@ -23,6 +23,7 @@ namespace Core
 		static void setInput(const InputEvent *);
 		void initialize() override;
 		const std::string &prefix() const;
+		void addRegValue(const std::string &name, int val);
 	private:
 		asIScriptEngine *m_engine;
 		asIScriptContext *m_contextMain;

@@ -14,6 +14,7 @@ namespace Core
 		EntityFactory(std::vector<std::unique_ptr<CoreEntity>> *, asIScriptEngine *);
 		void createEntity(const std::string &name, bool active = false, bool persistent = false, const std::string &layer = "default",
 			float x = 0.0f, float y = 0.0f, const std::string &subsceneName = "main");
+		void addInitData(const std::vector<std::string> &data);
 		void loadBlueprintData(const std::string &fName);
 	private:
 		enum class BType { Int, Float, Bool, String };
@@ -36,6 +37,7 @@ namespace Core
 		std::vector<std::unique_ptr<CoreEntity>> *m_entity;
 		asIScriptEngine *m_engine;
 		std::vector<Blueprint> m_blueprint;
+		CoreEntity *m_currentEntity;
 
 		bool readBlueprint(std::istream &ist, Blueprint &bp);
 		bool readComponentData(std::istream &ist, ComponentData &cd);

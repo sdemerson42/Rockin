@@ -1,5 +1,6 @@
 #include "CoreEntity.h"
 #include "TransformComponent.h"
+#include "ScriptComponent.h"
 
 namespace Core
 {
@@ -41,5 +42,12 @@ namespace Core
 	void CoreEntity::adjustPosition(float x, float y)
 	{
 		getComponent<TransformComponent>()->setPosition(x, y);
+	}
+
+	ScriptComponent *CoreEntity::scriptComponent()
+	{
+		auto sc = getComponent<ScriptComponent>();
+		if (sc) return sc;
+		return nullptr;
 	}
 }

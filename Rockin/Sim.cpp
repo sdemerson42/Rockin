@@ -73,22 +73,24 @@ namespace Core
 		ScriptComponent::setSim(this);
 
 		RegisterStdString(m_scriptEngine);
-
+		m_scriptEngine->RegisterObjectType("ScriptComponent", 0, asOBJ_REF | asOBJ_NOCOUNT);
 		m_scriptEngine->RegisterObjectType("Entity", 0, asOBJ_REF | asOBJ_NOCOUNT);
-		m_scriptEngine->RegisterObjectMethod("Entity", "bool hasTag(const string &in) const",
-			asMETHOD(sde::Entity, hasTag), asCALL_THISCALL);
-
+		m_scriptEngine->RegisterObjectType("InputEvent", 0, asOBJ_REF | asOBJ_NOCOUNT);
 		m_scriptEngine->RegisterObjectType("Vector2f", 0, asOBJ_REF | asOBJ_NOCOUNT);
+
+		m_scriptEngine->RegisterObjectMethod("Entity", "bool hasTag(const string &in) const",
+			asMETHOD(CoreEntity, hasTag), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("Entity", "ScriptComponent @scriptComponent()",
+			asMETHOD(CoreEntity, scriptComponent), asCALL_THISCALL);
+
 		m_scriptEngine->RegisterObjectProperty("Vector2f", "float x", asOFFSET(sf::Vector2f, x));
 		m_scriptEngine->RegisterObjectProperty("Vector2f", "float y", asOFFSET(sf::Vector2f, y));
 
-		m_scriptEngine->RegisterObjectType("InputEvent", 0, asOBJ_REF | asOBJ_NOCOUNT);
 		m_scriptEngine->RegisterObjectProperty("InputEvent", "float stickX", asOFFSET(InputEvent, stickX));
 		m_scriptEngine->RegisterObjectProperty("InputEvent", "float stickY", asOFFSET(InputEvent, stickY));
 		m_scriptEngine->RegisterObjectProperty("InputEvent", "bool fire", asOFFSET(InputEvent, fire));
 		m_scriptEngine->RegisterObjectProperty("InputEvent", "bool esc", asOFFSET(InputEvent, esc));
 
-		m_scriptEngine->RegisterObjectType("ScriptComponent", 0, asOBJ_REF | asOBJ_NOCOUNT);
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void suspend(int cycles = 0)",
 			asMETHOD(ScriptComponent, ScriptComponent::suspend), asCALL_THISCALL);
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void log(const string &in)",

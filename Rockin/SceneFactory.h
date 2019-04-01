@@ -32,6 +32,7 @@ namespace Core
 			float y;
 			bool persistent;
 			bool persistentCreated;
+			std::vector<std::string> data;
 		};
 		struct LayerData
 		{

@@ -15,7 +15,7 @@
 namespace Core
 {
 	EntityFactory::EntityFactory(std::vector<std::unique_ptr<CoreEntity>> *eVec, asIScriptEngine *engine) :
-		m_entity{ eVec }, m_engine{ engine }
+		m_entity{ eVec }, m_engine{ engine }, m_currentEntity{ nullptr }
 	{
 	}
 
@@ -104,6 +104,24 @@ namespace Core
 
 		auto alsp = e->getComponent<TextComponent>();
 		alsp->alsMoveRef(subsceneName);
+
+		// For subsequent requests:
+
+		m_currentEntity = e;
+	}
+
+	void EntityFactory::addInitData(const std::vector<std::string> &data)
+	{
+		if (!m_currentEntity) return;
+		auto sc = m_currentEntity->getComponent<ScriptComponent>();
+		if (!sc) return;
+
+		for (int i = 0; i < data.size(); i += 2)
+		{
+			std::string name = data[i];
+			std::string val = data[i + 1];
+			sc->addRegValue(name, std::stoi(val));
+		}
 	}
 
 	void EntityFactory::loadBlueprintData(const std::string &fName)
