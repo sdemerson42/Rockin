@@ -45,7 +45,8 @@ namespace Core
 					(data.valuePair[8].value == "true" ? true : false), (data.valuePair[9].value == "true" ? true : false),
 					(data.valuePair[10].value == "true" ? true : false));
 				
-				auto alsp = e->getComponent<PhysicsComponent>();
+				auto cv = e->getComponents<PhysicsComponent>();
+				auto alsp = cv[cv.size()-1];
 				alsp->alsMoveRef(subsceneName);
 			}
 			else if (data.component == "Render")

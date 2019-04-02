@@ -84,10 +84,6 @@ namespace Core
 				if (std::find(std::begin(m_collisionPair), std::end(m_collisionPair), cp) != std::end(m_collisionPair)) continue;
 				m_collisionPair.push_back(cp);
 
-				if (a->m_momentum.x == 0.0f && a->m_momentum.y == 0.0f &&
-					b->m_momentum.x == 0.0f && b->m_momentum.y == 0.0f)
-					continue;
-
 				if (a->m_inverseMass == 0.0f && b->m_inverseMass == 0.0f) continue;
 			
 				Collision collision{ a, b };
