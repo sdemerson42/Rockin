@@ -24,6 +24,11 @@ namespace Core
 		{
 			m_layer = layer;
 		}
+		void setFrame(float x, float y, float w, float h)
+		{
+			m_tPos = { x,y };
+			m_tSize = { w, h };
+		}
 	private:
 		sf::Vector2f m_tPos;
 		sf::Vector2f m_tSize;

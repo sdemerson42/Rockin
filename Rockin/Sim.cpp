@@ -139,6 +139,13 @@ namespace Core
 			asMETHOD(ScriptComponent, ScriptComponent::changeScene), asCALL_THISCALL);
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void changeSubscene(const string &in)",
 			asMETHOD(ScriptComponent, ScriptComponent::changeSubscene), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void setRenderFrame(float x, float y, float w, float h)",
+			asMETHOD(ScriptComponent, ScriptComponent::setRenderFrame), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void setString(int index, const string &in)",
+			asMETHOD(ScriptComponent, ScriptComponent::setString), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "const string &getString(int index)",
+			asMETHOD(ScriptComponent, ScriptComponent::getString), asCALL_THISCALL);
+		
 
 	}
 

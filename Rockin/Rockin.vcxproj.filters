@@ -132,4 +132,14 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\Clouds.as" />
+    <None Include="Scripts\Dialogue.as" />
+    <None Include="Scripts\Master.as" />
+    <None Include="Scripts\NPC.as" />
+    <None Include="Scripts\P1.as" />
+    <None Include="Data\Blueprints.dat" />
+    <None Include="Data\Scenes.dat" />
+    <None Include="Data\Tilesets.dat" />
+  </ItemGroup>
 </Project>

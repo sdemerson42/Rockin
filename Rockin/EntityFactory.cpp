@@ -119,9 +119,17 @@ namespace Core
 
 		for (int i = 0; i < data.size(); i += 2)
 		{
-			std::string name = data[i];
+			std::string index = data[i];
 			std::string val = data[i + 1];
-			sc->addRegValue(name, std::stoi(val));
+
+			if (isalpha(index[0]))
+			{
+				sc->addRegValue(index, std::stoi(val));
+			}
+			if (isdigit(index[0]))
+			{
+				sc->addStringValue(std::stoi(index), val);
+			}
 		}
 	}
 
@@ -306,7 +314,14 @@ namespace Core
 					{
 						break;
 					}
-					token += c;
+					if (c == 'n' && token.size() > 0 && token[token.size() - 1] == '\\')
+					{
+						token[token.size() - 1] = '\n';
+					}
+					else
+					{
+						token += c;
+					}
 				}
 				else
 				{

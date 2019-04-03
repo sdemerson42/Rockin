@@ -24,6 +24,7 @@ namespace Core
 		void initialize() override;
 		const std::string &prefix() const;
 		void addRegValue(const std::string &name, int val);
+		void addStringValue(int index, const std::string &s);
 	private:
 		asIScriptEngine *m_engine;
 		asIScriptContext *m_contextMain;
@@ -57,16 +58,21 @@ namespace Core
 		void setTextString(const std::string &s);
 		void changeScene(const std::string &scene);
 		void changeSubscene(const std::string &scene);
+		void setRenderFrame(float x, float y, float w, float h);
 
 		void setReg(const std::string &reg, int value);
 		int getReg(const std::string &reg);
 		void modReg(const std::string &reg, int value);
+
+		void setString(int index, const std::string &s);
+		const std::string &getString(int index);
 
 		// Script state
 
 		bool m_sleep;
 		int m_suspensionCycles;
 		std::map<std::string, int> m_registers;
+		std::map<int, std::string> m_strings;
 		sf::Vector2f m_defaultVector2f;
 	};
 }

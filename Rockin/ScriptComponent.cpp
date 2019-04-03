@@ -65,6 +65,7 @@ namespace Core
 		m_sleep = false;
 		m_suspensionCycles = 0;
 		m_registers.clear();
+		m_strings.clear();
 
 		auto mainState = m_contextMain->GetState();
 		if (mainState == asEXECUTION_SUSPENDED || mainState == asEXECUTION_ABORTED) m_contextMain->Abort();
@@ -80,6 +81,11 @@ namespace Core
 	void ScriptComponent::addRegValue(const std::string &name, int val)
 	{
 		m_registers[name] = val;
+	}
+
+	void ScriptComponent::addStringValue(int index, const std::string &s)
+	{
+		m_strings[index] = s;
 	}
 
 	// Script interface
@@ -214,6 +220,11 @@ namespace Core
 		broadcast(&cse);
 	}
 
+	void ScriptComponent::setRenderFrame(float x, float y, float w, float h)
+	{
+		auto rc = parent()->getComponent<RenderComponent>();
+		if (rc) rc->setFrame(x, y, w, h);
+	}
 
 	void ScriptComponent::setReg(const std::string &reg, int val)
 	{
@@ -228,5 +239,15 @@ namespace Core
 	void ScriptComponent::modReg(const std::string &reg, int val)
 	{
 		m_registers[reg] += val;
+	}
+
+	void ScriptComponent::setString(int index, const std::string &s)
+	{
+		m_strings[index] = s;
+	}
+
+	const std::string &ScriptComponent::getString(int index)
+	{
+		return m_strings[index];
 	}
 }

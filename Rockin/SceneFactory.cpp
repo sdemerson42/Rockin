@@ -550,7 +550,14 @@ namespace Core
 					{
 						break;
 					}
-					token += c;
+					if (c == 'n' && token.size() > 0 && token[token.size() - 1] == '\\')
+					{
+						token[token.size() - 1] = '\n';
+					}
+					else
+					{
+						token += c;
+					}
 				}
 				else
 				{
