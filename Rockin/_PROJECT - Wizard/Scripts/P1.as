@@ -4,43 +4,31 @@ void P1_main(ScriptComponent @p)
 {
 	p.log("P1 OK");
 	float speed = 5.0f;
-	bool fireState = false;
 	bool talkState = false;
 	ScriptComponent @dl = null;
+	auto master = p.getScriptByTag("Master");
 
 	while(true)
 	{
 		auto input = p.input();
 
-		if (input.fire)
+		if (!talkState and input.a == 1 and P1Col !is null)
 		{
-			if (!fireState and P1Col !is null)
-			{
-				fireState = true;
-				if (!talkState)
-				{
-					p.setMomentum(0.0, 0.0);
-					@dl = p.spawn("Dialogue");
-					ShowDialogue(dl, P1Col.getString(P1Col.getReg("node")));
-					NPC_updateNode(P1Col);
-					talkState = true;
-				}
-				else
-				{
-					dl.despawn();
-					talkState = false;
-				}
-			}
+			p.setMomentum(0.0, 0.0);
+			@dl = p.spawn("Dialogue");
+			ShowDialogue(dl, P1Col.getString(P1Col.getReg("node")));
+			NPC_updateNode(P1Col);
+			talkState = true;
 		}
-
-		if (!input.fire)
+		else if (talkState and input.a == 1)
 		{
-			fireState = false;
+			dl.despawn();
+			talkState = false;
 		}
 
 		if (!talkState)
 		{
-			p.setMomentum(input.stickX * speed, input.stickY * speed);
+			p.setMomentum(input.stickLeftX * speed, input.stickLeftY * speed);
 		}
 		
 		auto pos = p.position();

@@ -17,10 +17,23 @@ namespace Core
 
 	struct InputEvent : public sde::EventBase
 	{
-		float stickX{ 0.0f };
-		float stickY{ 0.0f };
-		bool fire{ false };
-		bool esc{ false };
+		float stickLeftX = 0.0f;
+		float stickLeftY = 0.0f;
+		float stickRightX = 0.0f;
+		float stickRightY = 0.0f;
+		int stickLeftPush = 0;
+		int stickRightPush = 0;
+		float padX = 0.0f;
+		float padY = 0.0f;
+		float trigger = 0.0f;
+		int a = 0;
+		int b = 0;
+		int x = 0;
+		int y = 0;
+		int shoulderLeft = 0;
+		int shoulderRight = 0;
+		int select = 0;
+		int start = 0;
 	};
 
 

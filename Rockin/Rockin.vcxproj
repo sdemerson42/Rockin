@@ -191,16 +191,6 @@
     <ClInclude Include="TilesetData.h" />
     <ClInclude Include="TransformComponent.h" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Data\Blueprints.dat" />
-    <None Include="Data\Scenes.dat" />
-    <None Include="Data\Tilesets.dat" />
-    <None Include="Scripts\Clouds.as" />
-    <None Include="Scripts\Dialogue.as" />
-    <None Include="Scripts\Master.as" />
-    <None Include="Scripts\NPC.as" />
-    <None Include="Scripts\P1.as" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

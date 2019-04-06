@@ -1,6 +1,7 @@
 #pragma once
 
 #include "sde.h"
+#include "Events.h"
 
 namespace Core
 {
@@ -8,5 +9,8 @@ namespace Core
 	{
 	public:
 		void execute() override;
+	private:
+		InputEvent m_ie;
+		const float deadZone = 0.2f;
 	};
 }

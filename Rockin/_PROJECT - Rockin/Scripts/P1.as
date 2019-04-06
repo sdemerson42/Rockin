@@ -11,12 +11,12 @@ void P1_main(ScriptComponent @p)
 
 		auto i = p.input();
 
-		if (i.esc) p.changeSubscene("ScenePause");
+		if (i.start == 1) p.changeSubscene("ScenePause");
 
-		if (i.stickX < 0) p.setMomentum(-1.0f * speed, 0);
-		if (i.stickX == 0) p.setMomentum(0, 0);
-		if (i.stickX > 0) p.setMomentum(1.0f * speed, 0);
-		if (i.fire and laserTimer == 0)
+		if (i.stickLeftX < 0) p.setMomentum(-1.0f * speed, 0);
+		if (i.stickLeftX == 0) p.setMomentum(0, 0);
+		if (i.stickLeftX > 0) p.setMomentum(1.0f * speed, 0);
+		if (i.a > 0 and laserTimer == 0)
 		{
 			auto las = p.spawn("Laser");
 			if (las !is null)

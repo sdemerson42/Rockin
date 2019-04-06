@@ -32,6 +32,7 @@ Render{0.0, 0.0, 800.0, 600.0, "Assets/Textures/Clouds.png"}
 Script{"Clouds", "Scripts/Clouds.as"}
 }
 
+
 NPC
 {
 Tag{"NPC"}

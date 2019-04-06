@@ -86,10 +86,23 @@ namespace Core
 		m_scriptEngine->RegisterObjectProperty("Vector2f", "float x", asOFFSET(sf::Vector2f, x));
 		m_scriptEngine->RegisterObjectProperty("Vector2f", "float y", asOFFSET(sf::Vector2f, y));
 
-		m_scriptEngine->RegisterObjectProperty("InputEvent", "float stickX", asOFFSET(InputEvent, stickX));
-		m_scriptEngine->RegisterObjectProperty("InputEvent", "float stickY", asOFFSET(InputEvent, stickY));
-		m_scriptEngine->RegisterObjectProperty("InputEvent", "bool fire", asOFFSET(InputEvent, fire));
-		m_scriptEngine->RegisterObjectProperty("InputEvent", "bool esc", asOFFSET(InputEvent, esc));
+		m_scriptEngine->RegisterObjectProperty("InputEvent", "float stickLeftX", asOFFSET(InputEvent, stickLeftX));
+		m_scriptEngine->RegisterObjectProperty("InputEvent", "float stickLeftY", asOFFSET(InputEvent, stickLeftY));
+		m_scriptEngine->RegisterObjectProperty("InputEvent", "float stickRightX", asOFFSET(InputEvent, stickRightX));
+		m_scriptEngine->RegisterObjectProperty("InputEvent", "float stickRightY", asOFFSET(InputEvent, stickRightY));
+		m_scriptEngine->RegisterObjectProperty("InputEvent", "float padX", asOFFSET(InputEvent, padX));
+		m_scriptEngine->RegisterObjectProperty("InputEvent", "float padY", asOFFSET(InputEvent, padY));
+		m_scriptEngine->RegisterObjectProperty("InputEvent", "float trigger", asOFFSET(InputEvent, trigger));
+		m_scriptEngine->RegisterObjectProperty("InputEvent", "int stickLeftPush", asOFFSET(InputEvent, stickLeftPush));
+		m_scriptEngine->RegisterObjectProperty("InputEvent", "int stickRightPush", asOFFSET(InputEvent, stickRightPush));
+		m_scriptEngine->RegisterObjectProperty("InputEvent", "int a", asOFFSET(InputEvent, a));
+		m_scriptEngine->RegisterObjectProperty("InputEvent", "int b", asOFFSET(InputEvent, b));
+		m_scriptEngine->RegisterObjectProperty("InputEvent", "int x", asOFFSET(InputEvent, x));
+		m_scriptEngine->RegisterObjectProperty("InputEvent", "int y", asOFFSET(InputEvent, y));
+		m_scriptEngine->RegisterObjectProperty("InputEvent", "int shoulderLeft", asOFFSET(InputEvent, shoulderLeft));
+		m_scriptEngine->RegisterObjectProperty("InputEvent", "int shoulderRight", asOFFSET(InputEvent, shoulderRight));
+		m_scriptEngine->RegisterObjectProperty("InputEvent", "int select", asOFFSET(InputEvent, select));
+		m_scriptEngine->RegisterObjectProperty("InputEvent", "int start", asOFFSET(InputEvent, start));
 
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void suspend(int cycles = 0)",
 			asMETHOD(ScriptComponent, ScriptComponent::suspend), asCALL_THISCALL);

@@ -4,7 +4,7 @@ void PauseLogic_main(ScriptComponent @me)
 	while(true)
 	{
 		auto i = me.input();
-		if (i.fire) me.changeSubscene("Scene1");
+		if (i.start == 1) me.changeSubscene("Scene1");
 		me.suspend();
 	}
 }
