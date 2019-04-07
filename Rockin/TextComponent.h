@@ -24,6 +24,11 @@ namespace Core
 		{
 			m_text.setFillColor(color);
 		}
+		void setFillColor(int r, int g, int b, int a)
+		{
+			sf::Color color{ (sf::Uint8)r, (sf::Uint8)g, (sf::Uint8)b, (sf::Uint8)a };
+			m_text.setFillColor(color);
+		}
 		void setSize(int sz)
 		{
 			m_text.setCharacterSize(sz);

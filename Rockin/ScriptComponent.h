@@ -57,12 +57,17 @@ namespace Core
 		void stopAnimation();
 		void setViewCenter(float x, float y);
 		void setTextString(const std::string &s);
+		void setTextSize(int val);
+		void setTextColor(int r, int g, int b, int a);
 		void changeScene(const std::string &scene);
 		void changeSubscene(const std::string &scene);
 		void setRenderFrame(float x, float y, float w, float h);
 		void playMusic(const std::string &fName, float volume, bool loop);
 		void pauseMusic();
 		void stopMusic();
+		void setRenderScale(float x, float y);
+		void setRenderRotation(float degrees);
+		void setRenderColor(int r, int g, int b, int a);
 
 		void setReg(const std::string &reg, int value);
 		int getReg(const std::string &reg);

@@ -210,6 +210,18 @@ namespace Core
 		if (tc) tc->setString(s);
 	}
 
+	void ScriptComponent::setTextSize(int val)
+	{
+		auto tc = parent()->getComponent<TextComponent>();
+		if (tc) tc->setSize(val);
+	}
+
+	void ScriptComponent::setTextColor(int r, int g, int b, int a)
+	{
+		auto tc = parent()->getComponent<TextComponent>();
+		if (tc) tc->setFillColor(r, g, b, a);
+	}
+
 	void ScriptComponent::changeScene(const std::string &scene)
 	{
 		ChangeSceneEvent cse;
@@ -254,6 +266,24 @@ namespace Core
 		MusicEvent me;
 		me.action = 2;
 		broadcast(&me);
+	}
+
+	void ScriptComponent::setRenderScale(float x, float y)
+	{
+		auto rc = parent()->getComponent<RenderComponent>();
+		if (rc) rc->setScale(x, y);
+	}
+
+	void ScriptComponent::setRenderRotation(float degrees)
+	{
+		auto rc = parent()->getComponent<RenderComponent>();
+		if (rc) rc->setRotation(degrees);
+	}
+
+	void ScriptComponent::setRenderColor(int r, int g, int b, int a)
+	{
+		auto rc = parent()->getComponent<RenderComponent>();
+		if (rc) rc->setColor(r, g, b, a);
 	}
 
 	void ScriptComponent::setReg(const std::string &reg, int val)

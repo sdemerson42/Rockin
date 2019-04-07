@@ -150,6 +150,10 @@ namespace Core
 			asMETHOD(ScriptComponent, ScriptComponent::setViewCenter), asCALL_THISCALL);
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void setTextString(const string &in)",
 			asMETHOD(ScriptComponent, ScriptComponent::setTextString), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void setTextColor(int r, int g, int b, int a)",
+			asMETHOD(ScriptComponent, ScriptComponent::setTextColor), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void setTextSize(int val)",
+			asMETHOD(ScriptComponent, ScriptComponent::setTextSize), asCALL_THISCALL);
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void changeScene(const string &in)",
 			asMETHOD(ScriptComponent, ScriptComponent::changeScene), asCALL_THISCALL);
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void changeSubscene(const string &in)",
@@ -166,6 +170,12 @@ namespace Core
 			asMETHOD(ScriptComponent, ScriptComponent::pauseMusic), asCALL_THISCALL);
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void stopMusic()",
 			asMETHOD(ScriptComponent, ScriptComponent::stopMusic), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void setRenderColor(int r, int g, int b, int a)",
+			asMETHOD(ScriptComponent, ScriptComponent::setRenderColor), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void setRenderScale(float x, float y)",
+			asMETHOD(ScriptComponent, ScriptComponent::setRenderScale), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void setRenderRotation(float degrees)",
+			asMETHOD(ScriptComponent, ScriptComponent::setRenderRotation), asCALL_THISCALL);
 		
 
 	}

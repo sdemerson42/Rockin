@@ -19,10 +19,17 @@ namespace Core
 		sf::RenderStates m_states;
 		sf::View m_view;
 		std::map<std::string, sf::Texture> m_texureMap;
+		struct VaData
+		{
+			sf::VertexArray va;
+			sf::Color color;
+			sf::Transform transform;
+			bool modified{ false };
+		};
 		struct LayerData
 		{
 			bool isStatic;
-			std::map<sf::Texture *, sf::VertexArray> vaMap;
+			std::map<sf::Texture *, std::vector<VaData>> vaMap;
 			std::vector<sf::Text *> text;
 		};
 		std::map<std::string, LayerData> m_layerMap;

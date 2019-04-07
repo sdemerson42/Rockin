@@ -53,7 +53,22 @@ namespace Core
 
 			// Fill vertex array in proper layer / texture
 
-			sf::VertexArray &va = m_layerMap[rc->m_layer].vaMap[&m_texureMap[rc->m_texFile]];
+			auto &vvd = m_layerMap[rc->m_layer].vaMap[&m_texureMap[rc->m_texFile]];
+			if (vvd.size() == 0) vvd.push_back(VaData{});
+
+			if (rc->m_tFlag || rc->m_cFlag)
+			{
+				vvd.push_back(VaData{});
+				vvd[vvd.size() - 1].modified = true;
+				sf::Vector2f center{ tc->position().x + rc->tSize().x / 2.0f,
+					tc->position().y + rc->tSize().y / 2.0f };
+				vvd[vvd.size() - 1].transform.rotate(rc->m_rotation, center);
+				vvd[vvd.size() - 1].transform.scale(rc->m_scale, center);
+				vvd[vvd.size() - 1].color = rc->m_color;
+			}
+
+			sf::VertexArray &va = ((rc->m_tFlag || rc->m_cFlag) ? vvd[vvd.size() - 1].va : vvd[0].va);
+
 			va.setPrimitiveType(sf::PrimitiveType::Quads);
 
 			float x = tc->position().x;
@@ -64,9 +79,13 @@ namespace Core
 			float h = rc->m_tSize.y;
 
 			va.append(sf::Vertex{ sf::Vector2f{x, y}, sf::Vector2f{tx, ty} });
+			if (rc->m_cFlag) va[va.getVertexCount() - 1].color = rc->m_color;
 			va.append(sf::Vertex{ sf::Vector2f{ x + w, y }, sf::Vector2f{ tx + w, ty } });
+			if (rc->m_cFlag) va[va.getVertexCount() - 1].color = rc->m_color;
 			va.append(sf::Vertex{ sf::Vector2f{ x + w, y + h }, sf::Vector2f{ tx + w, ty + h } });
+			if (rc->m_cFlag) va[va.getVertexCount() - 1].color = rc->m_color;
 			va.append(sf::Vertex{ sf::Vector2f{ x, y + h }, sf::Vector2f{ tx, ty + h } });
+			if (rc->m_cFlag) va[va.getVertexCount() - 1].color = rc->m_color;
 		}
 
 		// Add TextComponents
@@ -93,12 +112,20 @@ namespace Core
 
 			for (auto &pr : ld.vaMap)
 			{
-				m_states.texture = pr.first;
-				
 				if (ld.isStatic) m_window->setView(m_window->getDefaultView());
 				else m_window->setView(m_view);
 				
-				m_window->draw(pr.second, m_states);
+				for (auto &vad : pr.second)
+				{
+					if (vad.va.getVertexCount() == 0) continue;
+					if (vad.modified)
+					{
+						m_states.transform = vad.transform;
+					}
+					else m_states.transform = sf::Transform{};
+					m_states.texture = pr.first;
+					m_window->draw(vad.va, m_states);
+				}
 				pr.second.clear();
 			}
 
