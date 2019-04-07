@@ -132,6 +132,8 @@ namespace Core
 			asMETHOD(ScriptComponent, ScriptComponent::input), asCALL_THISCALL);
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void playSound(const string &in, float vol, bool loop, int priority)",
 			asMETHOD(ScriptComponent, ScriptComponent::playSound), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void stopSound()",
+			asMETHOD(ScriptComponent, ScriptComponent::stopSound), asCALL_THISCALL);
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "ScriptComponent @getScriptByTag(const string &in)",
 			asMETHOD(ScriptComponent, ScriptComponent::getScriptByTag), asCALL_THISCALL);
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void setReg(const string &in, int val)",
@@ -158,6 +160,12 @@ namespace Core
 			asMETHOD(ScriptComponent, ScriptComponent::setString), asCALL_THISCALL);
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "const string &getString(int index)",
 			asMETHOD(ScriptComponent, ScriptComponent::getString), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void playMusic(const string &in, float volume, bool loop)",
+			asMETHOD(ScriptComponent, ScriptComponent::playMusic), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void pauseMusic()",
+			asMETHOD(ScriptComponent, ScriptComponent::pauseMusic), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void stopMusic()",
+			asMETHOD(ScriptComponent, ScriptComponent::stopMusic), asCALL_THISCALL);
 		
 
 	}

@@ -1,5 +1,6 @@
 #include "SoundSystem.h"
 #include <algorithm>
+#include <fstream>
 
 namespace Core
 {
@@ -8,6 +9,8 @@ namespace Core
 		// Create Channels
 
 		registerFunc(this, &SoundSystem::onSound);
+		registerFunc(this, &SoundSystem::onMusic);
+
 		for (int i = 0; i < m_totalChannels; ++i)
 		{
 			m_channel.emplace_back("", sf::Sound{}, 0);
@@ -15,16 +18,40 @@ namespace Core
 
 		// Load sound buffers
 
-		m_buffer["Laser"] = sf::SoundBuffer{};
-		m_buffer["Laser"].loadFromFile("Assets/Sounds/Laser.wav");
-		m_buffer["Boom"] = sf::SoundBuffer{};
-		m_buffer["Boom"].loadFromFile("Assets/Sounds/Boom.wav");
+		std::ifstream ifs{ "Data/Sounds.dat" };
+		std::string tag;
+		std::string fName;
+
+		while (true)
+		{
+			ifs >> tag;
+			if (!ifs) break;
+			ifs >> fName;
+			m_buffer[tag] = sf::SoundBuffer{};
+			m_buffer[tag].loadFromFile(fName);
+		}
 	}
 
 	void SoundSystem::execute()
 	{
 		for (const auto &e : m_event)
 		{
+			// Stopping sound?
+
+			if (e.stop)
+			{
+				auto iter = std::find_if(std::begin(m_channel), std::end(m_channel), [&](const Channel &ch)
+				{
+					return ch.tag == e.tag;
+				});
+
+				if (iter != std::end(m_channel))
+				{
+					iter->sound.stop();
+				}
+				continue;
+			}
+
 			// Unused channel?
 
 			auto iter = std::find_if(std::begin(m_channel), std::end(m_channel), [](const Channel &ch)
@@ -87,5 +114,23 @@ namespace Core
 		if (iter != std::end(m_event)) return;
 
 		m_event.push_back(*event);
+	}
+
+	void SoundSystem::onMusic(const MusicEvent *event)
+	{
+		if (event->action == 2)
+		{
+			m_music.stop();
+			return;
+		}
+		else if (event->action == 1)
+		{
+			m_music.pause();
+			return;
+		}
+		m_music.openFromFile(event->fileName);
+		m_music.setVolume(event->volume);
+		m_music.setLoop(event->loop);
+		m_music.play();
 	}
 }

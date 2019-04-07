@@ -1,6 +1,5 @@
 void Dialogue_main(ScriptComponent @p)
 {
-	p.log("Dialogue OK");
 	p.setSleep(true);
 }
 

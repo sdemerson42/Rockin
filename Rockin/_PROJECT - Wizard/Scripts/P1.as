@@ -18,6 +18,7 @@ void P1_main(ScriptComponent @p)
 			@dl = p.spawn("Dialogue");
 			ShowDialogue(dl, P1Col.getString(P1Col.getReg("node")));
 			NPC_updateNode(P1Col);
+			p.playSound("Talk", 20.0f, false, 1);
 			talkState = true;
 		}
 		else if (talkState and input.a == 1)
@@ -30,6 +31,10 @@ void P1_main(ScriptComponent @p)
 		{
 			p.setMomentum(input.stickLeftX * speed, input.stickLeftY * speed);
 		}
+
+		auto momentum = p.momentum();
+		if (momentum.x == 0.0f and momentum.y == 0.0f) p.playAnimation("default");
+		else p.playAnimation("walk");
 		
 		auto pos = p.position();
 		p.setViewCenter(pos.x + 16.0, pos.y + 16.0);

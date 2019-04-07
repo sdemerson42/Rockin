@@ -41,13 +41,25 @@ namespace Core
 	{
 		SoundEvent()
 		{}
-		SoundEvent(const std::string &tag, float volume, bool loop, int priority) :
-			tag{ tag }, volume{ volume }, loop{ loop }, priority{ priority }
+		SoundEvent(const std::string &tag, float volume, bool loop, int priority, bool stop = false) :
+			tag{ tag }, volume{ volume }, loop{ loop }, priority{ priority }, stop{ stop }
 		{}
 		std::string tag;
 		float volume;
 		bool loop;
 		int priority;
+		bool stop;
+	};
+
+	struct MusicEvent : public sde::EventBase
+	{
+		MusicEvent() :
+			action{ 0 }
+		{}
+		std::string fileName;
+		float volume;
+		bool loop;
+		int action;
 	};
 
 	struct ChangeSceneEvent : public sde::EventBase

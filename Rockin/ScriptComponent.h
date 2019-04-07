@@ -52,6 +52,7 @@ namespace Core
 		const InputEvent &input();
 		void playSound(const std::string &tag, float volume, bool loop, int priority);
 		ScriptComponent *getScriptByTag(const std::string &tag);
+		void stopSound(const std::string &tag);
 		void playAnimation(const std::string &name);
 		void stopAnimation();
 		void setViewCenter(float x, float y);
@@ -59,6 +60,9 @@ namespace Core
 		void changeScene(const std::string &scene);
 		void changeSubscene(const std::string &scene);
 		void setRenderFrame(float x, float y, float w, float h);
+		void playMusic(const std::string &fName, float volume, bool loop);
+		void pauseMusic();
+		void stopMusic();
 
 		void setReg(const std::string &reg, int value);
 		int getReg(const std::string &reg);

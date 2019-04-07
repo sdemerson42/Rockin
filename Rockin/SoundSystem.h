@@ -15,6 +15,7 @@ namespace Core
 		void execute() override;
 	private:
 		const int m_totalChannels = 4;
+		sf::Music m_music;
 		struct Channel
 		{
 			Channel(const std::string &tag, const sf::Sound sound, int priority) :
@@ -30,5 +31,6 @@ namespace Core
 
 		void playSound(const SoundEvent &, std::vector<Channel>::iterator &p);
 		void onSound(const SoundEvent *);
+		void onMusic(const MusicEvent *);
 	};
 }

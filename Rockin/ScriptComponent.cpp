@@ -167,6 +167,12 @@ namespace Core
 		broadcast(&se);
 	}
 
+	void ScriptComponent::stopSound(const std::string &tag)
+	{
+		SoundEvent se{ tag, 0.0f, false, 0, true };
+		broadcast(&se);
+	}
+
 	ScriptComponent *ScriptComponent::getScriptByTag(const std::string &tag)
 	{
 		auto sz = AutoList<ScriptComponent>::size();
@@ -224,6 +230,30 @@ namespace Core
 	{
 		auto rc = parent()->getComponent<RenderComponent>();
 		if (rc) rc->setFrame(x, y, w, h);
+	}
+
+	void ScriptComponent::playMusic(const std::string &fName, float volume, bool loop)
+	{
+		MusicEvent me;
+		me.fileName = fName;
+		me.volume = volume;
+		me.loop = loop;
+		me.action = 0;
+		broadcast(&me);
+	}
+
+	void ScriptComponent::pauseMusic()
+	{
+		MusicEvent me;
+		me.action = 1;
+		broadcast(&me);
+	}
+
+	void ScriptComponent::stopMusic()
+	{
+		MusicEvent me;
+		me.action = 2;
+		broadcast(&me);
 	}
 
 	void ScriptComponent::setReg(const std::string &reg, int val)
