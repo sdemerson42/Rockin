@@ -203,19 +203,22 @@ namespace Core
 				if (aBoxPos.x + aSize.x > bBoxPos.x && aBoxPos.x < bBoxPos.x + bSize.x &&
 					aBoxPos.y + aSize.y > bBoxPos.y && aBoxPos.y < bBoxPos.y + bSize.y)
 				{
-					if (a->m_momentum.x > 0.0f)
+					if (a->m_solid)
 					{
-						float diff = bBoxPos.x - (aBoxPos.x + aSize.x);
-						float dist = (a->m_momentum.x - diff) * e;
-						atc->setPosition(bBoxPos.x - aSize.x - a->m_AABBOffset.x - dist - 0.1f, atc->position().y);
+						if (a->m_momentum.x > 0.0f)
+						{
+							float diff = bBoxPos.x - (aBoxPos.x + aSize.x);
+							float dist = (a->m_momentum.x - diff) * e;
+							atc->setPosition(bBoxPos.x - aSize.x - a->m_AABBOffset.x - dist - 0.1f, atc->position().y);
+						}
+						else
+						{
+							float diff = aBoxPos.x - (bBoxPos.x + bSize.x);
+							float dist = (a->m_momentum.x + diff) * e;
+							atc->setPosition(bBoxPos.x + bSize.x - a->m_AABBOffset.x - dist + 0.1f, atc->position().y);
+						}
+						a->m_momentum.x *= -1.0f * e;
 					}
-					else
-					{
-						float diff = aBoxPos.x - (bBoxPos.x + bSize.x);
-						float dist = (a->m_momentum.x + diff) * e;
-						atc->setPosition(bBoxPos.x + bSize.x - a->m_AABBOffset.x - dist + 0.1f, atc->position().y);
-					}
-					a->m_momentum.x *= -1.0f * e;
 					m_messageGroup.push_back(Collision{ a,b });
 				}
 			
@@ -245,19 +248,22 @@ namespace Core
 				if (aBoxPos.x + aSize.x > bBoxPos.x && aBoxPos.x < bBoxPos.x + bSize.x &&
 					aBoxPos.y + aSize.y > bBoxPos.y && aBoxPos.y < bBoxPos.y + bSize.y)
 				{
-					if (a->m_momentum.y > 0.0f)
+					if (a->m_solid)
 					{
-						float diff = bBoxPos.y - (aBoxPos.y + aSize.y);
-						float dist = (a->m_momentum.y - diff) * e;
-						atc->setPosition(atc->position().x, bBoxPos.y - aSize.y - a->m_AABBOffset.y - dist - 0.1f );
+						if (a->m_momentum.y > 0.0f)
+						{
+							float diff = bBoxPos.y - (aBoxPos.y + aSize.y);
+							float dist = (a->m_momentum.y - diff) * e;
+							atc->setPosition(atc->position().x, bBoxPos.y - aSize.y - a->m_AABBOffset.y - dist - 0.1f);
+						}
+						else
+						{
+							float diff = aBoxPos.y - (bBoxPos.y + bSize.y);
+							float dist = (a->m_momentum.y + diff) * e;
+							atc->setPosition(atc->position().x, bBoxPos.y + bSize.y - a->m_AABBOffset.y - dist + 0.1f);
+						}
+						a->m_momentum.y *= -1.0f * e;
 					}
-					else
-					{
-						float diff = aBoxPos.y - (bBoxPos.y + bSize.y);
-						float dist = (a->m_momentum.y + diff) * e;
-						atc->setPosition(atc->position().x, bBoxPos.y + bSize.y - a->m_AABBOffset.y - dist + 0.1f);
-					}
-					a->m_momentum.y *= -1.0f * e;
 					if (find_if(std::begin(m_messageGroup), std::end(m_messageGroup), [=](const Collision &col)
 					{
 						return col.a == a && col.b == b;

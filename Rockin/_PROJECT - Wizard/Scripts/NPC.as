@@ -6,6 +6,11 @@ void NPC_main(ScriptComponent @p)
 	int animCounter = 0;
 	int frame = 0;
 	
+	if (p.getReg("animate") == 0)
+	{
+		p.setSleep(true);
+	}
+
 	while(true)
 	{
 		++animCounter;

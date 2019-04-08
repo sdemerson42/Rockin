@@ -8,18 +8,27 @@ void P1_main(ScriptComponent @p)
 	ScriptComponent @dl = null;
 	auto master = p.getScriptByTag("Master");
 
+	p.setReg("portal", 0);
+
 	while(true)
 	{
 		auto input = p.input();
 
 		if (!talkState and input.a == 1 and P1Col !is null)
 		{
-			p.setMomentum(0.0, 0.0);
-			@dl = p.spawn("Dialogue");
-			ShowDialogue(dl, P1Col.getString(P1Col.getReg("node")));
-			NPC_updateNode(P1Col);
-			p.playSound("Talk", 20.0f, false, 1);
-			talkState = true;
+			if (p.getReg("portal") == 0)
+			{
+				p.setMomentum(0.0, 0.0);
+				@dl = p.spawn("Dialogue");
+				ShowDialogue(dl, P1Col.getString(P1Col.getReg("node")));
+				NPC_updateNode(P1Col);
+				p.playSound("Talk", 20.0f, false, 1);
+				talkState = true;
+			}
+			else
+			{
+				Portal_execute(P1Col);
+			}
 		}
 		else if (talkState and input.a == 1)
 		{
@@ -50,5 +59,10 @@ void P1_main(ScriptComponent @p)
 
 void P1_onCollision(ScriptComponent @p, Entity @e)
 {
-	if (e.hasTag("NPC")) @P1Col = e.scriptComponent();
+	if (e.hasTag("NPC") or e.hasTag("Portal"))
+	{
+		@P1Col = e.scriptComponent();
+		if (e.hasTag("Portal")) p.setReg("portal", 1);
+		else p.setReg("portal", 0);
+	}
 }
