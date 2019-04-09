@@ -9,9 +9,18 @@ void P1_main(ScriptComponent @p)
 	auto master = p.getScriptByTag("Master");
 
 	p.setReg("portal", 0);
+	p.setReg("locked", 0);
 
 	while(true)
 	{
+		// No action if locked
+
+		if (p.getReg("locked") == 1)
+		{
+			p.suspend();
+			continue;
+		}
+
 		auto input = p.input();
 
 		if (!talkState and input.a == 1 and P1Col !is null)
@@ -27,6 +36,7 @@ void P1_main(ScriptComponent @p)
 			}
 			else
 			{
+				p.setReg("locked", 1);
 				Portal_execute(P1Col);
 			}
 		}
@@ -51,6 +61,7 @@ void P1_main(ScriptComponent @p)
 		// Reset state
 
 		@P1Col = null;
+	
 
 		p.suspend();
 	}
