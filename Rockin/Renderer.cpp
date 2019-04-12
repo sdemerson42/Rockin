@@ -199,7 +199,7 @@ namespace Core
 			m_tilemapRenderTexture.draw(va, m_states);
 			m_tilemapRenderTexture.display();
 
-			m_tilemapSprite.setTexture(m_tilemapRenderTexture.getTexture());
+			m_tilemapSprite.setTexture(m_tilemapRenderTexture.getTexture(), true);
 
 			m_tilemapLayer = event->tilemapLayer;
 		}
