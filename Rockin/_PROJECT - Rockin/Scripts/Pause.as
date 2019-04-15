@@ -9,7 +9,7 @@ void PauseLogic_main(ScriptComponent @me)
 	}
 }
 
-void PauseLogic_onCollision(ScriptComponent @me, Entity @e)
+void PauseLogic_onCollision(ScriptComponent @me, Entity @collider, PhysicsComponent @c)
 {
 
 }

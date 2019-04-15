@@ -3,7 +3,7 @@ void Dialogue_main(ScriptComponent @p)
 	p.setSleep(true);
 }
 
-void Dialogue_onCollision(ScriptComponent @p, Entity @e)
+void Dialogue_onCollision(ScriptComponent @p, Entity @e, PhysicsComponent @c)
 {
 
 }

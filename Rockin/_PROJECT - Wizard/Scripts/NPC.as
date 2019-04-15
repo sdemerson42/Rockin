@@ -39,7 +39,7 @@ void NPC_updateNode(ScriptComponent @p)
 	if (p.getReg("node") == p.getReg("nodeTotal")) p.setReg("node", 0);
 }
 
-void NPC_onCollision(ScriptComponent @p, Entity @e)
+void NPC_onCollision(ScriptComponent @p, Entity @e, PhysicsComponent @c)
 {
 
 }

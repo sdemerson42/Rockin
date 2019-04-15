@@ -7,12 +7,14 @@
 namespace Core
 {
 	class ScriptComponent;
+	class PhysicsComponent;
 	struct TilesetData;
 
 	struct CollisionEvent : public sde::EventBase
 	{
 		ScriptComponent *receiver;
 		CoreEntity *collider;
+		PhysicsComponent *colliderPhysics;
 	};
 
 	struct InputEvent : public sde::EventBase

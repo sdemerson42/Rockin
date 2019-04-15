@@ -9,7 +9,7 @@ void Laser_main(ScriptComponent @p)
 }
 
 
-void Laser_onCollision(ScriptComponent @p, Entity @collider)
+void Laser_onCollision(ScriptComponent @p, Entity @collider, PhysicsComponent @c)
 {
 	p.despawn();
 }

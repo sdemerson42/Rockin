@@ -4,7 +4,7 @@ void Debris_main(ScriptComponent @p)
 	p.despawn();
 }
 
-void Debris_onCollision(ScriptComponent @p, Entity @collider)
+void Debris_onCollision(ScriptComponent @me, Entity @collider, PhysicsComponent @c)
 {
 	
 }

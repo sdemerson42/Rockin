@@ -66,7 +66,7 @@ void Master_changeScene(string scene, int ty, float x, float y)
 	}
 }
 
-void Master_onCollision(ScriptComponent @p, Entity @collider)
+void Master_onCollision(ScriptComponent @p, Entity @e, PhysicsComponent @c)
 {
 	
 }

@@ -12,7 +12,7 @@ void Portal_execute(ScriptComponent @p)
 	p.playSound("Portal", 30.0f, false, 5);	
 }
 
-void Portal_onCollision(ScriptComponent @p, Entity @e)
+void Portal_onCollision(ScriptComponent @p, Entity @e, PhysicsComponent @c)
 {
 
 }

@@ -33,7 +33,7 @@ void P1_main(ScriptComponent @p)
 }
 
 
-void P1_onCollision(ScriptComponent @p, Entity @collider)
+void P1_onCollision(ScriptComponent @p, Entity @collider, PhysicsComponent @c)
 {
 	if (collider.hasTag("Hazard"))
 	{	

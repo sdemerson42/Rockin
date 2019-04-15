@@ -28,6 +28,7 @@ namespace Core
 		context->Prepare(c->receiver->m_funcCollision);
 		context->SetArgObject(0, c->receiver);
 		context->SetArgObject(1, c->collider);
+		context->SetArgObject(2, c->colliderPhysics);
 		context->Execute();
 	}
 }

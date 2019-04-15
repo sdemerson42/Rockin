@@ -26,6 +26,14 @@ namespace Core
 		{
 			m_momentum = { x, y };
 		}
+		bool solid()
+		{
+			return m_solid;
+		}
+		void setSolid(bool val)
+		{
+			m_solid = val;
+		}
 	private:
 		bool m_static;
 		bool m_solid;

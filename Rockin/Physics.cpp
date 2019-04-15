@@ -290,6 +290,7 @@ namespace Core
 				CollisionEvent ce;
 				ce.collider = be;
 				ce.receiver = asc;
+				ce.colliderPhysics = c.b;
 				broadcast(&ce);
 			}
 			if (bsc)
@@ -297,6 +298,7 @@ namespace Core
 				CollisionEvent ce;
 				ce.collider = ae;
 				ce.receiver = bsc;
+				ce.colliderPhysics = c.a;
 				broadcast(&ce);
 			}
 		}

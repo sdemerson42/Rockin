@@ -13,7 +13,7 @@ void Meteor_main(ScriptComponent @p)
 	}
 }
 
-void Meteor_onCollision(ScriptComponent @p, Entity @collider)
+void Meteor_onCollision(ScriptComponent @p, Entity @collider, PhysicsComponent @c)
 {
 	if (collider.hasTag("Laser"))
 	{

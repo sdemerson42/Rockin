@@ -30,7 +30,7 @@ void Master_main(ScriptComponent @p)
 }
 
 
-void Master_onCollision(ScriptComponent @p, Entity @collider)
+void Master_onCollision(ScriptComponent @me, Entity @collider, PhysicsComponent @c)
 {
 	
 }

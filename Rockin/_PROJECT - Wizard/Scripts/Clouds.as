@@ -9,7 +9,7 @@ void Clouds_main(ScriptComponent @me)
 	}
 }
 
-void Clouds_onCollision(ScriptComponent @me, Entity @collider)
+void Clouds_onCollision(ScriptComponent @p, Entity @e, PhysicsComponent @c)
 {
 
 }

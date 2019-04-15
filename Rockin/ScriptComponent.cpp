@@ -34,7 +34,7 @@ namespace Core
 		
 		std::string sMain = std::string{ "void " + tag + "_main(ScriptComponent @p)" };
 		const char *cMain = sMain.c_str();
-		std::string sCollision = std::string{ "void " + tag + "_onCollision(ScriptComponent @p, Entity @collider)" };
+		std::string sCollision = std::string{ "void " + tag + "_onCollision(ScriptComponent @p, Entity @e, PhysicsComponent @c)" };
 		const char *cCollision = sCollision.c_str();
 
 		m_funcMain = mod->GetFunctionByDecl(cMain);
@@ -309,5 +309,15 @@ namespace Core
 	const std::string &ScriptComponent::getString(int index)
 	{
 		return m_strings[index];
+	}
+
+	void ScriptComponent::setScript(const std::string &name, ScriptComponent *sc)
+	{
+		m_scripts[name] = sc;
+	}
+
+	ScriptComponent *ScriptComponent::getScript(const std::string &name)
+	{
+		return m_scripts[name];
 	}
 }

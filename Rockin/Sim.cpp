@@ -77,6 +77,7 @@ namespace Core
 		m_scriptEngine->RegisterObjectType("Entity", 0, asOBJ_REF | asOBJ_NOCOUNT);
 		m_scriptEngine->RegisterObjectType("InputEvent", 0, asOBJ_REF | asOBJ_NOCOUNT);
 		m_scriptEngine->RegisterObjectType("Vector2f", 0, asOBJ_REF | asOBJ_NOCOUNT);
+		m_scriptEngine->RegisterObjectType("PhysicsComponent", 0, asOBJ_REF | asOBJ_NOCOUNT);
 
 		m_scriptEngine->RegisterObjectMethod("Entity", "bool hasTag(const string &in) const",
 			asMETHOD(CoreEntity, hasTag), asCALL_THISCALL);
@@ -103,6 +104,11 @@ namespace Core
 		m_scriptEngine->RegisterObjectProperty("InputEvent", "int shoulderRight", asOFFSET(InputEvent, shoulderRight));
 		m_scriptEngine->RegisterObjectProperty("InputEvent", "int select", asOFFSET(InputEvent, select));
 		m_scriptEngine->RegisterObjectProperty("InputEvent", "int start", asOFFSET(InputEvent, start));
+
+		m_scriptEngine->RegisterObjectMethod("PhysicsComponent", "bool solid()",
+			asMETHOD(PhysicsComponent, solid), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("PhysicsComponent", "void setSolid(bool val)",
+			asMETHOD(PhysicsComponent, setSolid), asCALL_THISCALL);
 
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void suspend(int cycles = 0)",
 			asMETHOD(ScriptComponent, ScriptComponent::suspend), asCALL_THISCALL);
@@ -176,6 +182,10 @@ namespace Core
 			asMETHOD(ScriptComponent, ScriptComponent::setRenderScale), asCALL_THISCALL);
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void setRenderRotation(float degrees)",
 			asMETHOD(ScriptComponent, ScriptComponent::setRenderRotation), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void setScript(const string &in, ScriptComponent @sc)",
+			asMETHOD(ScriptComponent, ScriptComponent::setScript), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "ScriptComponent @getScript(const string &in)",
+			asMETHOD(ScriptComponent, ScriptComponent::getScript), asCALL_THISCALL);
 		
 
 	}
