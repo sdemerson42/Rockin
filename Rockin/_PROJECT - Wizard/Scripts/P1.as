@@ -1,12 +1,18 @@
 void P1_main(ScriptComponent @p)
 {
 	p.log("P1 OK");
+
 	float speed = 5.0f;
+	int atkCounter = 0;
 	auto master = p.getScriptByTag("Master");
 
 	p.setReg("portal", 0);
 	p.setReg("locked", 0);
 	p.setReg("talk", 0);
+
+	// Temp
+	p.setReg("atkType", 1);
+	p.setReg("atkCooldown", 15);
 
 	while(true)
 	{
@@ -50,10 +56,33 @@ void P1_main(ScriptComponent @p)
 		
 		auto pos = p.position();
 		p.setViewCenter(pos.x + 16.0, pos.y + 16.0);
+
+		// Attacks
+
+		if ((input.stickRightX != 0.0 or input.stickRightY != 0.0) and atkCounter == 0)
+		{
+			if (p.getReg("atkType") == 1)
+			{
+				// Fireball
+				atkCounter = p.getReg("atkCooldown");
+				float vx = input.stickRightX;
+				float vy = input.stickRightY;
+				float m = sqrt(vx * vx + vy * vy);
+				vx /= m;
+				vy /= m;
+				auto fb = p.spawn("Fireball");
+				if (fb !is null)
+				{
+					fb.setPosition(pos.x + 2.0, pos.y + 2.0);
+					fb.setMomentum(vx * 8.0f, vy * 8.0f);
+				}
+			}
+		}
 		
-		// Reset state
+		// Update state
 
 		p.setScript("target", null);
+		if (atkCounter > 0) --atkCounter;
 	
 		p.suspend();
 	}

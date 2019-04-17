@@ -13,6 +13,7 @@
 #include "AnimationComponent.h"
 
 #include "../../add_on/scriptstdstring/scriptstdstring.h"
+#include "../../add_on/scriptmath/scriptmath.h"
 
 #include <iostream>
 #include <fstream>
@@ -73,6 +74,8 @@ namespace Core
 		ScriptComponent::setSim(this);
 
 		RegisterStdString(m_scriptEngine);
+		RegisterScriptMath(m_scriptEngine);
+
 		m_scriptEngine->RegisterObjectType("ScriptComponent", 0, asOBJ_REF | asOBJ_NOCOUNT);
 		m_scriptEngine->RegisterObjectType("Entity", 0, asOBJ_REF | asOBJ_NOCOUNT);
 		m_scriptEngine->RegisterObjectType("InputEvent", 0, asOBJ_REF | asOBJ_NOCOUNT);
