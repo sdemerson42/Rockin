@@ -73,7 +73,7 @@ void P1_main(ScriptComponent @p)
 				auto fb = p.spawn("Fireball");
 				if (fb !is null)
 				{
-					fb.setPosition(pos.x, pos.y);
+					fb.setPosition(pos.x + 8.0, pos.y + 8.0);
 					fb.setMomentum(vx * 8.0f, vy * 8.0f);
 				}
 			}
