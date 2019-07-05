@@ -1,16 +1,5 @@
-#include "Sim.h"
-#include "Renderer.h"
-#include "Physics.h"
-#include "ScriptSystem.h"
-#include "InputSystem.h"
-#include "SoundSystem.h"
-#include "Animator.h"
-
-#include "TransformComponent.h"
-#include "RenderComponent.h"
-#include "PhysicsComponent.h"
-#include "ScriptComponent.h"
-#include "AnimationComponent.h"
+#include "Systems.h"
+#include "Components.h"
 
 #include "../../add_on/scriptstdstring/scriptstdstring.h"
 #include "../../add_on/scriptmath/scriptmath.h"
@@ -19,6 +8,9 @@
 #include <fstream>
 #include <algorithm>
 #include <typeindex>
+#include <exception>
+
+#include "Logger.h"
 
 namespace Core
 {

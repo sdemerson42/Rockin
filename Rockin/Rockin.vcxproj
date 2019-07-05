@@ -160,6 +160,7 @@
     <ClCompile Include="CoreEntity.cpp" />
     <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="InputSystem.cpp" />
+    <ClCompile Include="Logger.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="Renderer.cpp" />
@@ -174,10 +175,12 @@
     <ClInclude Include="AnimationComponent.h" />
     <ClInclude Include="Animator.h" />
     <ClInclude Include="AutoListScene.h" />
+    <ClInclude Include="Components.h" />
     <ClInclude Include="CoreComponentBase.h" />
     <ClInclude Include="CoreEntity.h" />
     <ClInclude Include="EntityFactory.h" />
     <ClInclude Include="Events.h" />
+    <ClInclude Include="Logger.h" />
     <ClInclude Include="InputSystem.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="PhysicsComponent.h" />
@@ -188,6 +191,7 @@
     <ClInclude Include="ScriptSystem.h" />
     <ClInclude Include="Sim.h" />
     <ClInclude Include="SoundSystem.h" />
+    <ClInclude Include="Systems.h" />
     <ClInclude Include="TextComponent.h" />
     <ClInclude Include="TilesetData.h" />
     <ClInclude Include="TransformComponent.h" />

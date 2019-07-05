@@ -4,12 +4,9 @@
 #include "Events.h"
 #include <algorithm>
 #include "EntityFactory.h"
+#include "Logger.h"
 
-#include "PhysicsComponent.h"
-#include "AnimationComponent.h"
-#include "RenderComponent.h"
-#include "ScriptComponent.h"
-#include "TextComponent.h"
+#include "Components.h"
 
 namespace Core
 {
@@ -209,7 +206,7 @@ namespace Core
 			buildScene(subsceneName, true);
 		}
 
-		std::cout << sceneName << " built successfully.\n";
+		Logger::log(sceneName + " built successfully.");
 	}
 
 	void SceneFactory::setSubscene(const std::string &name)
