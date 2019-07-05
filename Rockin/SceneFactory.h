@@ -66,6 +66,5 @@ namespace Core
 		void readSceneData();
 		bool readScene(std::istream &ist, SceneData &sd);
 		void readTilesetData();
-		std::string nextToken(std::istream &ist);
 	};
 }

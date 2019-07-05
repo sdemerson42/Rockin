@@ -158,6 +158,7 @@
     <ClCompile Include="AnimationComponent.cpp" />
     <ClCompile Include="Animator.cpp" />
     <ClCompile Include="CoreEntity.cpp" />
+    <ClCompile Include="DataIO.cpp" />
     <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="InputSystem.cpp" />
     <ClCompile Include="Logger.cpp" />
@@ -178,6 +179,7 @@
     <ClInclude Include="Components.h" />
     <ClInclude Include="CoreComponentBase.h" />
     <ClInclude Include="CoreEntity.h" />
+    <ClInclude Include="DataIO.h" />
     <ClInclude Include="EntityFactory.h" />
     <ClInclude Include="Events.h" />
     <ClInclude Include="Logger.h" />

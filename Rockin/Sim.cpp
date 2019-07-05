@@ -42,6 +42,8 @@ namespace Core
 		m_subsceneChange = false;
 
 		m_sceneFactory->buildScene();
+
+		Logger::log("Sim successfully constructed. Beginning main loop.");
 	}
 
 	Sim::~Sim()

@@ -1,14 +1,13 @@
 #include "EntityFactory.h"
+#include <exception>
 #include <fstream>
 #include <iostream>
 #include <algorithm>
+#include "DataIO.h"
+#include "Logger.h"
 
-#include "TransformComponent.h"
-#include "RenderComponent.h"
-#include "PhysicsComponent.h"
-#include "ScriptComponent.h"
-#include "AnimationComponent.h"
-#include "TextComponent.h"
+#include "Components.h"
+
 
 #include "../../add_on/scriptbuilder/scriptbuilder.h"
 
@@ -138,7 +137,8 @@ namespace Core
 		std::ifstream ifs{ fName };
 		if (!ifs)
 		{
-			std::cerr << "WARNING: EntityFactory failed to open Blueprint data file.\n";
+			std::exception e{ "EntityFactory failed to open Blueprint data file.\n" };
+			throw(e);
 			return;
 		}
 
@@ -173,7 +173,7 @@ namespace Core
 		token = nextToken(ist);
 		if (token != "{")
 		{
-			std::cerr << "WARNING: Bad blueprint formatting.\n";
+			Logger::log("WARNING: Bad blueprint formatting.");
 			return false;
 		}
 
@@ -191,7 +191,7 @@ namespace Core
 				token = nextToken(ist);
 				if (token != "{")
 				{
-					std::cerr << "WARNING: Bad tag data formatting.\n";
+					Logger::log("WARNING: Bad tag data formatting.");
 					return false;
 				}
 
@@ -230,7 +230,7 @@ namespace Core
 		auto token = nextToken(ist);
 		if (token != "{")
 		{
-			std::cerr << "WARNING: Bad component data formatting.\n";
+			Logger::log("WARNING: Bad component data formatting.");
 			return false;
 		}
 
@@ -261,90 +261,5 @@ namespace Core
 			pair.value = token;
 			cd.valuePair.push_back(pair);
 		}
-	}
-
-	std::string EntityFactory::nextToken(std::istream &ist)
-	{
-		std::string token;
-		char c = ' ';
-		char type;
-		bool quotes{ false };
-
-		// Skip whitespace and newline...
-		while (' ' == c || '\n' == c)
-		{
-			ist.get(c);
-			if (!ist)
-			{
-				token = " ";
-				return token;
-			}
-		}
-
-		// Deduce token type
-
-		if (isalpha(c)) type = 's';
-		else if (c == '\"')
-		{
-			type = 's';
-			quotes = true;
-		}
-		else if (isdigit(c) || c == '-' || c == '.') type = '#';
-		else
-		{
-			token += c;
-			return token;
-		}
-		if (c != '\"')
-			token += c;
-
-		while (true)
-		{
-			ist.get(c);
-			if (!ist)
-			{
-				return token;
-			}
-
-			if ('s' == type)
-			{
-				if (quotes)
-				{
-					if (c == '\"')
-					{
-						break;
-					}
-					if (c == 'n' && token.size() > 0 && token[token.size() - 1] == '\\')
-					{
-						token[token.size() - 1] = '\n';
-					}
-					else
-					{
-						token += c;
-					}
-				}
-				else
-				{
-					if (isalnum(c)) token += c;
-					else
-					{
-						ist.putback(c);
-						break;
-					}
-				}
-			}
-			else if ('#' == type)
-			{
-				if (isdigit(c) || c == '.') token += c;
-				else
-				{
-					ist.putback(c);
-					if (token[0] == '.') token = "0" + token;
-					else if (token[0] == '-' && token[1] == '.') token.insert(std::begin(token) + 1, '0');
-					break;
-				}
-			}
-		}
-		return token;
 	}
 }

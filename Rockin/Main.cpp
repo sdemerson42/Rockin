@@ -12,9 +12,10 @@ expense of scalability.
 
 int main()
 {
+	const float version = .063f;
 	try
 	{
-		Logger::log("Stating execution.");
+		Logger::log("-----------Rockin' Version " + std::to_string(version) + " -----------\nStarting execution.");
 
 		// To-do: Replace temporary RNG with something more robust.
 		srand(std::time(NULL));

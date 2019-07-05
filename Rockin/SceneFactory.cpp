@@ -5,6 +5,8 @@
 #include <algorithm>
 #include "EntityFactory.h"
 #include "Logger.h"
+#include "DataIO.h"
+#include <exception>
 
 #include "Components.h"
 
@@ -20,7 +22,11 @@ namespace Core
 	void SceneFactory::buildScene()
 	{
 		if (m_sceneData.size() > 0) buildScene(m_sceneData[0].name);
-		else std::cerr << "WARNING: Default scene data not found.\n";
+		else
+		{
+			std::exception e{ "WARNING: Default scene data not found." };
+			throw(e);
+		}
 	}
 
 	void SceneFactory::buildScene(const std::string &sceneName, bool isSubscene)
@@ -53,7 +59,7 @@ namespace Core
 		});
 		if (sd == std::end(m_sceneData))
 		{
-			std::cerr << "WARNING: Scene not found. Construction aborted.\n";
+			Logger::log("WARNING: Scene not found. Construction aborted.");
 			return;
 		}
 
@@ -211,6 +217,20 @@ namespace Core
 
 	void SceneFactory::setSubscene(const std::string &name)
 	{
+		// Ensure subscene exists. Otherwise throw exception.
+
+		auto p = std::find_if(std::begin(m_sceneData), std::end(m_sceneData),
+			[&](const SceneData &sd)
+		{
+			return sd.name == name;
+		});
+
+		if (p == std::end(m_sceneData))
+		{
+			std::exception e{ "Tried to contruct nonexistent subscene." };
+			throw(e);
+		}
+
 		AutoListScene<AnimationComponent>::alsSetScene(name);
 		AutoListScene<PhysicsComponent>::alsSetScene(name);
 		AutoListScene<RenderComponent>::alsSetScene(name);
@@ -255,7 +275,8 @@ namespace Core
 		std::ifstream ifs{ "Data/Scenes.dat" };
 		if (!ifs)
 		{
-			std::cerr << "WARNING: Scene data not found.\n";
+			std::exception e{ "Scene data not found." };
+			throw(e);
 		}
 
 		while (true)
@@ -277,7 +298,7 @@ namespace Core
 		t = nextToken(ist);
 		if (t != "{")
 		{
-			std::cerr << "WARNING: Bad scene formatting.\n";
+			Logger::log("WARNING: Bad scene formatting.");
 			return false;
 		}
 
@@ -293,7 +314,7 @@ namespace Core
 				t = nextToken(ist);
 				if (t != "{")
 				{
-					std::cerr << "WARNING: Bad layer formatting.\n";
+					Logger::log("WARNING: Bad layer formatting.");
 					return false;
 				}
 
@@ -302,7 +323,7 @@ namespace Core
 				t = nextToken(ist);
 				if (t != ",")
 				{
-					std::cerr << "WARNING: Bad layer formatting.\n";
+					Logger::log("WARNING: Bad layer formatting.");
 					return false;
 				}
 				t = nextToken(ist);
@@ -310,7 +331,7 @@ namespace Core
 				t = nextToken(ist);
 				if (t != "}")
 				{
-					std::cerr << "WARNING: Bad layer formatting.\n";
+					Logger::log("WARNING: Bad layer formatting.");
 					return false;
 				}
 				sd.layer.push_back(ld);
@@ -332,7 +353,7 @@ namespace Core
 				t = nextToken(ist);
 				if (t != "{")
 				{
-					std::cerr << "WARNING: Bad entity formatting.\n";
+					Logger::log("WARNING: Bad entity formatting.");
 					return false;
 				}
 				t = nextToken(ist);
@@ -398,7 +419,7 @@ namespace Core
 
 				if (iter == std::end(m_tilesetData))
 				{
-					std::cerr << "WARNING: Tileset not found.\n";
+					Logger::log("WARNING: Tileset not found.");
 					return false;
 				}
 
@@ -419,7 +440,7 @@ namespace Core
 
 				if (nextToken(ist) != "}")
 				{
-					std::cerr << "WARNING: Bad tilemap formatting.\n";
+					Logger::log("WARNING: Bad tilemap formatting.");
 					return false;
 				}
 			}
@@ -445,7 +466,7 @@ namespace Core
 			}
 			else if (t != "}")
 			{
-				std::cerr << "WARNING: Bad scene formatting.\n";
+				Logger::log("WARNING: Bad scene formatting.");
 				return false;
 			}
 			else break;
@@ -458,7 +479,7 @@ namespace Core
 		std::ifstream ifs{ "Data/Tilesets.dat" };
 		if (!ifs)
 		{
-			std::cerr << "WARNING: Tileset data not found.\n";
+			Logger::log("WARNING: Tileset data not found.");
 			return;
 		}
 
@@ -494,90 +515,5 @@ namespace Core
 			}
 			m_tilesetData.push_back(td);
 		}
-	}
-
-	std::string SceneFactory::nextToken(std::istream &ist)
-	{
-		std::string token;
-		char c = ' ';
-		char type;
-		bool quotes{ false };
-
-		// Skip whitespace and newline...
-		while (' ' == c || '\n' == c)
-		{
-			ist.get(c);
-			if (!ist)
-			{
-				token = " ";
-				return token;
-			}
-		}
-
-		// Deduce token type
-
-		if (isalpha(c)) type = 's';
-		else if (c == '\"')
-		{
-			type = 's';
-			quotes = true;
-		}
-		else if (isdigit(c) || c == '-' || c == '.') type = '#';
-		else
-		{
-			token += c;
-			return token;
-		}
-		if (c != '\"')
-			token += c;
-
-		while (true)
-		{
-			ist.get(c);
-			if (!ist)
-			{
-				return token;
-			}
-
-			if ('s' == type)
-			{
-				if (quotes)
-				{
-					if (c == '\"')
-					{
-						break;
-					}
-					if (c == 'n' && token.size() > 0 && token[token.size() - 1] == '\\')
-					{
-						token[token.size() - 1] = '\n';
-					}
-					else
-					{
-						token += c;
-					}
-				}
-				else
-				{
-					if (isalnum(c)) token += c;
-					else
-					{
-						ist.putback(c);
-						break;
-					}
-				}
-			}
-			else if ('#' == type)
-			{
-				if (isdigit(c) || c == '.') token += c;
-				else
-				{
-					ist.putback(c);
-					if (token[0] == '.') token = "0" + token;
-					else if (token[0] == '-' && token[1] == '.') token.insert(std::begin(token) + 1, '0');
-					break;
-				}
-			}
-		}
-		return token;
 	}
 }

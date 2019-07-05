@@ -41,8 +41,6 @@ namespace Core
 
 		bool readBlueprint(std::istream &ist, Blueprint &bp);
 		bool readComponentData(std::istream &ist, ComponentData &cd);
-		std::string nextToken(std::istream &ist);
 		std::vector<std::string> m_compiledScripts;
-
 	};
 }
