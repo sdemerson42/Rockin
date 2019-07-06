@@ -54,7 +54,7 @@ namespace Core
 		bool detectCollision(Collision *c);
 		void processStatics(std::vector<PhysicsComponent *> &sv, std::vector<PhysicsComponent *> &nsv);
 		void sendCollisionEvents();
-		void proxPlace(PhysicsComponent *pc, std::vector<std::vector<std::vector<PhysicsComponent *>>> &v);
+		void proxPlace(PhysicsComponent *pc, std::vector<std::vector<std::vector<PhysicsComponent *>>> &proxMap);
 		sf::Vector2i m_cellSize;
 
 		void onNewScene(const NewSceneEvent *event);

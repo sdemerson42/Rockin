@@ -13,6 +13,11 @@ expense of scalability.
 int main()
 {
 	const float version = .0631f;
+
+	// Temporary display window constraints
+	const int windowWidth = 800;
+	const int windowHeight = 600;
+
 	try
 	{
 		Logger::log("-----------Rockin' Version " + std::to_string(version) + " -----------\nStarting execution.");
@@ -20,7 +25,7 @@ int main()
 		// To-do: Replace temporary RNG with something more robust.
 		srand(std::time(NULL));
 
-		std::unique_ptr<Core::Sim> sim = std::make_unique<Core::Sim>(800, 600, "Rockin'");
+		std::unique_ptr<Core::Sim> sim = std::make_unique<Core::Sim>(windowWidth, windowHeight, "Rockin'");
 		sim->execute();
 
 		Logger::log("Completing execution.");

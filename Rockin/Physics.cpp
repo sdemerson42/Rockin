@@ -102,13 +102,19 @@ namespace Core
 
 	void Physics::adjustMomentum(Collision *collision)
 	{
+		// Resolve collisions using: v'a = va - jn / massA, v'b = vb + jn / massB
+
 		auto a = collision->a;
 		auto b = collision->b;
 
 		float e = (a->m_elasticity + b->m_elasticity) / 2.0f;
-		auto rv = sf::Vector2f{ b->m_momentum.x - a->m_momentum.x, b->m_momentum.y - a->m_momentum.y };
-		float velAlongNormal = rv.x * collision->normal.x + rv.y * collision->normal.y;
+		auto relativeVelocity = sf::Vector2f{ b->m_momentum.x - a->m_momentum.x, b->m_momentum.y - a->m_momentum.y };
+		float velAlongNormal = relativeVelocity.x * collision->normal.x + 
+			relativeVelocity.y * collision->normal.y;
 		if (velAlongNormal > 0.0f) return;
+
+		// Find impule magnitude by j = (-(e+1)(vb - va) . n) / sum of inverse masses 
+
 		float j = (-1.0f*(e + 1.0f) * velAlongNormal) / (a->m_inverseMass + b->m_inverseMass);
 
 		a->m_momentum -= j * collision->normal * a->m_inverseMass;
@@ -178,7 +184,7 @@ namespace Core
 		// For collisions involving static objects,
 		// process axis by axis and adjust position accordingly.
 
-		// X
+		// X axis
 
 		for (int i = 0; i < nsv.size(); ++i)
 		{
@@ -225,7 +231,7 @@ namespace Core
 			}
 		}
 
-		// Y
+		// Y axis
 
 		for (int i = 0; i < nsv.size(); ++i)
 		{
@@ -264,6 +270,10 @@ namespace Core
 						}
 						a->m_momentum.y *= -1.0f * e;
 					}
+
+					// Check to see if this collision has already been recorded in
+					// the message group before adding it.
+
 					if (find_if(std::begin(m_messageGroup), std::end(m_messageGroup), [=](const Collision &col)
 					{
 						return col.a == a && col.b == b;
@@ -304,15 +314,18 @@ namespace Core
 		}
 	}
 
-	void Physics::proxPlace(PhysicsComponent *pc, std::vector<std::vector<std::vector<PhysicsComponent *>>> &v)
+	void Physics::proxPlace(PhysicsComponent *pc, std::vector<std::vector<std::vector<PhysicsComponent *>>> &proxMap)
 	{
+		// Determine where in the provided 2D vector (proximity map) the
+		// provided PhysicsComponent should be placed.
+
 		int l = (int)pc->parent()->position().x + (int)pc->m_AABBOffset.x;
 		int t = (int)pc->parent()->position().y + (int)pc->m_AABBOffset.y;
 		int r = l + (int)pc->m_AABBSize.x + (int)pc->m_momentum.x + 1;
 		int b = t + (int)pc->m_AABBSize.y + (int)pc->m_momentum.y + 1;
 
-		int xSz = v.size();
-		int ySz = v[0].size();
+		int xSz = proxMap.size();
+		int ySz = proxMap[0].size();
 
 		int xMin = std::max(0, l / m_cellSize.x);
 		int xMax = std::min(r / m_cellSize.y, xSz - 1);
@@ -323,13 +336,15 @@ namespace Core
 		{
 			for (int j = yMin; j <= yMax; ++j)
 			{
-				v[i][j].push_back(pc);
+				proxMap[i][j].push_back(pc);
 			}
 		}
 	}
 
 	void Physics::onNewScene(const NewSceneEvent *event)
 	{
+		// Set state that determines behavior of proximity map
+
 		m_cellSize = event->cellSize;
 		m_pcStaticMap.clear();
 		m_pcNonstaticMap.clear();
