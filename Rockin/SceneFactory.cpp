@@ -290,12 +290,12 @@ namespace Core
 
 	bool SceneFactory::readScene(std::istream &ist, SceneData &sd)
 	{		
-		auto t = nextToken(ist);
+		auto t = Tokenizer::next(ist);
 		if (t == " ") return false;
 
 		sd.name = t;
 
-		t = nextToken(ist);
+		t = Tokenizer::next(ist);
 		if (t != "{")
 		{
 			Logger::log("WARNING: Bad scene formatting.");
@@ -304,31 +304,31 @@ namespace Core
 
 		while (true)
 		{
-			t = nextToken(ist);
+			t = Tokenizer::next(ist);
 			if (t == "Layer")
 			{
 				// Read Layer data
 
 				LayerData ld;
 
-				t = nextToken(ist);
+				t = Tokenizer::next(ist);
 				if (t != "{")
 				{
 					Logger::log("WARNING: Bad layer formatting.");
 					return false;
 				}
 
-				t = nextToken(ist);
+				t = Tokenizer::next(ist);
 				ld.name = t;
-				t = nextToken(ist);
+				t = Tokenizer::next(ist);
 				if (t != ",")
 				{
 					Logger::log("WARNING: Bad layer formatting.");
 					return false;
 				}
-				t = nextToken(ist);
+				t = Tokenizer::next(ist);
 				ld.isStatic = (t == "static" ? true : false);
-				t = nextToken(ist);
+				t = Tokenizer::next(ist);
 				if (t != "}")
 				{
 					Logger::log("WARNING: Bad layer formatting.");
@@ -350,21 +350,21 @@ namespace Core
 				else
 					ed.persistent = false;
 
-				t = nextToken(ist);
+				t = Tokenizer::next(ist);
 				if (t != "{")
 				{
 					Logger::log("WARNING: Bad entity formatting.");
 					return false;
 				}
-				t = nextToken(ist);
+				t = Tokenizer::next(ist);
 				ed.name = t;
-				t = nextToken(ist);
-				t = nextToken(ist);
+				t = Tokenizer::next(ist);
+				t = Tokenizer::next(ist);
 				ed.total = std::stoi(t);
-				t = nextToken(ist);
-				t = nextToken(ist);
+				t = Tokenizer::next(ist);
+				t = Tokenizer::next(ist);
 				ed.active = (t == "true" ? true : false);
-				t = nextToken(ist);
+				t = Tokenizer::next(ist);
 				if (t == "}")
 				{
 					ed.layer = "default";
@@ -373,9 +373,9 @@ namespace Core
 					sd.entity.push_back(ed);
 					continue;
 				}
-				t = nextToken(ist);
+				t = Tokenizer::next(ist);
 				ed.layer = t;
-				t = nextToken(ist);
+				t = Tokenizer::next(ist);
 				if (t == "}")
 				{
 					ed.x = 0.0f;
@@ -383,34 +383,34 @@ namespace Core
 					sd.entity.push_back(ed);
 					continue;
 				}
-				t = nextToken(ist);
+				t = Tokenizer::next(ist);
 				ed.x = std::stof(t);
-				t = nextToken(ist);
-				t = nextToken(ist);
+				t = Tokenizer::next(ist);
+				t = Tokenizer::next(ist);
 				ed.y = std::stof(t);
 				sd.entity.push_back(ed);
-				t = nextToken(ist);
+				t = Tokenizer::next(ist);
 			}
 			else if (t == "Physics")
 			{
-				t = nextToken(ist);
-				t = nextToken(ist);
+				t = Tokenizer::next(ist);
+				t = Tokenizer::next(ist);
 				sd.sceneSize.x = std::stoi(t);
-				t = nextToken(ist);
-				t = nextToken(ist);
+				t = Tokenizer::next(ist);
+				t = Tokenizer::next(ist);
 				sd.sceneSize.y = std::stoi(t);
-				t = nextToken(ist);
-				t = nextToken(ist);
+				t = Tokenizer::next(ist);
+				t = Tokenizer::next(ist);
 				sd.cellSize.x = std::stoi(t);
-				t = nextToken(ist);
-				t = nextToken(ist);
+				t = Tokenizer::next(ist);
+				t = Tokenizer::next(ist);
 				sd.cellSize.y = std::stoi(t);
-				t = nextToken(ist);
+				t = Tokenizer::next(ist);
 			}
 			else if (t == "Tilemap")
 			{
-				nextToken(ist);
-				std::string tmName = nextToken(ist);
+				Tokenizer::next(ist);
+				std::string tmName = Tokenizer::next(ist);
 
 				auto iter = std::find_if(std::begin(m_tilesetData), std::end(m_tilesetData), [&](const TilesetData &td)
 				{
@@ -424,21 +424,21 @@ namespace Core
 				}
 
 				sd.tilesetData = &*iter;
-				t = nextToken(ist);
-				sd.tilemapLayer = nextToken(ist);
-				nextToken(ist);
-				sd.tilemapSize.x = std::stoi(nextToken(ist));
-				nextToken(ist);
-				sd.tilemapSize.y = std::stoi(nextToken(ist));
+				t = Tokenizer::next(ist);
+				sd.tilemapLayer = Tokenizer::next(ist);
+				Tokenizer::next(ist);
+				sd.tilemapSize.x = std::stoi(Tokenizer::next(ist));
+				Tokenizer::next(ist);
+				sd.tilemapSize.y = std::stoi(Tokenizer::next(ist));
 
 				int sz = sd.tilemapSize.x * sd.tilemapSize.y;
 				for (int i = 0; i < sz; ++i)
 				{
-					nextToken(ist);
-					sd.tilemap.push_back(std::stoi(nextToken(ist)));
+					Tokenizer::next(ist);
+					sd.tilemap.push_back(std::stoi(Tokenizer::next(ist)));
 				}
 
-				if (nextToken(ist) != "}")
+				if (Tokenizer::next(ist) != "}")
 				{
 					Logger::log("WARNING: Bad tilemap formatting.");
 					return false;
@@ -446,22 +446,22 @@ namespace Core
 			}
 			else if (t == "Subscene")
 			{
-				nextToken(ist);
-				sd.subscene.push_back(nextToken(ist));
-				nextToken(ist);
+				Tokenizer::next(ist);
+				sd.subscene.push_back(Tokenizer::next(ist));
+				Tokenizer::next(ist);
 			}
 			else if (t == "Data")
 			{
 				if (sd.entity.size() == 0) break;
 
 				EntityData &ed = sd.entity[sd.entity.size() - 1];
-				nextToken(ist);
+				Tokenizer::next(ist);
 				while (true)
 				{
-					ed.data.push_back(nextToken(ist));
-					nextToken(ist);
-					ed.data.push_back(nextToken(ist));
-					if (nextToken(ist) == "}") break;
+					ed.data.push_back(Tokenizer::next(ist));
+					Tokenizer::next(ist);
+					ed.data.push_back(Tokenizer::next(ist));
+					if (Tokenizer::next(ist) == "}") break;
 				}
 			}
 			else if (t != "}")
@@ -485,32 +485,32 @@ namespace Core
 
 		while (true)
 		{
-			auto t = nextToken(ifs);
+			auto t = Tokenizer::next(ifs);
 
 			if (t == " ") break;
 			
 			TilesetData td;
 			td.name = t;
-			nextToken(ifs);
-			td.texture = nextToken(ifs);
-			nextToken(ifs);
-			int x = std::stoi(nextToken(ifs));
-			nextToken(ifs);
-			int y = std::stoi(nextToken(ifs));
+			Tokenizer::next(ifs);
+			td.texture = Tokenizer::next(ifs);
+			Tokenizer::next(ifs);
+			int x = std::stoi(Tokenizer::next(ifs));
+			Tokenizer::next(ifs);
+			int y = std::stoi(Tokenizer::next(ifs));
 			td.textureSize = { x, y };
 
-			nextToken(ifs);
-			int tx = std::stoi(nextToken(ifs));
-			nextToken(ifs);
-			int ty = std::stoi(nextToken(ifs));
+			Tokenizer::next(ifs);
+			int tx = std::stoi(Tokenizer::next(ifs));
+			Tokenizer::next(ifs);
+			int ty = std::stoi(Tokenizer::next(ifs));
 			td.tileSize = { tx, ty };
-			t = nextToken(ifs);
+			t = Tokenizer::next(ifs);
 			if (t != "}")
 			{
 				do
 				{
-					td.staticTile.push_back(std::stoi(nextToken(ifs)));
-					t = nextToken(ifs);
+					td.staticTile.push_back(std::stoi(Tokenizer::next(ifs)));
+					t = Tokenizer::next(ifs);
 				} while (t != "}");
 			}
 			m_tilesetData.push_back(td);

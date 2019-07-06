@@ -1,90 +1,114 @@
 #include "DataIO.h"
+#include <exception>
 
 namespace Core
 {
+	std::vector<std::regex> Tokenizer::m_regex;
 
-	std::string nextToken(std::istream &ist)
+	void Tokenizer::initialize()
 	{
-		std::string token;
-		char c = ' ';
-		char type;
-		bool quotes{ false };
+		// Populate m_regex with necessary regular expressions,
+		// in order of precedence
 
-		// Skip whitespace and newline...
-		while (' ' == c || '\n' == c)
+		m_regex.clear();
+		std::string regStr;
+
+		// Quoted strings
+		regStr = "\"[^\"]*\"";
+		m_regex.emplace_back(regStr, std::regex_constants::icase);
+
+		// Single character tokens
+		regStr = "[{},]";
+		m_regex.emplace_back(regStr, std::regex_constants::icase);
+
+		// Unquoted strings
+		regStr = "[a-z][a-z0-9]*";
+		m_regex.emplace_back(regStr, std::regex_constants::icase);
+
+		// Floats
+		regStr = "-*[0-9]*\\.[0-9]+";
+		m_regex.emplace_back(regStr, std::regex_constants::icase);
+
+		// Ints
+		regStr = "-*[0-9]+";
+		m_regex.emplace_back(regStr, std::regex_constants::icase);
+
+	}
+
+	std::string Tokenizer::next(std::istream &ist)
+	{
+		char c;
+	
+		// Parse out any preceding whitespace of newlines
+
+		while (true)
 		{
-			ist.get(c);
-			if (!ist)
-			{
-				token = " ";
-				return token;
-			}
+			// Return a single whitespace character at EOF
+			if (!(ist.get(c))) return " ";
+			if (' ' == c || '\n' == c) continue;
+			ist.putback(c);
+			break;
 		}
 
-		// Deduce token type
+		// Build current block of characters
 
-		if (isalpha(c)) type = 's';
-		else if (c == '\"')
-		{
-			type = 's';
-			quotes = true;
-		}
-		else if (isdigit(c) || c == '-' || c == '.') type = '#';
-		else
-		{
-			token += c;
-			return token;
-		}
-		if (c != '\"')
-			token += c;
+		bool quoted{ false };
+		std::string s;
 
 		while (true)
 		{
 			ist.get(c);
 			if (!ist)
 			{
-				return token;
+				ist.clear(std::ios_base::goodbit);
+				break;
+			}
+			if ((' ' == c || '\n' == c) && !quoted)
+			{
+				ist.putback(c);
+				break;
+			}
+			if ('\"' == c)
+			{
+				if (quoted) quoted = false;
+				else quoted = true;
 			}
 
-			if ('s' == type)
+			s += c;
+		}
+
+		// Attempt to match
+
+		for (const auto &regex : m_regex)
+		{
+			std::smatch match;
+			if (std::regex_search(s, match, regex) && match.position(0) == 0)
 			{
-				if (quotes)
+				// Match found: Return current token and replace unused characters
+
+				std::string token{ match.str() };
+				
+				// Remove quotes from quoted strings
+				if (token[0] == '\"') token = token.substr(1, token.length() - 2);
+				
+				auto stringBeginIndex = s.length() - 1;
+				auto stringEndIndex = match.length() - 1;
+
+				for (int i = stringBeginIndex; i > stringEndIndex; --i)
 				{
-					if (c == '\"')
-					{
-						break;
-					}
-					if (c == 'n' && token.size() > 0 && token[token.size() - 1] == '\\')
-					{
-						token[token.size() - 1] = '\n';
-					}
-					else
-					{
-						token += c;
-					}
+					ist.putback(s[i]);
 				}
-				else
-				{
-					if (isalnum(c)) token += c;
-					else
-					{
-						ist.putback(c);
-						break;
-					}
-				}
-			}
-			else if ('#' == type)
-			{
-				if (isdigit(c) || c == '.') token += c;
-				else
-				{
-					ist.putback(c);
-					if (token[0] == '.') token = "0" + token;
-					else if (token[0] == '-' && token[1] == '.') token.insert(std::begin(token) + 1, '0');
-					break;
-				}
+
+				return token;
 			}
 		}
-		return token;
+
+		// If no regular expression match was found, throw an exception.
+
+		std::string exceptionMessage{ "Unrecognized token found in data file: " + s };
+		std::exception e{ exceptionMessage.c_str() };
+		throw(e);
+
+		return "";
 	}
 }

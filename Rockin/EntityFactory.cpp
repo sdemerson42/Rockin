@@ -165,12 +165,12 @@ namespace Core
 
 	bool EntityFactory::readBlueprint(std::istream &ist, Blueprint &bp)
 	{
-		auto token = nextToken(ist);
+		auto token = Tokenizer::next(ist);
 		if (token == " ") return false;
 
 		bp.name = token;
 
-		token = nextToken(ist);
+		token = Tokenizer::next(ist);
 		if (token != "{")
 		{
 			Logger::log("WARNING: Bad blueprint formatting.");
@@ -179,7 +179,7 @@ namespace Core
 
 		while (true)
 		{
-			token = nextToken(ist);
+			token = Tokenizer::next(ist);
 			if (token == "}") break;
 
 			// Read data
@@ -188,7 +188,7 @@ namespace Core
 
 			if (token == "Tag")
 			{
-				token = nextToken(ist);
+				token = Tokenizer::next(ist);
 				if (token != "{")
 				{
 					Logger::log("WARNING: Bad tag data formatting.");
@@ -197,7 +197,7 @@ namespace Core
 
 				while (true)
 				{
-					token = nextToken(ist);
+					token = Tokenizer::next(ist);
 					if (token == ",") continue;
 					if (token == "}") break;
 					bp.tag.push_back(token);
@@ -227,7 +227,7 @@ namespace Core
 
 	bool EntityFactory::readComponentData(std::istream &ist, ComponentData &cd)
 	{
-		auto token = nextToken(ist);
+		auto token = Tokenizer::next(ist);
 		if (token != "{")
 		{
 			Logger::log("WARNING: Bad component data formatting.");
@@ -236,7 +236,7 @@ namespace Core
 
 		while (true)
 		{
-			token = nextToken(ist);
+			token = Tokenizer::next(ist);
 			if (token == "}") return true;
 			if (token == ",") continue;
 
