@@ -9,6 +9,12 @@
 
 namespace Core
 {
+	/*
+	Renderer - Stores textures and processes state from TextComponents and RenderComponents
+	to draw the current scene. When processing components the Renderer sorts by layers and
+	packs quads into as few sf::VertexArrays as possible to minimize draw calls.
+	*/
+
 	class Renderer : public sde::ISystem
 	{
 	public:

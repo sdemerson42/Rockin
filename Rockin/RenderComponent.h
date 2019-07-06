@@ -10,6 +10,12 @@
 
 namespace Core
 {
+	/*
+	RenderComponent - Contains state necessary for Entities to be rendered and methods
+	to simplify interactions with scripts and AnimationComponents.
+	Textures are owned by the Renderer class to avoid redundant state.
+	*/
+
 	class RenderComponent : public CoreComponentBase, public sde::AutoList<RenderComponent>, public AutoListScene<RenderComponent>
 	{
 		friend class Renderer;

@@ -8,6 +8,10 @@
 
 namespace Core
 {
+	/*
+	AnimationComponent - Stores animation state and receives requests to start or stop animations
+	received from scripts. State changes in the current animation are controlled by the Animation system.
+	*/
 	class AnimationComponent : public CoreComponentBase, public sde::AutoList<AnimationComponent>, public AutoListScene<AnimationComponent>
 	{
 		friend class Animator;

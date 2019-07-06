@@ -8,6 +8,12 @@
 
 namespace Core
 {
+
+	/*
+	SoundSystem - Stores all sound state and manages available sound channels. Stores
+	sound and music events and processes them each frame.
+	*/
+
 	class SoundSystem : public sde::ISystem
 	{
 	public:

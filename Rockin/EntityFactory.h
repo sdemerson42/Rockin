@@ -8,10 +8,13 @@
 
 namespace Core
 {
+	/*
+	EntityFactory - Class in charge of building entites and storing blueprint data.
+	*/
 	class EntityFactory
 	{
 	public:
-		EntityFactory(std::vector<std::unique_ptr<CoreEntity>> *, asIScriptEngine *);
+		EntityFactory(std::vector<std::unique_ptr<CoreEntity>> *eVec, asIScriptEngine *engine);
 		void createEntity(const std::string &name, bool active = false, bool persistent = false, const std::string &layer = "default",
 			float x = 0.0f, float y = 0.0f, const std::string &subsceneName = "main");
 		void addInitData(const std::vector<std::string> &data);

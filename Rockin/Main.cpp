@@ -12,7 +12,7 @@ expense of scalability.
 
 int main()
 {
-	const float version = .063f;
+	const float version = .0631f;
 	try
 	{
 		Logger::log("-----------Rockin' Version " + std::to_string(version) + " -----------\nStarting execution.");

@@ -6,6 +6,11 @@
 
 namespace Core
 {
+	/*
+	All EventBase structs that are to be passed among sde::EventHandlers should
+	be defined here.
+	*/
+
 	class ScriptComponent;
 	class PhysicsComponent;
 	struct TilesetData;

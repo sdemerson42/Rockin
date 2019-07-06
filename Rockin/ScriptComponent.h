@@ -11,6 +11,11 @@
 
 namespace Core
 {
+	/*
+	ScriptComponent - Contains state necessary for the correct execution of scripts as well as persistent
+	state that scripts may access to cut down on use of global script variables. The scripting API is
+	also located here to simplify calling syntax within individual scripts.
+	*/
 
 	class ScriptComponent : public CoreComponentBase, public sde::AutoList<ScriptComponent>, public AutoListScene<ScriptComponent>
 	{
@@ -19,8 +24,8 @@ namespace Core
 	public:
 		ScriptComponent(CoreEntity *parent, asIScriptEngine *engine, const std::string &tag);
 		~ScriptComponent();
-		static void setSim(Sim *);
-		static void setInput(const InputEvent *);
+		static void setSim(Sim *sim);
+		static void setInput(const InputEvent *ie);
 		void initialize() override;
 		const std::string &prefix() const;
 		void addRegValue(const std::string &name, int val);
@@ -35,7 +40,7 @@ namespace Core
 		static Sim *m_sim;
 		std::string m_prefix;
 
-		// Script interface
+		// Scripting API
 
 		void log(const std::string &msg);
 		void suspend(int cycles);

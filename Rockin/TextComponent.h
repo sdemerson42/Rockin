@@ -9,6 +9,12 @@
 namespace Core
 {
 	class CoreEntity;
+
+	/*
+	TextComponent - Component containing all state necessary to describe text to be rendered
+	by the Renderer, including a static map of all fonts to be used throughout execution.
+	*/
+
 	class TextComponent : public CoreComponentBase, public sde::AutoList<TextComponent>, public AutoListScene<TextComponent>
 	{
 		friend class Renderer;

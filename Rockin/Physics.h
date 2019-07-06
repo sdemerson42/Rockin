@@ -7,6 +7,11 @@
 
 namespace Core
 {
+	/*
+	Physics - Resolves collisions between objects with PhysicsComponents and broadcasts
+	collision events to be acted on by scripts. Also stores and updates proximity map
+	state to reduce the number of physics calculations performed each frame.
+	*/
 	class PhysicsComponent;
 	class Physics : public sde::ISystem
 	{

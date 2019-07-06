@@ -3,7 +3,8 @@
 #include <string>
 
 /*
-Logger - Collection of static members / methods
+Logger - Collection of static members / methods allowing simple log
+files to be created during runtime.
 */
 
 class Logger

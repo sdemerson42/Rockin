@@ -7,6 +7,12 @@
 
 namespace Core
 {
+	/* AutoListScene - A variation on the AutoList pattern that manages vectors of references to objects
+	at creation and destruction. This version, rather than owning a single vector, owns a map of 
+	strings to vectors, with each string signifying a scene. This allows for easy switching between
+	groups of references without moving references around or otherwise tampering with them.
+	*/
+
 	template<typename T>
 	class AutoListScene
 	{

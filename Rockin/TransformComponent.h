@@ -5,6 +5,12 @@
 
 namespace Core
 {
+
+	/*
+	TransformComponent - Simple Component that contains position state for entities. Every Entity
+	is provided a single TransformComponent at construction time.
+	*/
+
 	class TransformComponent : public CoreComponentBase, public sde::AutoList<TransformComponent>
 	{
 	public:

@@ -181,10 +181,8 @@ namespace Core
 			asMETHOD(ScriptComponent, ScriptComponent::setRenderRotation), asCALL_THISCALL);
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void setScript(const string &in, ScriptComponent @sc)",
 			asMETHOD(ScriptComponent, ScriptComponent::setScript), asCALL_THISCALL);
-		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "ScriptComponent @getScript(const string &in)",
+		auto finalValue = m_scriptEngine->RegisterObjectMethod("ScriptComponent", "ScriptComponent @getScript(const string &in)",
 			asMETHOD(ScriptComponent, ScriptComponent::getScript), asCALL_THISCALL);
-		
-
 	}
 
 	void Sim::execute()
@@ -237,6 +235,10 @@ namespace Core
 			(*iter)->setActive(true);
 			(*iter)->initializeAllComponents();
 			r = (*iter)->getComponent<ScriptComponent>();
+		}
+		else
+		{
+			Logger::log("WARNING: A script requested a bad spawn. Entity with tag " + tag + " was requested.");
 		}
 
 		return r;

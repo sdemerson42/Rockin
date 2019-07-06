@@ -11,6 +11,9 @@
 
 namespace Core
 {
+	/*
+	SceneFactory - Stores Scene data and provides methods for construction of Scenes and Subscenes.
+	*/
 	class EntityFactory;
 	class CoreEntity;
 

@@ -5,6 +5,11 @@
 namespace Core
 {
 	class CoreEntity;
+	
+	/*
+	CoreComponentBase - Base class for all components.
+	*/
+
 	class CoreComponentBase : public sde::ComponentBaseNoParent
 	{
 	public:

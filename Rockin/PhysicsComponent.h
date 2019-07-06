@@ -6,6 +6,10 @@
 
 namespace Core
 {
+	/*
+	PhysicsComponent - Component that holds all data necessary to resolve collisions.
+	Calculations are processed by the Physics system.
+	*/
 	class PhysicsComponent : public CoreComponentBase, public sde::AutoList<PhysicsComponent>, public AutoListScene<PhysicsComponent>
 	{
 		friend class Physics;

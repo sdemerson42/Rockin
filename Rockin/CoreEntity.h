@@ -5,6 +5,11 @@
 
 namespace Core
 {
+	/*
+	CoreEntity - This is the main game object class. CoreEntities have no state of their own aside
+	from a persistence flag. Instead they provide ownership of and access to components, which
+	are stored in the sde::EntityNoParent subclass.
+	*/
 	class ScriptComponent;
 	class CoreEntity : public sde::EntityNoParent, public sde::AutoList<CoreEntity>
 	{

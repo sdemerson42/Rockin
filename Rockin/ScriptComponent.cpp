@@ -9,6 +9,7 @@
 #include "Sim.h"
 #include "CoreEntity.h"
 #include "Events.h"
+#include "Logger.h"
 
 namespace Core
 {
@@ -88,11 +89,15 @@ namespace Core
 		m_strings[index] = s;
 	}
 
-	// Script interface
+
+
+	// Scripting API definitions
+
+
 
 	void ScriptComponent::log(const std::string &msg)
 	{
-		std::cout << '<' << this << ">: " << msg << std::endl;
+		Logger::log("Log request from ScriptComponent @" + std::to_string((unsigned long long)this) + ": " + msg);
 	}
 
 	void ScriptComponent::suspend(int cycles)

@@ -14,12 +14,23 @@
 namespace Core
 {
 	class ScriptComponent;
+	
+	/*
+	Sim - Primary simulation class. Owns all Systems and Entities.
+	On construction the Sim creates and initializes Systems, creates the
+	AngelScript engine, registers the scripting API, and prepares
+	the starting scene. The execute() method contains the main game loop.
+	*/
 
 	class Sim : public sde::EventHandler
 	{
 	public:
 		Sim(unsigned int w, unsigned int h, const std::string &name);
 		~Sim();
+		Sim(const Sim &) = delete;
+		Sim(Sim &&) = delete;
+		Sim &operator=(const Sim &) = delete;
+		Sim &operator=(Sim &&) = delete;
 		void execute();
 		ScriptComponent *spawn(const std::string &tag);
 	private:
