@@ -33,19 +33,23 @@ namespace Core
 
 			// Load texture if necessary
 
-			if (m_texureMap.find(rc->m_texFile) == std::end(m_texureMap))
+			auto textureFile = rc->textureFile();
+
+			if (m_texureMap.find(textureFile) == std::end(m_texureMap))
 			{
-				m_texureMap[rc->m_texFile].loadFromFile(rc->m_texFile);
+				m_texureMap[textureFile].loadFromFile(textureFile);
 			}
 
 			// Exclude from the vertex array if out of view
 
-			if (!m_layerMap[rc->m_layer].isStatic)
+			auto layer = rc->layer();
+
+			if (!m_layerMap[layer].isStatic)
 			{
 				float entL = tc->position().x;
-				float entR = entL + rc->m_tSize.x;
+				float entR = entL + rc->textureSize().x;
 				float entT = tc->position().y;
-				float entB = entT + rc->m_tSize.y;
+				float entB = entT + rc->textureSize().y;
 
 				if (entR < viewL || entL > viewR ||
 					entB < viewT || entT > viewB) continue;
@@ -53,39 +57,39 @@ namespace Core
 
 			// Fill vertex array in proper layer / texture
 
-			auto &vvd = m_layerMap[rc->m_layer].vaMap[&m_texureMap[rc->m_texFile]];
+			auto &vvd = m_layerMap[layer].vaMap[&m_texureMap[textureFile]];
 			if (vvd.size() == 0) vvd.push_back(VaData{});
 
-			if (rc->m_tFlag || rc->m_cFlag)
+			if (rc->tFlag() || rc->cFlag())
 			{
 				vvd.push_back(VaData{});
 				vvd[vvd.size() - 1].modified = true;
-				sf::Vector2f center{ tc->position().x + rc->tSize().x / 2.0f,
-					tc->position().y + rc->tSize().y / 2.0f };
-				vvd[vvd.size() - 1].transform.rotate(rc->m_rotation, center);
-				vvd[vvd.size() - 1].transform.scale(rc->m_scale, center);
-				vvd[vvd.size() - 1].color = rc->m_color;
+				sf::Vector2f center{ tc->position().x + rc->textureSize().x / 2.0f,
+					tc->position().y + rc->textureSize().y / 2.0f };
+				vvd[vvd.size() - 1].transform.rotate(rc->rotation(), center);
+				vvd[vvd.size() - 1].transform.scale(rc->scale(), center);
+				vvd[vvd.size() - 1].color = rc->color();
 			}
 
-			sf::VertexArray &va = ((rc->m_tFlag || rc->m_cFlag) ? vvd[vvd.size() - 1].va : vvd[0].va);
+			sf::VertexArray &va = ((rc->tFlag() || rc->cFlag()) ? vvd[vvd.size() - 1].va : vvd[0].va);
 
 			va.setPrimitiveType(sf::PrimitiveType::Quads);
 
 			float x = tc->position().x;
 			float y = tc->position().y;
-			float tx = rc->m_tPos.x;
-			float ty = rc->m_tPos.y;
-			float w = rc->m_tSize.x;
-			float h = rc->m_tSize.y;
+			float tx = rc->texturePosition().x;
+			float ty = rc->texturePosition().y;
+			float w = rc->textureSize().x;
+			float h = rc->textureSize().y;
 
 			va.append(sf::Vertex{ sf::Vector2f{x, y}, sf::Vector2f{tx, ty} });
-			if (rc->m_cFlag) va[va.getVertexCount() - 1].color = rc->m_color;
+			if (rc->cFlag()) va[va.getVertexCount() - 1].color = rc->color();
 			va.append(sf::Vertex{ sf::Vector2f{ x + w, y }, sf::Vector2f{ tx + w, ty } });
-			if (rc->m_cFlag) va[va.getVertexCount() - 1].color = rc->m_color;
+			if (rc->cFlag()) va[va.getVertexCount() - 1].color = rc->color();
 			va.append(sf::Vertex{ sf::Vector2f{ x + w, y + h }, sf::Vector2f{ tx + w, ty + h } });
-			if (rc->m_cFlag) va[va.getVertexCount() - 1].color = rc->m_color;
+			if (rc->cFlag()) va[va.getVertexCount() - 1].color = rc->color();
 			va.append(sf::Vertex{ sf::Vector2f{ x, y + h }, sf::Vector2f{ tx, ty + h } });
-			if (rc->m_cFlag) va[va.getVertexCount() - 1].color = rc->m_color;
+			if (rc->cFlag()) va[va.getVertexCount() - 1].color = rc->color();
 		}
 
 		// Add TextComponents

@@ -11,12 +11,12 @@ namespace Core
 			auto ac = AutoListScene<AnimationComponent>::alsCurrentGet(i);
 			if (!ac->active() || !ac->playing()) continue;
 
-			auto anim = &ac->m_animation[ac->m_currentAnimationIndex];
-			ac->m_frameCounter = ++ac->m_frameCounter % anim->frameDelay;
-			if (0 == ac->m_frameCounter)
+			auto anim = &ac->curentAnimation();
+			ac->setFrameCounter((ac->frameCounter() + 1) % anim->frameDelay);
+			if (0 == ac->frameCounter())
 			{
-				ac->m_currentFrameIndex = ++ac->m_currentFrameIndex % anim->frame.size();
-				if (0 == ac->m_currentFrameIndex && !anim->loop) ac->stop();
+				ac->setCurrentFrameIndex((ac->currentFrameIndex() + 1) % anim->frame.size());
+				if (0 == ac->currentFrameIndex() && !anim->loop) ac->stop();
 				else ac->setCurrentRenderFrame();
 			}
 		}

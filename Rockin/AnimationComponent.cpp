@@ -61,7 +61,7 @@ namespace Core
 		auto rc = parent()->getComponent<RenderComponent>();
 		if (!rc) return;
 		auto p = &m_animation[m_currentAnimationIndex];
-		rc->m_tPos = p->frame[m_currentFrameIndex].position;
-		rc->m_tSize = p->frame[m_currentFrameIndex].size;
+		rc->setTexturePosition(p->frame[m_currentFrameIndex].position);
+		rc->setTextureSize(p->frame[m_currentFrameIndex].size);
 	}
 }

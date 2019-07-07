@@ -18,16 +18,37 @@ namespace Core
 
 	class RenderComponent : public CoreComponentBase, public sde::AutoList<RenderComponent>, public AutoListScene<RenderComponent>
 	{
-		friend class Renderer;
-		friend class AnimationComponent;
 	public:
 		RenderComponent(CoreEntity *parent, float tx, float ty, float w, float h, const std::string &fName, const std::string &layer) :
 			CoreComponentBase{ parent }, m_tPos{ tx, ty }, m_tSize{ w, h }, m_texFile{ fName }, m_layer{ layer }, m_tFlag{ false },
 			m_cFlag{ false }, m_rotation{ 0.0f }, m_scale{ 1.0f, 1.0f }
 		{}
-		const sf::Vector2f &tSize()
+		// Accessors
+		const sf::Vector2f &textureSize() const
 		{
 			return m_tSize;
+		}
+		void setTextureSize(float x, float y)
+		{
+			m_tSize.x = x;
+			m_tSize.y = y;
+		}
+		void setTextureSize(const sf::Vector2f &vec)
+		{
+			m_tSize = vec;
+		}
+		const sf::Vector2f &texturePosition() const
+		{
+			return m_tPos;
+		}
+		void setTexturePosition(float x, float y)
+		{
+			m_tPos.x = x;
+			m_tPos.y = y;
+		}
+		void setTexturePosition(const sf::Vector2f &vec)
+		{
+			m_tPos = vec;
 		}
 		void setLayer(const std::string &layer)
 		{
@@ -58,6 +79,34 @@ namespace Core
 			m_rotation = degrees;
 			if (m_scale.x == 1.0f && m_scale.y == 1.0f && m_rotation == 0.0f) m_tFlag = false;
 			else m_tFlag = true;
+		}
+		const std::string &textureFile() const
+		{
+			return m_texFile;
+		}
+		const std::string&layer() const
+		{
+			return m_layer;
+		}
+		bool tFlag() const
+		{
+			return m_tFlag;
+		}
+		bool cFlag() const
+		{
+			return m_cFlag;
+		}
+		const sf::Vector2f &scale() const
+		{
+			return m_scale;
+		}
+		float rotation() const
+		{
+			return m_rotation;
+		}
+		const sf::Color &color() const
+		{
+			return m_color;
 		}
 	private:
 		sf::Vector2f m_tPos;

@@ -28,7 +28,7 @@ namespace Core
 		for (size_t i = 0; i < sz; ++i)
 		{
 			auto pc = AutoListScene<PhysicsComponent>::alsCurrentGet(i);
-			if (!pc->m_static && pc->active() && !pc->m_noCollision) proxPlace(pc, m_pcNonstaticMap);
+			if (!pc->getStatic() && pc->active() && !pc->noCollision()) proxPlace(pc, m_pcNonstaticMap);
 		}
 		
 		m_messageGroup.clear();
@@ -60,11 +60,11 @@ namespace Core
 		for (size_t i = 0; i < sz; ++i)
 		{
 			auto pc = AutoListScene<PhysicsComponent>::alsCurrentGet(i);
-			if (pc->active() && !pc->m_static)
+			if (pc->active() && !pc->getStatic())
 			{
 				auto e = pc->parent();
-				float x = e->position().x + pc->m_momentum.x;
-				float y = e->position().y + pc->m_momentum.y;
+				float x = e->position().x + pc->momentum().x;
+				float y = e->position().y + pc->momentum().y;
 				e->setPosition(x, y);
 			}
 		}
@@ -84,12 +84,12 @@ namespace Core
 				if (std::find(std::begin(m_collisionPair), std::end(m_collisionPair), cp) != std::end(m_collisionPair)) continue;
 				m_collisionPair.push_back(cp);
 
-				if (a->m_inverseMass == 0.0f && b->m_inverseMass == 0.0f) continue;
+				if (0.0f == a->iMass() && 0.0f == b->iMass()) continue;
 			
 				Collision collision{ a, b };
 				if (detectCollision(&collision))
 				{
-					if (a->m_solid && b->m_solid)
+					if (a->solid() && b->solid())
 					{
 						adjustMomentum(&collision);
 						applyCorrection(&collision);
@@ -107,18 +107,18 @@ namespace Core
 		auto a = collision->a;
 		auto b = collision->b;
 
-		float e = (a->m_elasticity + b->m_elasticity) / 2.0f;
-		auto relativeVelocity = sf::Vector2f{ b->m_momentum.x - a->m_momentum.x, b->m_momentum.y - a->m_momentum.y };
+		float e = (a->elasticity() + b->elasticity()) / 2.0f;
+		auto relativeVelocity = sf::Vector2f{ b->momentum().x - a->momentum().x, b->momentum().y - a->momentum().y };
 		float velAlongNormal = relativeVelocity.x * collision->normal.x + 
 			relativeVelocity.y * collision->normal.y;
 		if (velAlongNormal > 0.0f) return;
 
 		// Find impule magnitude by j = (-(e+1)(vb - va) . n) / sum of inverse masses 
 
-		float j = (-1.0f*(e + 1.0f) * velAlongNormal) / (a->m_inverseMass + b->m_inverseMass);
+		float j = (-1.0f*(e + 1.0f) * velAlongNormal) / (a->iMass() + b->iMass());
 
-		a->m_momentum -= j * collision->normal * a->m_inverseMass;
-		b->m_momentum += j * collision->normal * b->m_inverseMass;
+		a->setMomentum(a->momentum() - j * collision->normal * a->iMass());
+		b->setMomentum(b->momentum() + j * collision->normal * b->iMass());
 	}
 
 	void Physics::applyCorrection(Collision *collision)
@@ -130,9 +130,9 @@ namespace Core
 		auto tb = collision->b->parent()->getComponent<TransformComponent>();
 
 		sf::Vector2f correction = std::max(collision->penetration - slop, 0.0f) / 
-			(collision->a->m_inverseMass + collision->b->m_inverseMass) * percCorrect * collision->normal;
-		ta->adjustPosition(-1.0f * collision->a->m_inverseMass * correction);
-		tb->adjustPosition(collision->b->m_inverseMass * correction);
+			(collision->a->iMass() + collision->b->iMass()) * percCorrect * collision->normal;
+		ta->adjustPosition(-1.0f * collision->a->iMass() * correction);
+		tb->adjustPosition(collision->b->iMass() * correction);
 	}
 
 	bool Physics::detectCollision(Collision *c)
@@ -142,10 +142,12 @@ namespace Core
 		auto btc = c->b->parent()->getComponent<TransformComponent>();
 		if (!btc) return false;
 
-		sf::Vector2f aBoxPos{ atc->position().x + c->a->m_AABBOffset.x, atc->position().y + c->a->m_AABBOffset.y };
-		sf::Vector2f bBoxPos{ btc->position().x + c->b->m_AABBOffset.x, btc->position().y + c->b->m_AABBOffset.y };
-		sf::Vector2f aSize{ c->a->m_AABBSize };
-		sf::Vector2f bSize{ c->b->m_AABBSize };
+		sf::Vector2f aBoxPos{ atc->position().x + c->a->boundingBoxOffset().x, 
+			atc->position().y + c->a->boundingBoxOffset().y };
+		sf::Vector2f bBoxPos{ btc->position().x + c->b->boundingBoxOffset().x, 
+			btc->position().y + c->b->boundingBoxOffset().y };
+		sf::Vector2f aSize{ c->a->boundingBoxSize() };
+		sf::Vector2f bSize{ c->b->boundingBoxSize() };
 		sf::Vector2f aCenter{ aBoxPos.x + aSize.x / 2.0f, aBoxPos.y + aSize.y / 2.0f };
 		sf::Vector2f bCenter{ bBoxPos.x + bSize.x / 2.0f, bBoxPos.y + bSize.y / 2.0f };
 		sf::Vector2f extent{ bCenter.x - aCenter.x, bCenter.y - aCenter.y };
@@ -199,31 +201,34 @@ namespace Core
 				if (std::find(std::begin(m_collisionPair), std::end(m_collisionPair), cp) != std::end(m_collisionPair)) continue;
 				m_collisionPair.push_back(cp);
 				
-				float e = (a->m_elasticity + b->m_elasticity) / 2.0f;
+				float e = (a->elasticity() + b->elasticity()) / 2.0f;
 
-				sf::Vector2f aBoxPos{ atc->position().x + a->m_AABBOffset.x, atc->position().y + a->m_AABBOffset.y - a->m_momentum.y };
-				sf::Vector2f bBoxPos{ btc->position().x + b->m_AABBOffset.x, btc->position().y + b->m_AABBOffset.y };
-				sf::Vector2f aSize{ a->m_AABBSize };
-				sf::Vector2f bSize{ b->m_AABBSize };
+				sf::Vector2f aBoxPos{ atc->position().x + a->boundingBoxOffset().x, 
+					atc->position().y + a->boundingBoxOffset().y - a->momentum().y };
+				sf::Vector2f bBoxPos{ btc->position().x + b->boundingBoxOffset().x, 
+					btc->position().y + b->boundingBoxOffset().y };
+				sf::Vector2f aSize{ a->boundingBoxSize() };
+				sf::Vector2f bSize{ b->boundingBoxSize() };
 
 				if (aBoxPos.x + aSize.x > bBoxPos.x && aBoxPos.x < bBoxPos.x + bSize.x &&
 					aBoxPos.y + aSize.y > bBoxPos.y && aBoxPos.y < bBoxPos.y + bSize.y)
 				{
-					if (a->m_solid)
+					if (a->solid())
 					{
-						if (a->m_momentum.x > 0.0f)
+						if (a->momentum().x > 0.0f)
 						{
 							float diff = bBoxPos.x - (aBoxPos.x + aSize.x);
-							float dist = (a->m_momentum.x - diff) * e;
-							atc->setPosition(bBoxPos.x - aSize.x - a->m_AABBOffset.x - dist - 0.1f, atc->position().y);
+							float dist = (a->momentum().x - diff) * e;
+							atc->setPosition(bBoxPos.x - aSize.x - a->boundingBoxOffset().x - dist - 0.1f, atc->position().y);
 						}
 						else
 						{
 							float diff = aBoxPos.x - (bBoxPos.x + bSize.x);
-							float dist = (a->m_momentum.x + diff) * e;
-							atc->setPosition(bBoxPos.x + bSize.x - a->m_AABBOffset.x - dist + 0.1f, atc->position().y);
+							float dist = (a->momentum().x + diff) * e;
+							atc->setPosition(bBoxPos.x + bSize.x - a->boundingBoxOffset().x - dist + 0.1f, atc->position().y);
 						}
-						a->m_momentum.x *= -1.0f * e;
+						auto aMomentum = a->momentum();
+						a->setMomentum(aMomentum.x * -1.0f * e, aMomentum.y);
 					}
 					m_messageGroup.push_back(Collision{ a,b });
 				}
@@ -244,31 +249,34 @@ namespace Core
 				auto btc = b->parent()->getComponent<TransformComponent>();
 				if (!btc) continue;
 
-				float e = (a->m_elasticity + b->m_elasticity) / 2.0f;
+				float e = (a->elasticity() + b->elasticity()) / 2.0f;
 
-				sf::Vector2f aBoxPos{ atc->position().x + a->m_AABBOffset.x, atc->position().y + a->m_AABBOffset.y };
-				sf::Vector2f bBoxPos{ btc->position().x + b->m_AABBOffset.x, btc->position().y + b->m_AABBOffset.y };
-				sf::Vector2f aSize{ a->m_AABBSize };
-				sf::Vector2f bSize{ b->m_AABBSize };
+				sf::Vector2f aBoxPos{ atc->position().x + a->boundingBoxOffset().x, 
+					atc->position().y + a->boundingBoxOffset().y };
+				sf::Vector2f bBoxPos{ btc->position().x + b->boundingBoxOffset().x, 
+					btc->position().y + b->boundingBoxOffset().y };
+				sf::Vector2f aSize{ a->boundingBoxSize() };
+				sf::Vector2f bSize{ b->boundingBoxSize() };
 
 				if (aBoxPos.x + aSize.x > bBoxPos.x && aBoxPos.x < bBoxPos.x + bSize.x &&
 					aBoxPos.y + aSize.y > bBoxPos.y && aBoxPos.y < bBoxPos.y + bSize.y)
 				{
-					if (a->m_solid)
+					if (a->solid())
 					{
-						if (a->m_momentum.y > 0.0f)
+						if (a->momentum().y > 0.0f)
 						{
 							float diff = bBoxPos.y - (aBoxPos.y + aSize.y);
-							float dist = (a->m_momentum.y - diff) * e;
-							atc->setPosition(atc->position().x, bBoxPos.y - aSize.y - a->m_AABBOffset.y - dist - 0.1f);
+							float dist = (a->momentum().y - diff) * e;
+							atc->setPosition(atc->position().x, bBoxPos.y - aSize.y - a->boundingBoxOffset().y - dist - 0.1f);
 						}
 						else
 						{
 							float diff = aBoxPos.y - (bBoxPos.y + bSize.y);
-							float dist = (a->m_momentum.y + diff) * e;
-							atc->setPosition(atc->position().x, bBoxPos.y + bSize.y - a->m_AABBOffset.y - dist + 0.1f);
+							float dist = (a->momentum().y + diff) * e;
+							atc->setPosition(atc->position().x, bBoxPos.y + bSize.y - a->boundingBoxOffset().y - dist + 0.1f);
 						}
-						a->m_momentum.y *= -1.0f * e;
+						auto aMomentum = a->momentum();
+						a->setMomentum(aMomentum.x, aMomentum.y * -1.0f * e);
 					}
 
 					// Check to see if this collision has already been recorded in
@@ -319,10 +327,10 @@ namespace Core
 		// Determine where in the provided 2D vector (proximity map) the
 		// provided PhysicsComponent should be placed.
 
-		int l = (int)pc->parent()->position().x + (int)pc->m_AABBOffset.x;
-		int t = (int)pc->parent()->position().y + (int)pc->m_AABBOffset.y;
-		int r = l + (int)pc->m_AABBSize.x + (int)pc->m_momentum.x + 1;
-		int b = t + (int)pc->m_AABBSize.y + (int)pc->m_momentum.y + 1;
+		int l = (int)pc->parent()->position().x + (int)pc->boundingBoxOffset().x;
+		int t = (int)pc->parent()->position().y + (int)pc->boundingBoxOffset().y;
+		int r = l + (int)pc->boundingBoxSize().x + (int)pc->momentum().x + 1;
+		int b = t + (int)pc->boundingBoxSize().y + (int)pc->momentum().y + 1;
 
 		int xSz = proxMap.size();
 		int ySz = proxMap[0].size();
@@ -366,7 +374,7 @@ namespace Core
 		for (size_t i = 0; i < sz; ++i)
 		{
 			auto pc = AutoListScene<PhysicsComponent>::alsCurrentGet(i);
-			if (pc->m_static) proxPlace(pc, m_pcStaticMap);
+			if (pc->getStatic()) proxPlace(pc, m_pcStaticMap);
 		}
 	}
 }

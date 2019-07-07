@@ -129,7 +129,7 @@ namespace Core
 	const sf::Vector2f &ScriptComponent::spriteSize()
 	{
 		auto rc = parent()->getComponent<RenderComponent>();
-		if (rc) return rc->tSize();
+		if (rc) return rc->textureSize();
 		return m_defaultVector2f;
 	}
 

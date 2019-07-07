@@ -12,7 +12,6 @@ namespace Core
 	*/
 	class PhysicsComponent : public CoreComponentBase, public sde::AutoList<PhysicsComponent>, public AutoListScene<PhysicsComponent>
 	{
-		friend class Physics;
 	public:
 		PhysicsComponent(CoreEntity *parent, float ox, float oy, float w, float h, float mx, float my,
 			float mass, float elasticity, bool solid = true, bool stat = false, bool noCollision = false) :
@@ -22,6 +21,7 @@ namespace Core
 			if (mass == 0.0f) m_inverseMass = 0.0f;
 			else m_inverseMass = 1.0f / mass;
 		}
+		// Accessors
 		const sf::Vector2f &momentum() const
 		{
 			return m_momentum;
@@ -30,13 +30,53 @@ namespace Core
 		{
 			m_momentum = { x, y };
 		}
-		bool solid()
+		void setMomentum(const sf::Vector2f &vec)
+		{
+			m_momentum = vec;
+		}
+		bool solid() const
 		{
 			return m_solid;
 		}
 		void setSolid(bool val)
 		{
 			m_solid = val;
+		}
+		bool getStatic() const
+		{
+			return m_static;
+		}
+		void setStatic(bool val)
+		{
+			m_static = val;
+		}
+		bool noCollision() const
+		{
+			return m_noCollision;
+		}
+		void setNoCollision(bool val)
+		{
+			m_noCollision = val;
+		}
+		const sf::Vector2f &boundingBoxOffset() const
+		{
+			return m_AABBOffset;
+		}
+		const sf::Vector2f &boundingBoxSize() const
+		{
+			return m_AABBSize;
+		}
+		float mass()
+		{
+			return m_mass;
+		}
+		float iMass()
+		{
+			return m_inverseMass;
+		}
+		float elasticity()
+		{
+			return m_elasticity;
 		}
 	private:
 		bool m_static;

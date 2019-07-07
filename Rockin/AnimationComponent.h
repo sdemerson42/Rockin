@@ -14,7 +14,6 @@ namespace Core
 	*/
 	class AnimationComponent : public CoreComponentBase, public sde::AutoList<AnimationComponent>, public AutoListScene<AnimationComponent>
 	{
-		friend class Animator;
 	public:
 		enum class AnimationState { Playing, Stopped };
 		struct Frame
@@ -41,6 +40,27 @@ namespace Core
 		void stop();
 		bool playing();
 		void setCurrentRenderFrame();
+		// Inline accessors
+		Animation &curentAnimation()
+		{
+			return m_animation[m_currentAnimationIndex];
+		}
+		int frameCounter() const
+		{
+			return m_frameCounter;
+		}
+		void setFrameCounter(int val)
+		{
+			m_frameCounter = val;
+		}
+		int currentFrameIndex() const
+		{
+			return m_currentFrameIndex;
+		}
+		void setCurrentFrameIndex(int val)
+		{
+			m_currentFrameIndex = val;
+		}
 	private:
 		std::vector<Animation> m_animation;
 		int m_currentAnimationIndex;
