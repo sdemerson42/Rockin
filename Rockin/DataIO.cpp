@@ -73,6 +73,12 @@ namespace Core
 				if (quoted) quoted = false;
 				else quoted = true;
 			}
+			// Fix for newline characters
+			if ('n' == c && s.length() > 0 && '\\' == s[s.length() - 1])
+			{
+				s.erase(s.end() - 1);
+				c = '\n';
+			}
 
 			s += c;
 		}

@@ -13,7 +13,7 @@ expense of scalability.
 
 int main()
 {
-	const float version = .0631f;
+	const float version = .0632f;
 
 	// Temporary display window constraints
 	const int windowWidth = 800;
