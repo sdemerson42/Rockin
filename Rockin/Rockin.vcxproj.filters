@@ -152,5 +152,8 @@
     <ClInclude Include="DataIO.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CoreException.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

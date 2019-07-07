@@ -179,6 +179,7 @@
     <ClInclude Include="Components.h" />
     <ClInclude Include="CoreComponentBase.h" />
     <ClInclude Include="CoreEntity.h" />
+    <ClInclude Include="CoreException.h" />
     <ClInclude Include="DataIO.h" />
     <ClInclude Include="EntityFactory.h" />
     <ClInclude Include="Events.h" />

@@ -1,5 +1,5 @@
 #include "DataIO.h"
-#include <exception>
+#include "CoreException.h"
 
 namespace Core
 {
@@ -112,7 +112,7 @@ namespace Core
 		// If no regular expression match was found, throw an exception.
 
 		std::string exceptionMessage{ "Unrecognized token found in data file: " + s };
-		std::exception e{ exceptionMessage.c_str() };
+		CoreException e{ exceptionMessage.c_str(), 2 };
 		throw(e);
 
 		return "";

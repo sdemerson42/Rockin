@@ -1,5 +1,5 @@
 #include "EntityFactory.h"
-#include <exception>
+#include "CoreException.h"
 #include <fstream>
 #include <iostream>
 #include <algorithm>
@@ -137,7 +137,7 @@ namespace Core
 		std::ifstream ifs{ fName };
 		if (!ifs)
 		{
-			std::exception e{ "EntityFactory failed to open Blueprint data file.\n" };
+			CoreException e{ "EntityFactory failed to open Blueprint data file.\n", 3 };
 			throw(e);
 			return;
 		}

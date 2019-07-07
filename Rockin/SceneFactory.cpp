@@ -6,7 +6,7 @@
 #include "EntityFactory.h"
 #include "Logger.h"
 #include "DataIO.h"
-#include <exception>
+#include "CoreException.h"
 
 #include "Components.h"
 
@@ -24,7 +24,7 @@ namespace Core
 		if (m_sceneData.size() > 0) buildScene(m_sceneData[0].name);
 		else
 		{
-			std::exception e{ "WARNING: Default scene data not found." };
+			CoreException e{ "WARNING: Default scene data not found.", 4 };
 			throw(e);
 		}
 	}
@@ -227,7 +227,7 @@ namespace Core
 
 		if (p == std::end(m_sceneData))
 		{
-			std::exception e{ "Tried to contruct nonexistent subscene." };
+			CoreException e{ "Tried to contruct nonexistent subscene.", 5 };
 			throw(e);
 		}
 
@@ -275,7 +275,7 @@ namespace Core
 		std::ifstream ifs{ "Data/Scenes.dat" };
 		if (!ifs)
 		{
-			std::exception e{ "Scene data not found." };
+			CoreException e{ "Scene data not found.", 6 };
 			throw(e);
 		}
 
