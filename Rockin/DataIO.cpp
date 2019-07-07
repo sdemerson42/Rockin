@@ -46,7 +46,7 @@ namespace Core
 		{
 			// Return a single whitespace character at EOF
 			if (!(ist.get(c))) return " ";
-			if (' ' == c || '\n' == c) continue;
+			if (' ' == c || '\n' == c || '\r' == c) continue;
 			ist.putback(c);
 			break;
 		}

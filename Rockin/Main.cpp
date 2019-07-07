@@ -40,7 +40,7 @@ Default is "RuntimeLog.txt"
 
 int main(int argc, char *argv[])
 {
-	const float version = .0632f;
+	const float version = .0633f;
 
 	// Temporary display window constraints
 	const int windowWidth = 800;
@@ -104,6 +104,11 @@ int main(int argc, char *argv[])
 			std::cerr << e.what();
 		}
 		return e.errCode;
+	}
+	catch (const std::exception &e)
+	{
+		Core::Logger::log(e.what());
+		Core::Logger::log("Aborting simulation.");
 	}
 
 	_getch();

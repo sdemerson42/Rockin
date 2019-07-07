@@ -311,182 +311,52 @@ namespace Core
 	}
 
 	bool SceneFactory::readScene(std::istream &ist, SceneData &sd)
-	{		
-		auto t = Tokenizer::next(ist);
-		if (t == " ") return false;
+	{	
+		if (!ist) return false;
+		auto token = Tokenizer::next(ist);
+		if (token == " ") return false;
 
-		sd.name = t;
+		sd.name = token;
 
-		t = Tokenizer::next(ist);
-		if (t != "{")
-		{
-			Logger::log("WARNING: Bad scene formatting.");
-			return false;
-		}
+		token = Tokenizer::next(ist);
+		if (!checkDataFormatting(token, "{", "WARNING: Bad scene formatting.")) return false;
+		
+		std::string badSubsceneMsg{ "WARNING: Bad subscene formatting in scene " + sd.name + "." };
 
 		while (true)
 		{
-			t = Tokenizer::next(ist);
-			if (t == "Layer")
+			// Read tokens and add to SceneData based on information found in file
+
+			token = Tokenizer::next(ist);
+			if (token == "Layer")
 			{
-				// Read Layer data
-
-				LayerData ld;
-
-				t = Tokenizer::next(ist);
-				if (t != "{")
-				{
-					Logger::log("WARNING: Bad layer formatting.");
-					return false;
-				}
-
-				t = Tokenizer::next(ist);
-				ld.name = t;
-				t = Tokenizer::next(ist);
-				if (t != ",")
-				{
-					Logger::log("WARNING: Bad layer formatting.");
-					return false;
-				}
-				t = Tokenizer::next(ist);
-				ld.isStatic = (t == "static" ? true : false);
-				t = Tokenizer::next(ist);
-				if (t != "}")
-				{
-					Logger::log("WARNING: Bad layer formatting.");
-					return false;
-				}
-				sd.layer.push_back(ld);
+				if (!readLayerData(ist, sd)) return false;
 			}
-			else if (t == "Entity" || t == "PersistentEntity")
+			else if (token == "Entity" || token == "PersistentEntity")
 			{
-				// Read entity data
-
-				EntityData ed;
-
-				if (t == "PersistentEntity")
-				{
-					ed.persistent = true;
-					ed.persistentCreated = false;
-				}
-				else
-					ed.persistent = false;
-
-				t = Tokenizer::next(ist);
-				if (t != "{")
-				{
-					Logger::log("WARNING: Bad entity formatting.");
-					return false;
-				}
-				t = Tokenizer::next(ist);
-				ed.name = t;
-				t = Tokenizer::next(ist);
-				t = Tokenizer::next(ist);
-				ed.total = std::stoi(t);
-				t = Tokenizer::next(ist);
-				t = Tokenizer::next(ist);
-				ed.active = (t == "true" ? true : false);
-				t = Tokenizer::next(ist);
-				if (t == "}")
-				{
-					ed.layer = "default";
-					ed.x = 0.0f;
-					ed.y = 0.0f;
-					sd.entity.push_back(ed);
-					continue;
-				}
-				t = Tokenizer::next(ist);
-				ed.layer = t;
-				t = Tokenizer::next(ist);
-				if (t == "}")
-				{
-					ed.x = 0.0f;
-					ed.y = 0.0f;
-					sd.entity.push_back(ed);
-					continue;
-				}
-				t = Tokenizer::next(ist);
-				ed.x = std::stof(t);
-				t = Tokenizer::next(ist);
-				t = Tokenizer::next(ist);
-				ed.y = std::stof(t);
-				sd.entity.push_back(ed);
-				t = Tokenizer::next(ist);
+				if (!readEntityData(ist, sd, token)) return false;
 			}
-			else if (t == "Physics")
+			else if (token == "Physics")
 			{
-				t = Tokenizer::next(ist);
-				t = Tokenizer::next(ist);
-				sd.sceneSize.x = std::stoi(t);
-				t = Tokenizer::next(ist);
-				t = Tokenizer::next(ist);
-				sd.sceneSize.y = std::stoi(t);
-				t = Tokenizer::next(ist);
-				t = Tokenizer::next(ist);
-				sd.cellSize.x = std::stoi(t);
-				t = Tokenizer::next(ist);
-				t = Tokenizer::next(ist);
-				sd.cellSize.y = std::stoi(t);
-				t = Tokenizer::next(ist);
+				if (!readPhysicsData(ist, sd)) return false;
 			}
-			else if (t == "Tilemap")
+			else if (token == "Tilemap")
 			{
-				Tokenizer::next(ist);
-				std::string tmName = Tokenizer::next(ist);
-
-				auto iter = std::find_if(std::begin(m_tilesetData), std::end(m_tilesetData), [&](const TilesetData &td)
-				{
-					return td.name == tmName;
-				});
-
-				if (iter == std::end(m_tilesetData))
-				{
-					Logger::log("WARNING: Tileset not found.");
-					return false;
-				}
-
-				sd.tilesetData = &*iter;
-				t = Tokenizer::next(ist);
-				sd.tilemapLayer = Tokenizer::next(ist);
-				Tokenizer::next(ist);
-				sd.tilemapSize.x = std::stoi(Tokenizer::next(ist));
-				Tokenizer::next(ist);
-				sd.tilemapSize.y = std::stoi(Tokenizer::next(ist));
-
-				int sz = sd.tilemapSize.x * sd.tilemapSize.y;
-				for (int i = 0; i < sz; ++i)
-				{
-					Tokenizer::next(ist);
-					sd.tilemap.push_back(std::stoi(Tokenizer::next(ist)));
-				}
-
-				if (Tokenizer::next(ist) != "}")
-				{
-					Logger::log("WARNING: Bad tilemap formatting.");
-					return false;
-				}
+				if (!readTilemapData(ist, sd)) return false;
 			}
-			else if (t == "Subscene")
+			else if (token == "Subscene")
 			{
-				Tokenizer::next(ist);
+				token = Tokenizer::next(ist);
+				if (!checkDataFormatting(token, "{", badSubsceneMsg)) return false;
 				sd.subscene.push_back(Tokenizer::next(ist));
-				Tokenizer::next(ist);
+				token = Tokenizer::next(ist);
+				if (!checkDataFormatting(token, "}", badSubsceneMsg)) return false;
 			}
-			else if (t == "Data")
+			else if (token == "Data")
 			{
-				if (sd.entity.size() == 0) break;
-
-				EntityData &ed = sd.entity[sd.entity.size() - 1];
-				Tokenizer::next(ist);
-				while (true)
-				{
-					ed.data.push_back(Tokenizer::next(ist));
-					Tokenizer::next(ist);
-					ed.data.push_back(Tokenizer::next(ist));
-					if (Tokenizer::next(ist) == "}") break;
-				}
+				if (!readEntityInitData(ist, sd)) return false;
 			}
-			else if (t != "}")
+			else if (token != "}")
 			{
 				Logger::log("WARNING: Bad scene formatting.");
 				return false;
@@ -494,6 +364,232 @@ namespace Core
 			else break;
 		}
 		return true;
+	}
+
+	bool SceneFactory::readLayerData(std::istream &ist, SceneData &sd)
+	{
+		try
+		{
+			std::string badMsg{ "WARNING: Bad layer formatting in scene " + sd.name + "." };
+			LayerData ld;
+
+			auto token = Tokenizer::next(ist);
+			if (!checkDataFormatting(token, "{", badMsg)) return false;
+
+			token = Tokenizer::next(ist);
+			ld.name = token;
+			token = Tokenizer::next(ist);
+			if (!checkDataFormatting(token, ",", badMsg)) return false;
+			token = Tokenizer::next(ist);
+			ld.isStatic = (token == "static" ? true : false);
+			token = Tokenizer::next(ist);
+			if (!checkDataFormatting(token, "}", badMsg)) return false;
+			sd.layer.push_back(ld);
+
+			return true;
+		}
+		catch (const std::exception &e)
+		{
+			Logger::log("Exception thrown while reading layer data, scene " + sd.name + ".");
+			throw(e);
+		}
+	}
+
+	bool SceneFactory::readEntityData(std::istream &ist, SceneData &sd, const std::string &persistType)
+	{
+		try
+		{
+			std::string badMsg{ "WARNING: Bad Entity formatting in scene " + sd.name + "." };
+			EntityData ed;
+
+			if ("PersistentEntity" == persistType)
+			{
+				ed.persistent = true;
+				ed.persistentCreated = false;
+			}
+			else
+				ed.persistent = false;
+
+			auto token = Tokenizer::next(ist);
+			if (!checkDataFormatting(token, "{", badMsg)) return false;
+
+			token = Tokenizer::next(ist);
+			ed.name = token;
+			token = Tokenizer::next(ist);
+			if (!checkDataFormatting(token, ",", badMsg)) return false;
+			token = Tokenizer::next(ist);
+			ed.total = std::stoi(token);
+			token = Tokenizer::next(ist);
+			if (!checkDataFormatting(token, ",", badMsg)) return false;
+			token = Tokenizer::next(ist);
+			ed.active = (token == "true" ? true : false);
+
+			// Set optional data to defaults
+
+			ed.layer = "default";
+			ed.x = 0.0f;
+			ed.y = 0.0f;
+
+			token = Tokenizer::next(ist);
+			if ("}" == token)
+			{
+				sd.entity.push_back(ed);
+				return true;
+			}
+			if (!checkDataFormatting(token, ",", badMsg)) return false;
+			token = Tokenizer::next(ist);
+			ed.layer = token;
+			token = Tokenizer::next(ist);
+			if ("}" == token)
+			{
+				sd.entity.push_back(ed);
+				return true;
+			}
+			if (!checkDataFormatting(token, ",", badMsg)) return false;
+			token = Tokenizer::next(ist);
+			ed.x = std::stof(token);
+			token = Tokenizer::next(ist);
+			if (!checkDataFormatting(token, ",", badMsg)) return false;
+			token = Tokenizer::next(ist);
+			ed.y = std::stof(token);
+			sd.entity.push_back(ed);
+			token = Tokenizer::next(ist);
+			if (!checkDataFormatting(token, "}", badMsg)) return false;
+			return true;
+		}
+		catch (const std::exception &e)
+		{
+			Logger::log("Exception thrown while reading entity data, scene " + sd.name + ".");
+			throw(e);
+		}
+	}
+
+	bool SceneFactory::readPhysicsData(std::istream &ist, SceneData &sd)
+	{
+		try
+		{
+			std::string badMsg{ "WARNING: Bad physics formatting in scene " + sd.name + "." };
+
+			auto token = Tokenizer::next(ist);
+			if (!checkDataFormatting(token, "{", badMsg)) return false;
+			token = Tokenizer::next(ist);
+			sd.sceneSize.x = std::stoi(token);
+			token = Tokenizer::next(ist);
+			if (!checkDataFormatting(token, ",", badMsg)) return false;
+			token = Tokenizer::next(ist);
+			sd.sceneSize.y = std::stoi(token);
+			token = Tokenizer::next(ist);
+			if (!checkDataFormatting(token, ",", badMsg)) return false;
+			token = Tokenizer::next(ist);
+			sd.cellSize.x = std::stoi(token);
+			token = Tokenizer::next(ist);
+			if (!checkDataFormatting(token, ",", badMsg)) return false;
+			token = Tokenizer::next(ist);
+			sd.cellSize.y = std::stoi(token);
+			token = Tokenizer::next(ist);
+			if (!checkDataFormatting(token, "}", badMsg)) return false;
+			return true;
+		}
+		catch (const std::exception &e)
+		{
+			Logger::log("Exception thrown while reading physics data, scene " + sd.name + ".");
+			throw(e);
+		}
+	}
+
+	bool SceneFactory::readEntityInitData(std::istream &ist, SceneData &sd)
+	{
+		try
+		{
+			std::string badMsg{ "WARNING: Bad entity initialization data formatting in scene " + sd.name + "." };
+
+			// Return immediately if there is no Entity to reference
+			if (sd.entity.size() == 0)
+			{
+				Logger::log(badMsg);
+				return false;
+			}
+
+			EntityData &ed = sd.entity[sd.entity.size() - 1];
+			auto token = Tokenizer::next(ist);
+			if (!checkDataFormatting(token, "{", badMsg)) return false;
+			while (true)
+			{
+				// Error conditions
+
+				if (!ist)
+				{
+					Logger::log(badMsg);
+					return false;
+				}
+				
+				// Read data
+				ed.data.push_back(Tokenizer::next(ist));
+				token = Tokenizer::next(ist);
+				if (!checkDataFormatting(token, ",", badMsg)) return false;
+				ed.data.push_back(Tokenizer::next(ist));
+				token = Tokenizer::next(ist);
+				if ("}" == token) break;
+				if (!checkDataFormatting(token, ",", badMsg)) return false;
+			}
+			return true;
+		}
+		catch (const std::exception &e)
+		{
+			Logger::log("Exception thrown while reading Entity initialization data, scene " + sd.name + ".");
+			throw(e);
+		}
+	}
+
+	bool SceneFactory::readTilemapData(std::istream &ist, SceneData &sd)
+	{
+		try
+		{
+			std::string badMsg{ "WARNING: Bad tilemap formatting in scene " + sd.name + "." };
+
+			auto token = Tokenizer::next(ist);
+			if (!checkDataFormatting(token, "{", badMsg)) return false;
+			std::string tmName = Tokenizer::next(ist);
+
+			auto iter = std::find_if(std::begin(m_tilesetData), std::end(m_tilesetData), [&](const TilesetData &td)
+			{
+				return td.name == tmName;
+			});
+
+			if (iter == std::end(m_tilesetData))
+			{
+				Logger::log("WARNING: Tileset not found.");
+				return false;
+			}
+
+			sd.tilesetData = &*iter;
+			token = Tokenizer::next(ist);
+			if (!checkDataFormatting(token, ",", badMsg)) return false;
+			sd.tilemapLayer = Tokenizer::next(ist);
+			Tokenizer::next(ist);
+			if (!checkDataFormatting(token, ",", badMsg)) return false;
+			sd.tilemapSize.x = std::stoi(Tokenizer::next(ist));
+			Tokenizer::next(ist);
+			if (!checkDataFormatting(token, ",", badMsg)) return false;
+			sd.tilemapSize.y = std::stoi(Tokenizer::next(ist));
+
+			int sz = sd.tilemapSize.x * sd.tilemapSize.y;
+			for (int i = 0; i < sz; ++i)
+			{
+				token = Tokenizer::next(ist);
+				if (!checkDataFormatting(token, ",", badMsg)) return false;
+				sd.tilemap.push_back(std::stoi(Tokenizer::next(ist)));
+			}
+
+			token = Tokenizer::next(ist);
+			if (!checkDataFormatting(token, "}", badMsg)) return false;
+			return true;
+		}
+		catch (const std::exception &e)
+		{
+			Logger::log("Exception thrown while reading tilemap data, scene " + sd.name + ".");
+			throw(e);
+		}
 	}
 
 	void SceneFactory::readTilesetData()
@@ -505,37 +601,62 @@ namespace Core
 			return;
 		}
 
-		while (true)
+		std::string currentTilesetName{ "UNKNOWN" };
+
+		try
 		{
-			auto t = Tokenizer::next(ifs);
-
-			if (t == " ") break;
-			
-			TilesetData td;
-			td.name = t;
-			Tokenizer::next(ifs);
-			td.texture = Tokenizer::next(ifs);
-			Tokenizer::next(ifs);
-			int x = std::stoi(Tokenizer::next(ifs));
-			Tokenizer::next(ifs);
-			int y = std::stoi(Tokenizer::next(ifs));
-			td.textureSize = { x, y };
-
-			Tokenizer::next(ifs);
-			int tx = std::stoi(Tokenizer::next(ifs));
-			Tokenizer::next(ifs);
-			int ty = std::stoi(Tokenizer::next(ifs));
-			td.tileSize = { tx, ty };
-			t = Tokenizer::next(ifs);
-			if (t != "}")
+			while (true)
 			{
-				do
+				std::string badMsg{ "WARNING: Bad tileset formatting while reading unknown tileset." };
+
+				auto token = Tokenizer::next(ifs);
+
+				if (" " == token) break;
+
+				TilesetData td;
+				td.name = currentTilesetName = token;
+				badMsg = "WARNING: Bad tileset formatting while reading tileset " + currentTilesetName;
+				token = Tokenizer::next(ifs);
+				if (!checkDataFormatting(token, "{", badMsg)) return;
+				td.texture = Tokenizer::next(ifs);
+				token = Tokenizer::next(ifs);
+				if (!checkDataFormatting(token, ",", badMsg)) return;
+				int x = std::stoi(Tokenizer::next(ifs));
+				token = Tokenizer::next(ifs);
+				if (!checkDataFormatting(token, ",", badMsg)) return;
+				int y = std::stoi(Tokenizer::next(ifs));
+				td.textureSize = { x, y };
+
+				token = Tokenizer::next(ifs);
+				if (!checkDataFormatting(token, ",", badMsg)) return;
+				int tx = std::stoi(Tokenizer::next(ifs));
+				token = Tokenizer::next(ifs);
+				if (!checkDataFormatting(token, ",", badMsg)) return;
+				int ty = std::stoi(Tokenizer::next(ifs));
+				td.tileSize = { tx, ty };
+				token = Tokenizer::next(ifs);
+				if ("}" != token)
 				{
-					td.staticTile.push_back(std::stoi(Tokenizer::next(ifs)));
-					t = Tokenizer::next(ifs);
-				} while (t != "}");
+					while(true)
+					{
+						if (!ifs)
+						{
+							Logger::log(badMsg);
+							return;
+						}
+						td.staticTile.push_back(std::stoi(Tokenizer::next(ifs)));
+						token = Tokenizer::next(ifs);
+						if ("}" == token) break;
+						if (!checkDataFormatting(token, ",", badMsg)) return;
+					}
+				}
+				m_tilesetData.push_back(td);
 			}
-			m_tilesetData.push_back(td);
+		}
+		catch (const std::exception &e)
+		{
+			Logger::log("Exception thrown while reading tileset data in tileset " + currentTilesetName + ".");
+			throw(e);
 		}
 	}
 }
