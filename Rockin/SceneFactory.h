@@ -65,6 +65,9 @@ namespace Core
 		EntityFactory *m_eFactory;
 		std::vector<std::unique_ptr<CoreEntity>> *m_eVec;
 		
+		void createEntities(SceneData &sd, const std::string &sceneName);
+		void processTilemapData(SceneData &sd, NewSceneEvent &nse, const std::string &sceneName);
+		void processPhysicsGeometry(SceneData &sd, NewSceneEvent &nse, CoreEntity *e);
 		void moveEntityIntoScene(CoreEntity *e, const std::string &scene);
 		void readSceneData();
 		bool readScene(std::istream &ist, SceneData &sd);

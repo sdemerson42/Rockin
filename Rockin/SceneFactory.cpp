@@ -24,7 +24,7 @@ namespace Core
 		if (m_sceneData.size() > 0) buildScene(m_sceneData[0].name);
 		else
 		{
-			CoreException e{ "WARNING: Default scene data not found.", 4 };
+			CoreException e{ "WARNING: Default scene data not found.", CoreException::ErrCode::missingDefaultSceneData };
 			throw(e);
 		}
 	}
@@ -32,6 +32,8 @@ namespace Core
 	void SceneFactory::buildScene(const std::string &sceneName, bool isSubscene)
 	{
 		NewSceneEvent nse;
+
+		// Perform cleanup before building
 
 		if (!isSubscene)
 		{
@@ -73,126 +75,11 @@ namespace Core
 
 		// Create entities (persistent first)
 
-		for (EntityData &ed : sd->entity)
-		{
-			if (ed.persistent && !ed.persistentCreated)
-			{
-				for (int i = 0; i < ed.total; ++i)
-				{
-					m_eFactory->createEntity(ed.name, ed.active, ed.persistent, ed.layer, ed.x, ed.y, sceneName);
-					if (ed.data.size() > 0) m_eFactory->addInitData(ed.data);
-					ed.persistentCreated = true;
-				}
-			}
-		}
-
-		for (const EntityData &ed : sd->entity)
-		{
-			if (!ed.persistent)
-			{
-				for (int i = 0; i < ed.total; ++i)
-				{
-					m_eFactory->createEntity(ed.name, ed.active, ed.persistent, ed.layer, ed.x, ed.y, sceneName);
-					if (ed.data.size() > 0) m_eFactory->addInitData(ed.data);
-				}
-			}
-		}
+		createEntities(*sd, sceneName);
 
 		// Copy tilemap data if present
 
-		if (sd->tilesetData)
-		{
-			nse.tilesetData = sd->tilesetData;
-			nse.tilemapSize = sd->tilemapSize;
-			nse.tilemap = sd->tilemap;
-			nse.tilemapLayer = sd->tilemapLayer;
-
-			// Create tilemap physics Entity
-
-			m_eVec->push_back(std::make_unique<CoreEntity>());
-			auto e = m_eVec->back().get();
-
-			e->setActive(true);
-			e->setPosition(0.0f, 0.0f);
-
-			// Simplify geometry
-
-			std::vector<sf::IntRect> AABB;
-			int mapX = nse.tilemapSize.x;
-			int mapY = nse.tilemapSize.y;
-			int tileX = nse.tilesetData->tileSize.x;
-			int tileY = nse.tilesetData->tileSize.y;
-			std::vector<std::vector<int>> physMap;
-			physMap.resize(nse.tilemapSize.x);
-			for (auto &v : physMap)
-			{
-				v.resize(nse.tilemapSize.y);
-			}
-
-			for (int i = 0; i < nse.tilemap.size(); ++i)
-			{
-				int tVal = nse.tilemap[i];
-				if (std::find(std::begin(sd->tilesetData->staticTile),
-					std::end(sd->tilesetData->staticTile), tVal) != std::end(sd->tilesetData->staticTile))
-				{
-					int x = (i % mapX);
-					int y = (i / mapX);
-					physMap[x][y] = 1;
-				}
-			}
-
-			for (int j = 0; j < nse.tilemapSize.y; ++j)
-			{
-				for (int i = 0; i < nse.tilemapSize.x; ++i)
-				{
-					if (physMap[i][j] == 1)
-					{
-						int m = i + 1;
-						while (m < nse.tilemapSize.x && physMap[m][j] == 1) ++m;
-						int n = j + 1;
-						while (true)
-						{
-							bool rowFlag = true;
-							for (int k = i; k < m; ++k)
-							{
-								if (n >= nse.tilemapSize.y || physMap[k][n] != 1)
-								{
-									rowFlag = false;
-									break;
-								}
-							}
-							if (!rowFlag) break;
-							++n;
-						}
-						// Remove this block from physMap and translate to Physics data
-
-						for (int ii = i; ii < m; ++ii)
-						{
-							for (int jj = j; jj < n; ++jj)
-							{
-								physMap[ii][jj] = -1;
-							}
-						}
-						AABB.push_back(sf::IntRect{ i, j, m - i, n - j });
-					}
-				}
-			}
-
-			// Create PhysicsComponents from data
-
-			for (const auto &aabb : AABB)
-			{
-				e->addComponent<PhysicsComponent>(e, (float)aabb.left * (float)tileX, (float)aabb.top * (float)tileY,
-					(float)aabb.width * (float)tileX, (float)aabb.height * (float)tileY, 
-					0.0f, 0.0f, 0.0f, 0.0f, true, true, false);
-			}
-
-			auto pcv = e->getComponents<PhysicsComponent>();
-			for (auto pc : pcv)
-			{
-				pc->alsMoveRef(sceneName);
-			}
-		}
+		if (sd->tilesetData) processTilemapData(*sd, nse, sceneName);
 		else nse.tilesetData = nullptr;
 
 		nse.sceneSize = sd->sceneSize;
@@ -215,6 +102,141 @@ namespace Core
 		Logger::log(sceneName + " built successfully.");
 	}
 
+	void SceneFactory::createEntities(SceneData &sd, const std::string &sceneName)
+	{
+		for (EntityData &ed : sd.entity)
+		{
+			if (ed.persistent && !ed.persistentCreated)
+			{
+				for (int i = 0; i < ed.total; ++i)
+				{
+					m_eFactory->createEntity(ed.name, ed.active, ed.persistent, ed.layer, ed.x, ed.y, sceneName);
+					if (ed.data.size() > 0) m_eFactory->addInitData(ed.data);
+					ed.persistentCreated = true;
+				}
+			}
+		}
+
+		for (const EntityData &ed : sd.entity)
+		{
+			if (!ed.persistent)
+			{
+				for (int i = 0; i < ed.total; ++i)
+				{
+					m_eFactory->createEntity(ed.name, ed.active, ed.persistent, ed.layer, ed.x, ed.y, sceneName);
+					if (ed.data.size() > 0) m_eFactory->addInitData(ed.data);
+				}
+			}
+		}
+	}
+
+	void SceneFactory::processTilemapData(SceneData &sd, NewSceneEvent &nse, const std::string &sceneName)
+	{
+		nse.tilesetData = sd.tilesetData;
+		nse.tilemapSize = sd.tilemapSize;
+		nse.tilemap = sd.tilemap;
+		nse.tilemapLayer = sd.tilemapLayer;
+
+		// Create tilemap physics Entity
+
+		m_eVec->push_back(std::make_unique<CoreEntity>());
+		auto e = m_eVec->back().get();
+
+		e->setActive(true);
+		e->setPosition(0.0f, 0.0f);
+
+		// Process solid tiles and construct physics components
+
+		processPhysicsGeometry(sd, nse, e);
+
+		// Move references to newly created PhysicsComponents
+		// to the current scene AutoList
+
+		auto pcv = e->getComponents<PhysicsComponent>();
+		for (auto pc : pcv)
+		{
+			pc->alsMoveRef(sceneName);
+		}
+	}
+
+	void SceneFactory::processPhysicsGeometry(SceneData &sd, NewSceneEvent &nse, CoreEntity *e)
+	{
+		std::vector<sf::IntRect> AABB;
+		int mapX = nse.tilemapSize.x;
+		int mapY = nse.tilemapSize.y;
+		int tileX = nse.tilesetData->tileSize.x;
+		int tileY = nse.tilesetData->tileSize.y;
+		std::vector<std::vector<int>> physMap;
+		physMap.resize(nse.tilemapSize.x);
+		for (auto &v : physMap)
+		{
+			v.resize(nse.tilemapSize.y);
+		}
+
+		// Create a physical map that represents placement of tiles with solid geometry
+
+		for (int i = 0; i < nse.tilemap.size(); ++i)
+		{
+			int tVal = nse.tilemap[i];
+			if (std::find(std::begin(sd.tilesetData->staticTile),
+				std::end(sd.tilesetData->staticTile), tVal) != std::end(sd.tilesetData->staticTile))
+			{
+				int x = (i % mapX);
+				int y = (i / mapX);
+				physMap[x][y] = 1;
+			}
+		}
+
+		// Find rectangular groups of solid tiles and replace them with a single
+		// AABB data entry
+
+		for (int j = 0; j < nse.tilemapSize.y; ++j)
+		{
+			for (int i = 0; i < nse.tilemapSize.x; ++i)
+			{
+				if (physMap[i][j] == 1)
+				{
+					int m = i + 1;
+					while (m < nse.tilemapSize.x && physMap[m][j] == 1) ++m;
+					int n = j + 1;
+					while (true)
+					{
+						bool rowFlag = true;
+						for (int k = i; k < m; ++k)
+						{
+							if (n >= nse.tilemapSize.y || physMap[k][n] != 1)
+							{
+								rowFlag = false;
+								break;
+							}
+						}
+						if (!rowFlag) break;
+						++n;
+					}
+					// Remove this block from physMap and translate to Physics data
+
+					for (int ii = i; ii < m; ++ii)
+					{
+						for (int jj = j; jj < n; ++jj)
+						{
+							physMap[ii][jj] = -1;
+						}
+					}
+					AABB.push_back(sf::IntRect{ i, j, m - i, n - j });
+				}
+			}
+		}
+
+		// Create PhysicsComponents from data
+
+		for (const auto &aabb : AABB)
+		{
+			e->addComponent<PhysicsComponent>(e, (float)aabb.left * (float)tileX, (float)aabb.top * (float)tileY,
+				(float)aabb.width * (float)tileX, (float)aabb.height * (float)tileY,
+				0.0f, 0.0f, 0.0f, 0.0f, true, true, false);
+		}
+	}
+
 	void SceneFactory::setSubscene(const std::string &name)
 	{
 		// Ensure subscene exists. Otherwise throw exception.
@@ -227,7 +249,7 @@ namespace Core
 
 		if (p == std::end(m_sceneData))
 		{
-			CoreException e{ "Tried to contruct nonexistent subscene.", 5 };
+			CoreException e{ "Tried to contruct nonexistent subscene.", CoreException::ErrCode::missingSubsceneData };
 			throw(e);
 		}
 
@@ -275,7 +297,7 @@ namespace Core
 		std::ifstream ifs{ "Data/Scenes.dat" };
 		if (!ifs)
 		{
-			CoreException e{ "Scene data not found.", 6 };
+			CoreException e{ "Scene data not found.", CoreException::ErrCode::missingSceneData };
 			throw(e);
 		}
 

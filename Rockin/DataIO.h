@@ -22,4 +22,12 @@ namespace Core
 	private:
 		static std::vector<std::regex> m_regex;
 	};
+
+	/*
+	checkDataFormatting() - Helper function to aid factories in handling
+	bad formatting.
+	*/
+
+	bool checkDataFormatting(const std::string &token, const std::string &expected,
+		const std::string &badMsg, int errCode = -1);
 }

@@ -21,22 +21,30 @@ namespace Core
 	void EntityFactory::createEntity(const std::string &name, bool active, bool persistent, const std::string &layer,
 		float x, float y, const std::string &subsceneName)
 	{
+		// Find blueprint with provided name
+
 		auto bpIter = std::find_if(std::begin(m_blueprint), std::end(m_blueprint), [&](const Blueprint &bp)
 		{
 			return bp.name == name;
 		});
 
-		if (bpIter == std::end(m_blueprint)) return;
+		if (bpIter == std::end(m_blueprint))
+		{
+			Logger::log("WARNING: EntityFactory failed to find entity blueprint with name " + name);
+			return;
+		}
 
 		m_entity->push_back(std::make_unique<CoreEntity>());
 		auto e = m_entity->back().get();
 
 		e->setPosition(x, y);
 
+		// Add components to Entity
+
 		for (const std::string &tag : bpIter->tag) e->addTag(tag);
 		for (const auto &data : bpIter->data)
 		{
-			if (data.component == "Physics")
+			if ("Physics" == data.component)
 			{	
 				e->addComponent<PhysicsComponent>(e, std::stof(data.valuePair[0].value), std::stof(data.valuePair[1].value),
 					std::stof(data.valuePair[2].value), std::stof(data.valuePair[3].value), std::stof(data.valuePair[4].value),
@@ -48,7 +56,7 @@ namespace Core
 				auto alsp = cv[cv.size()-1];
 				alsp->alsMoveRef(subsceneName);
 			}
-			else if (data.component == "Render")
+			else if ("Render" == data.component)
 			{
 				e->addComponent<RenderComponent>(e, std::stof(data.valuePair[0].value), std::stof(data.valuePair[1].value),
 					std::stof(data.valuePair[2].value), std::stof(data.valuePair[3].value),
@@ -56,13 +64,13 @@ namespace Core
 				auto alsp = e->getComponent<RenderComponent>();
 				alsp->alsMoveRef(subsceneName);
 			}
-			else if (data.component == "Script")
+			else if ("Script" == data.component)
 			{
 				e->addComponent<ScriptComponent>(e, m_engine, data.valuePair[0].value);
 				auto alsp = e->getComponent<ScriptComponent>();
 				alsp->alsMoveRef(subsceneName);
 			}
-			else if (data.component == "Animation")
+			else if ("Animation" == data.component)
 			{
 				auto ac = e->getComponent<AnimationComponent>();
 				if (!ac)
@@ -73,7 +81,7 @@ namespace Core
 				AnimationComponent::Animation a;
 				a.name = data.valuePair[0].value;
 				a.frameDelay = std::stoi(data.valuePair[1].value);
-				a.loop = data.valuePair[2].value == "true" ? true : false;
+				a.loop = "true" == data.valuePair[2].value ? true : false;
 				
 				int totalFrames = std::stoi(data.valuePair[3].value);
 				int j = 4;
@@ -90,7 +98,7 @@ namespace Core
 				auto alsp = e->getComponent<AnimationComponent>();
 				alsp->alsMoveRef(subsceneName);
 			}
-			else if (data.component == "Text")
+			else if ("Text" == data.component)
 			{
 				e->addComponent<TextComponent>(e, data.valuePair[0].value, data.valuePair[1].value,
 					layer, std::stof(data.valuePair[2].value),
@@ -112,6 +120,9 @@ namespace Core
 
 	void EntityFactory::addInitData(const std::vector<std::string> &data)
 	{
+		// If initializing data is provided for a ScriptComponent
+		// read and set values
+
 		if (!m_currentEntity) return;
 		auto sc = m_currentEntity->getComponent<ScriptComponent>();
 		if (!sc) return;
@@ -137,7 +148,7 @@ namespace Core
 		std::ifstream ifs{ fName };
 		if (!ifs)
 		{
-			CoreException e{ "EntityFactory failed to open Blueprint data file.\n", 3 };
+			CoreException e{ "EntityFactory failed to open Blueprint data file.\n", CoreException::ErrCode::badBlueprintFile };
 			throw(e);
 			return;
 		}
@@ -171,11 +182,7 @@ namespace Core
 		bp.name = token;
 
 		token = Tokenizer::next(ist);
-		if (token != "{")
-		{
-			Logger::log("WARNING: Bad blueprint formatting.");
-			return false;
-		}
+		if (!checkDataFormatting(token, "{", "WARNING: Bad blueprint formatting.")) return false;
 
 		while (true)
 		{
@@ -189,11 +196,7 @@ namespace Core
 			if (token == "Tag")
 			{
 				token = Tokenizer::next(ist);
-				if (token != "{")
-				{
-					Logger::log("WARNING: Bad tag data formatting.");
-					return false;
-				}
+				if (!checkDataFormatting(token, "{", "WARNING: Bad tag data formatting.")) return false;
 
 				while (true)
 				{
@@ -228,11 +231,7 @@ namespace Core
 	bool EntityFactory::readComponentData(std::istream &ist, ComponentData &cd)
 	{
 		auto token = Tokenizer::next(ist);
-		if (token != "{")
-		{
-			Logger::log("WARNING: Bad component data formatting.");
-			return false;
-		}
+		if (!checkDataFormatting(token, "{", "WARNING: Bad component data formatting.")) return false;
 
 		while (true)
 		{

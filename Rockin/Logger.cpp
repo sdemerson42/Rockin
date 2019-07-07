@@ -16,7 +16,7 @@ namespace Core
 		std::ofstream ofs{ m_logFileName, std::ios::app };
 		if (!ofs)
 		{
-			CoreException e{ "Bad logfile.", 1 };
+			CoreException e{ "Bad logfile.", CoreException::ErrCode::badLogFile };
 			throw(e);
 		}
 
