@@ -20,6 +20,7 @@ namespace Core
 		TransformComponent(CoreEntity *parent, float x, float y) :
 			CoreComponentBase{ parent }, m_position{ x, y }
 		{}
+		// Accessors
 		const sf::Vector2f &position() const
 		{
 			return m_position;

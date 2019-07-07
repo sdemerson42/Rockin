@@ -11,6 +11,8 @@
 
 namespace Core
 {
+	class Sim;
+
 	/*
 	ScriptComponent - Contains state necessary for the correct execution of scripts as well as persistent
 	state that scripts may access to cut down on use of global script variables. The scripting API is
@@ -19,8 +21,6 @@ namespace Core
 
 	class ScriptComponent : public CoreComponentBase, public sde::AutoList<ScriptComponent>, public AutoListScene<ScriptComponent>
 	{
-		friend class ScriptSystem;
-		friend class Sim;
 	public:
 		ScriptComponent(CoreEntity *parent, asIScriptEngine *engine, const std::string &tag);
 		~ScriptComponent();
@@ -30,16 +30,31 @@ namespace Core
 		const std::string &prefix() const;
 		void addRegValue(const std::string &name, int val);
 		void addStringValue(int index, const std::string &s);
-	private:
-		asIScriptEngine *m_engine;
-		asIScriptContext *m_contextMain;
-		asIScriptContext *m_contextEvent;
-		asIScriptFunction *m_funcMain;
-		asIScriptFunction *m_funcCollision;
-		static InputEvent m_input;
-		static Sim *m_sim;
-		std::string m_prefix;
-
+		//Accessors
+		bool sleep() const
+		{
+			return m_sleep;
+		}
+		int suspensionCycles() const
+		{
+			return m_suspensionCycles;
+		}
+		void decSuspensionCycles()
+		{
+			--m_suspensionCycles;
+		}
+		asIScriptContext *contextMain()
+		{
+			return m_contextMain;
+		}
+		asIScriptContext *contextEvent()
+		{
+			return m_contextEvent;
+		}
+		asIScriptFunction *collisionFunction()
+		{
+			return m_funcCollision;
+		}
 		// Scripting API
 
 		void log(const std::string &msg);
@@ -83,6 +98,15 @@ namespace Core
 
 		void setScript(const std::string &name, ScriptComponent *sc);
 		ScriptComponent *getScript(const std::string &name);
+	private:
+		asIScriptEngine *m_engine;
+		asIScriptContext *m_contextMain;
+		asIScriptContext *m_contextEvent;
+		asIScriptFunction *m_funcMain;
+		asIScriptFunction *m_funcCollision;
+		static InputEvent m_input;
+		static Sim *m_sim;
+		std::string m_prefix;
 
 		// Script state
 

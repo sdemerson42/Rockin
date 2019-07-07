@@ -100,8 +100,8 @@ namespace Core
 			auto txc = AutoListScene<TextComponent>::alsCurrentGet(i);
 			if (!txc->active()) continue;
 			const auto &txcParentPos = txc->parent()->position();
-			txc->m_text.setPosition(txcParentPos.x + txc->m_offset.x, txcParentPos.y + txc->m_offset.y);
-			m_layerMap[txc->m_layer].text.push_back(&txc->m_text);
+			txc->text().setPosition(txcParentPos.x + txc->offset().x, txcParentPos.y + txc->offset().y);
+			m_layerMap[txc->layer()].text.push_back(&txc->text());
 		}
 
 		m_window->clear();
@@ -166,7 +166,13 @@ namespace Core
 			m_layerMap[event->layer[i]].isStatic = event->isStatic[i];
 		}
 
-		// Prepare renderTexture if tilemap data is present
+		/*
+		 Prepare renderTexture if tilemap data is present
+		 NOTE: sf::RenderTexture represents a composite texture that is
+		 drawn once at scene construction, then displayed each frame.
+		 Processing tileset data in this way reduces computation time
+		 by many orders of magnitude.
+		 */
 
 		if (event->tilesetData)
 		{

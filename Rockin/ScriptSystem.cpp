@@ -14,8 +14,8 @@ namespace Core
 		for (size_t i = 0; i < sz; ++i)
 		{
 			auto sc = AutoListScene<ScriptComponent>::alsCurrentGet(i);
-			if (sc->active() && !sc->m_sleep && sc->m_suspensionCycles <= 0) sc->m_contextMain->Execute();
-			if (sc->m_suspensionCycles > 0) --sc->m_suspensionCycles;
+			if (sc->active() && !sc->sleep() && sc->suspensionCycles() <= 0) sc->contextMain()->Execute();
+			if (sc->suspensionCycles() > 0) sc->decSuspensionCycles();
 		}
 	}
 
@@ -24,8 +24,8 @@ namespace Core
 		if (!c->receiver->active())
 			return;
 
-		auto context = c->receiver->m_contextEvent;
-		context->Prepare(c->receiver->m_funcCollision);
+		auto context = c->receiver->contextEvent();
+		context->Prepare(c->receiver->collisionFunction());
 		context->SetArgObject(0, c->receiver);
 		context->SetArgObject(1, c->collider);
 		context->SetArgObject(2, c->colliderPhysics);

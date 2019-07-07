@@ -17,11 +17,12 @@ namespace Core
 
 	class TextComponent : public CoreComponentBase, public sde::AutoList<TextComponent>, public AutoListScene<TextComponent>
 	{
-		friend class Renderer;
 	public:
 		TextComponent(CoreEntity *parent, const std::string &s,
 			const std::string &fontFile, const std::string &layer = "default", 
 			float offX = 0.0f, float offY = 0.0f, int size = 20, int r = 255, int g = 255, int b = 255, int a = 255);
+
+		//Accessors
 		void setString(const std::string &s)
 		{
 			m_text.setString(s);
@@ -38,6 +39,18 @@ namespace Core
 		void setSize(int sz)
 		{
 			m_text.setCharacterSize(sz);
+		}
+		sf::Text &text()
+		{
+			return m_text;
+		}
+		const std::string &layer() const
+		{
+			return m_layer;
+		}
+		const sf::Vector2f &offset() const
+		{
+			return m_offset;
 		}
 	private:
 		sf::Text m_text;
