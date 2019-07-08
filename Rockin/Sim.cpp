@@ -70,6 +70,8 @@ namespace Core
 		RegisterStdString(m_scriptEngine);
 		RegisterScriptMath(m_scriptEngine);
 
+		// Register the Scripting API: Object references, methods, and properties
+
 		m_scriptEngine->RegisterObjectType("ScriptComponent", 0, asOBJ_REF | asOBJ_NOCOUNT);
 		m_scriptEngine->RegisterObjectType("Entity", 0, asOBJ_REF | asOBJ_NOCOUNT);
 		m_scriptEngine->RegisterObjectType("InputEvent", 0, asOBJ_REF | asOBJ_NOCOUNT);
@@ -187,8 +189,9 @@ namespace Core
 
 	void Sim::execute()
 	{
-		const float framerate = 1000.0f / 60.0f;
+		constexpr float framerate = 1000.0f / 60.0f;
 		sf::Clock clock;
+		float deltaTime{ 0.0f };
 
 		while (m_window.isOpen())
 		{
@@ -200,7 +203,7 @@ namespace Core
 
 			// Main loop
 
-             			if (clock.getElapsedTime().asMilliseconds() > framerate)
+            if (clock.getElapsedTime().asMilliseconds() + deltaTime >= framerate)
 			{
 				// Execute Systems
 
@@ -216,6 +219,8 @@ namespace Core
 					m_nextScene = "";
 				}
 
+				deltaTime = clock.getElapsedTime().asMilliseconds() - framerate;
+				if (deltaTime < 0.0f) deltaTime = 0.0f;
 				clock.restart();
 			}
 		}

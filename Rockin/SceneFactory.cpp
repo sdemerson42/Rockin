@@ -16,7 +16,7 @@ namespace Core
 		m_eFactory{ eFactory }, m_eVec{ eVec }
 	{
 		readTilesetData();
-		readSceneData();
+		readScenes();
 	}
 
 	void SceneFactory::buildScene()
@@ -292,7 +292,7 @@ namespace Core
 		}
 	}
 
-	void SceneFactory::readSceneData()
+	void SceneFactory::readScenes()
 	{
 		std::ifstream ifs{ "Data/Scenes.dat" };
 		if (!ifs)
@@ -304,13 +304,13 @@ namespace Core
 		while (true)
 		{
 			SceneData sd;
-			if (!readScene(ifs, sd))
+			if (!readSceneDataTokens(ifs, sd))
 				break;
 			m_sceneData.push_back(sd);
 		}
 	}
 
-	bool SceneFactory::readScene(std::istream &ist, SceneData &sd)
+	bool SceneFactory::readSceneDataTokens(std::istream &ist, SceneData &sd)
 	{	
 		if (!ist) return false;
 		auto token = Tokenizer::next(ist);
@@ -328,23 +328,23 @@ namespace Core
 			// Read tokens and add to SceneData based on information found in file
 
 			token = Tokenizer::next(ist);
-			if (token == "Layer")
+			if ("Layer" == token)
 			{
 				if (!readLayerData(ist, sd)) return false;
 			}
-			else if (token == "Entity" || token == "PersistentEntity")
+			else if ("Entity" == token  || "PersistentEntity" == token)
 			{
 				if (!readEntityData(ist, sd, token)) return false;
 			}
-			else if (token == "Physics")
+			else if ("Physics" == token)
 			{
 				if (!readPhysicsData(ist, sd)) return false;
 			}
-			else if (token == "Tilemap")
+			else if ("Tilemap" == token)
 			{
 				if (!readTilemapData(ist, sd)) return false;
 			}
-			else if (token == "Subscene")
+			else if ("Subscene" == token)
 			{
 				token = Tokenizer::next(ist);
 				if (!checkDataFormatting(token, "{", badSubsceneMsg)) return false;
@@ -352,11 +352,11 @@ namespace Core
 				token = Tokenizer::next(ist);
 				if (!checkDataFormatting(token, "}", badSubsceneMsg)) return false;
 			}
-			else if (token == "Data")
+			else if ("Data" == token)
 			{
 				if (!readEntityInitData(ist, sd)) return false;
 			}
-			else if (token != "}")
+			else if ("}" != token)
 			{
 				Logger::log("WARNING: Bad scene formatting.");
 				return false;

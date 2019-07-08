@@ -62,17 +62,19 @@ namespace Core
 		std::vector<TilesetData> m_tilesetData;
 		std::map<std::string, NewSceneEvent> m_newSceneEventMap;
 
+		// References to existing objects in Sim
 		EntityFactory *m_eFactory;
 		std::vector<std::unique_ptr<CoreEntity>> *m_eVec;
 		
+		// Entity creation
 		void createEntities(SceneData &sd, const std::string &sceneName);
 		void processTilemapData(SceneData &sd, NewSceneEvent &nse, const std::string &sceneName);
 		void processPhysicsGeometry(SceneData &sd, NewSceneEvent &nse, CoreEntity *e);
 		void moveEntityIntoScene(CoreEntity *e, const std::string &scene);
 		
 		// Data input methods
-		void readSceneData();
-		bool readScene(std::istream &ist, SceneData &sd);
+		void readScenes();
+		bool readSceneDataTokens(std::istream &ist, SceneData &sd);
 		bool readLayerData(std::istream &ist, SceneData &sd);
 		bool readEntityData(std::istream &ist, SceneData &sd, const std::string &persistType);
 		bool readPhysicsData(std::istream &ist, SceneData &sd);

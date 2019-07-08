@@ -49,8 +49,8 @@ namespace Core
 				e->addComponent<PhysicsComponent>(e, std::stof(data.valuePair[0].value), std::stof(data.valuePair[1].value),
 					std::stof(data.valuePair[2].value), std::stof(data.valuePair[3].value), std::stof(data.valuePair[4].value),
 					std::stof(data.valuePair[5].value), std::stof(data.valuePair[6].value), std::stof(data.valuePair[7].value),
-					(data.valuePair[8].value == "true" ? true : false), (data.valuePair[9].value == "true" ? true : false),
-					(data.valuePair[10].value == "true" ? true : false));
+					("true" == data.valuePair[8].value ? true : false), ("true" == data.valuePair[9].value ? true : false),
+					("true" == data.valuePair[10].value ? true : false));
 				
 				auto cv = e->getComponents<PhysicsComponent>();
 				auto alsp = cv[cv.size()-1];
@@ -187,7 +187,7 @@ namespace Core
 		while (true)
 		{
 			token = Tokenizer::next(ist);
-			if (token == "}") break;
+			if ("}" == token) break;
 
 			// Read data
 
@@ -201,8 +201,8 @@ namespace Core
 				while (true)
 				{
 					token = Tokenizer::next(ist);
-					if (token == ",") continue;
-					if (token == "}") break;
+					if ("," == token) continue;
+					if ("}" == token || !ist) break;
 					bp.tag.push_back(token);
 				}
 			}
@@ -217,7 +217,7 @@ namespace Core
 
 				// Add script path if necessary
 
-				if (cd.component == "Script")
+				if ("Script" == cd.component)
 				{
 					if (std::find(std::begin(m_compiledScripts), std::end(m_compiledScripts), cd.valuePair[1].value) == std::end(m_compiledScripts))
 						m_compiledScripts.push_back(cd.valuePair[1].value);
@@ -236,15 +236,15 @@ namespace Core
 		while (true)
 		{
 			token = Tokenizer::next(ist);
-			if (token == "}") return true;
-			if (token == ",") continue;
+			if ("}" == token) return true;
+			if ("," == token) continue;
 
 			// Fix floats with no digits before the point
 
 			if (token.size() > 1)
 			{
-				if (token[0] == '.') token = "0" + token;
-				else if (token[0] == '-' && token[1] == '.') token.insert(std::begin(token) + 1, '0');
+				if ('.' == token[0]) token = "0" + token;
+				else if ('-' == token[0]  && '.' == token[1]) token.insert(std::begin(token) + 1, '0');
 			}
 
 			BPair pair;
@@ -254,7 +254,7 @@ namespace Core
 				if (result != std::string::npos) pair.type = BType::Float;
 				else pair.type = BType::Int;
 			}
-			else if (token == "true" || token == "false") pair.type = BType::Bool;
+			else if ("true" == token || "false" == token) pair.type = BType::Bool;
 			else pair.type = BType::String;
 
 			pair.value = token;

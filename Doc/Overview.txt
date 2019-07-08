@@ -1,0 +1,26 @@
+Rockin' - Overview
+
+These are rough notes regarding technical aspects of the project to be tidied up and expanded later.
+
+COMPILATION
+Included libraries target 32-bit Windows as a compilation platform. The project was created and is maintained using Visual Studio 2015 CE.
+
+DATA FILES
+Presently there is a required structure of folders, data files, and .dlls that the executable expects to find in whatever folder it resides in. These include:
+
+-All .dll files located in rockin\SFML-2.4.2\bin\ (Versions ending in -d indicate debug build compatablity)
+ 
+-Three folders named Assets, Data, and Scripts.
+
+-Assets should contain a Fonts folder, a Sounds folder, and a Textures folder. These should contain all font files, sound files, and texture files, respectively. An Assets folder containing all demo project Assets is located at rockin\rockin\Assets.
+
+-Data should contain the following files:
+Blueprints.dat
+Scenes.dat
+Sounds.dat
+Tilesets.dat
+
+-Scripts should contain all scripts expected by the blueprints defined in Blueprints.dat.
+
+-There are two underscored PROJECT folders in rockin\rockin\ containing Data and Scripts folders for simple, incomplete demo projects. These can be copied into the executable folder or into rockin\rockin\ for execution while in Visual Studio.
+

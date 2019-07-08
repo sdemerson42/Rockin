@@ -1,0 +1,79 @@
+REFERENCES
+
+Blueprints.dat - Contains all "Blueprints," or descriptions of objects that will be spawnable in scenes.
+
+// One or more of the following:
+
+<BlueprintName>
+{
+Tag{ <Tag string>, ... }
+
+// One or more of the following:
+
+Render{ <Texture x position>, <Texture y position>, <Texture width>, <Texture height>,
+<Texture filename> }
+
+Physics { <AABB x offset>, <AABB y offset>, <AABB width>, <AABB height>,
+<Momentum x>, <Momentum y>, <Mass>, <Restitution>, <solid = true>, <static = false>,
+<noCollision = false> }
+
+Script { <Function prefix>, <Script filename> }
+ 
+Animation { <Animation name>, <Sim frames per animation frame>, <looping>,
+<Number of frames>, <Frame 1 texture x position>, <Frame 1 texture y position>,
+<Frame 1 texture width>, <Frame 1 texture height> ... }
+
+Text { <Starting text>, <Font filename>, <Offset X>, <Offset Y>,
+<Font size>, <r>, <g>, <b>, <a> }
+
+}
+
+
+Tilesets.dat - Defines tilesets from which tilemaps can be constructed in scenes.
+
+// One or more of the following:
+
+<TilesetName>
+{
+<Texture filename>, <Texture width>, <Texture height>, <Tile width>, <Tile height>, 
+<Statically solid tile number>...
+}
+
+
+Sounds.dat - A simple list of sound assets to be preloaded by the Sound ISystem.
+
+// One or more of the following:
+
+<Sound name> <Sound filename>
+
+
+Scenes.dat - Contains data for all scenes to be contructed in the game.
+
+// One or more of the following:
+
+<Scene name>
+{
+Physics { <Prox map width>, <Prox map height>, <Prox map cell width>, <Prox map cell height> }
+
+// One or more of the following:
+
+Layer { <Layer tag>, <static / free> }
+
+Tilemap { <Tileset tag>, <Render layer>, <Number of columns>,
+<Number of rows>, <Comma separated tile numbers equal to columns * rows...> } 
+
+Entity { <Entity tag>, <Number to construct>, <Spawn at start of scene?>,
+<Render layer>, <x position>, <y position> }
+
+PersistentEntity { <Entity tag>, <Number to construct>, <Spawn at start of scene?>,
+<Render layer>, <x position>, <y position> }
+
+// NOTE: Immediately following the declaration of an Entity or PersistentEntity
+// initializing data may optionally be supplied:
+
+Data { <Tag or integer key>, <value>... }
+
+
+}
+
+
