@@ -203,8 +203,10 @@ namespace Core
 
 			// Main loop
 
-            if (clock.getElapsedTime().asMilliseconds() + deltaTime >= framerate)
+            if (clock.getElapsedTime().asMilliseconds() >= deltaTime)
 			{
+				clock.restart();
+
 				// Execute Systems
 
 				for (auto &up : m_system)
@@ -219,9 +221,9 @@ namespace Core
 					m_nextScene = "";
 				}
 
-				deltaTime = clock.getElapsedTime().asMilliseconds() - framerate;
-				if (deltaTime < 0.0f) deltaTime = 0.0f;
-				clock.restart();
+				// Adjust deltaTime
+
+				deltaTime = framerate - clock.getElapsedTime().asMilliseconds();
 			}
 		}
 	}

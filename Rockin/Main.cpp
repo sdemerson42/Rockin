@@ -40,7 +40,7 @@ Default is "RuntimeLog.txt"
 
 int main(int argc, char *argv[])
 {
-	const float version = .0633f;
+	const float version = 0.0634f;
 
 	// Temporary display window constraints
 	const int windowWidth = 800;
