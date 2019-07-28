@@ -6,3 +6,4 @@
 #include "ScriptComponent.h"
 #include "AnimationComponent.h"
 #include "TextComponent.h"
+#include "ParticlesComponent.h"

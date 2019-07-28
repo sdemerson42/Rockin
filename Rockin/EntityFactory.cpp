@@ -106,6 +106,19 @@ namespace Core
 					std::stoi(data.valuePair[5].value), std::stoi(data.valuePair[6].value),
 					std::stoi(data.valuePair[7].value), std::stoi(data.valuePair[8].value));
 			}
+			else if ("Particles" == data.component)
+			{
+				e->addComponent<ParticlesComponent>(e, std::stof(data.valuePair[0].value),
+					std::stof(data.valuePair[1].value), std::stoi(data.valuePair[2].value),
+					std::stoi(data.valuePair[3].value), std::stoi(data.valuePair[4].value),
+					std::stoi(data.valuePair[5].value), std::stoi(data.valuePair[6].value),
+					std::stoi(data.valuePair[7].value), std::stof(data.valuePair[8].value),
+					std::stof(data.valuePair[9].value), std::stoi(data.valuePair[10].value),
+					std::stoi(data.valuePair[11].value), std::stoi(data.valuePair[12].value),
+					std::stoi(data.valuePair[13].value), std::stoi(data.valuePair[14].value),
+					std::stoi(data.valuePair[15].value), std::stoi(data.valuePair[16].value),
+					layer);
+			}
 		}
 		e->setActive(active);
 		e->setPersistent(persistent);

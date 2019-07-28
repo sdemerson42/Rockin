@@ -37,6 +37,7 @@ namespace Core
 			bool isStatic;
 			std::map<sf::Texture *, std::vector<VaData>> vaMap;
 			std::vector<sf::Text *> text;
+			std::vector<sf::VertexArray> particle;
 		};
 		std::map<std::string, LayerData> m_layerMap;
 		std::vector<std::string> m_layerOrder;

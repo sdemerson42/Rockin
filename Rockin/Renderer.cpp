@@ -5,6 +5,7 @@
 #include <iostream>
 #include "TextComponent.h"
 #include "TilesetData.h"
+#include "ParticlesComponent.h"
 
 namespace Core
 {
@@ -92,6 +93,49 @@ namespace Core
 			if (rc->cFlag()) va[va.getVertexCount() - 1].color = rc->color();
 		}
 
+		// Add Particles
+
+		sz = AutoListScene<ParticlesComponent>::alsCurrentSize();
+		for (size_t i = 0; i < sz; ++i)
+		{
+			auto pc = AutoListScene<ParticlesComponent>::alsCurrentGet(i);
+			if (!pc->active()) continue;
+			auto &ld = m_layerMap[pc->layer()];
+			ld.particle.push_back(sf::VertexArray{});
+			auto &va = ld.particle.back();
+			auto &color = pc->color();
+
+			for (int i = 0; i < pc->count(); ++i)
+			{
+				auto &pData = pc->particleData()[i];
+
+				// Exclude particles that are out of frame
+
+				if (!ld.isStatic)
+				{
+					float entL = pData.position.x;
+					float entR = entL + pData.size;
+					float entT = pData.position.y;
+					float entB = entT + pData.size;
+
+					if (entR < viewL || entL > viewR ||
+						entB < viewT || entT > viewB) continue;
+				}
+				
+				va.setPrimitiveType(sf::PrimitiveType::Quads);
+
+				float x = pData.position.x;
+				float y = pData.position.y;
+				int size = pData.size;
+
+				va.append(sf::Vertex{ sf::Vector2f{ x, y }, color });
+				va.append(sf::Vertex{ sf::Vector2f{ x + size, y }, color });
+				va.append(sf::Vertex{ sf::Vector2f{ x + size, y + size }, color });
+				va.append(sf::Vertex{ sf::Vector2f{ x, y + size }, color });
+			}	
+		}
+
+
 		// Add TextComponents
 
 		sz = AutoListScene<TextComponent>::alsCurrentSize();
@@ -142,6 +186,16 @@ namespace Core
 				m_window->draw(*txp);
 			}
 			ld.text.clear();
+
+			// Draw particles
+
+			for (auto &va : ld.particle)
+			{
+				if (ld.isStatic) m_window->setView(m_window->getDefaultView());
+				else m_window->setView(m_view);
+				m_window->draw(va);
+			}
+			ld.particle.clear();
 
 			// Draw tilemap
 

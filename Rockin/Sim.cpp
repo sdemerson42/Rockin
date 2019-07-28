@@ -42,7 +42,7 @@ namespace Core
 		m_subsceneChange = false;
 
 		m_sceneFactory->buildScene();
-
+	
 		Logger::log("Sim successfully constructed. Beginning main loop.");
 	}
 
@@ -58,6 +58,7 @@ namespace Core
 		m_system.push_back(std::make_unique<ScriptSystem>());
 		m_system.push_back(std::make_unique<SoundSystem>());
 		m_system.push_back(std::make_unique<Animator>());
+		m_system.push_back(std::make_unique<Particles>());
 		m_system.push_back(std::make_unique<Renderer>(&m_window, 0.0f, 0.0f, m_window.getSize().x, m_window.getSize().y));
 	}
 
