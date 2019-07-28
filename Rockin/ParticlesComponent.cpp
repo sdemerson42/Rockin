@@ -16,6 +16,14 @@ namespace Core
 		resetSpawnCount();
 	}
 
+	void ParticlesComponent::initialize()
+	{
+		resetSpawnCount();
+		m_particleData.clear();
+		m_particleData.resize(m_densityCap);
+		m_particleCount = 0;
+	}
+
 	bool ParticlesComponent::incSpawnCounter()
 	{
 		if (++m_spawnCounter == m_currentSpawnTime)

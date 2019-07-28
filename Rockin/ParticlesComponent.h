@@ -31,6 +31,7 @@ namespace Core
 			int direction, int arcWidth, int sizeMin, int sizeMax,
 			int lifeMin, int lifeMax, float speedMin, float speedMax, int spawnMin, int spawnMax, int densityCap,
 			int r, int g, int b, int a, const std::string &layer);
+		void initialize() override;
 		bool incSpawnCounter();
 		void modCount(int val);
 
