@@ -1,3 +1,11 @@
+SceneMenu
+{
+Physics {800, 600, 100, 100}
+Layer{ "main", "static" }
+PersistentEntity { "ScoreState", 1, true, "main" }
+Entity {"MenuLogic", 1, true, "main" }
+}
+
 Scene1
 {
 Physics {800, 600, 100, 100}

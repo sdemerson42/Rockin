@@ -38,6 +38,7 @@ void P1_onCollision(ScriptComponent @p, Entity @collider, PhysicsComponent @c)
 	if (collider.hasTag("Hazard"))
 	{	
 		Master_explosion(p);
+		Master_playerDead(gMaster);
 		p.despawn();
 	}
 }

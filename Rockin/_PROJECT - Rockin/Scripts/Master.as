@@ -1,7 +1,12 @@
+ScriptComponent @gMaster;
+
 void Master_main(ScriptComponent @p)
 {
+	@gMaster = p;
+
 	p.log("Master OK");
 	p.setReg("score", 0);
+	p.setReg("endCounter", 0);
 	auto p1Handle = p.spawn("P1");
 	p1Handle.setPosition(390.0, 568.0);
 
@@ -25,6 +30,21 @@ void Master_main(ScriptComponent @p)
 		{
 			handle.setPosition(x,y);
 			handle.setMomentum(mx, my);
+		}
+
+		if (p.getReg("endCounter") > 0)
+		{
+			p.modReg("endCounter", 1);
+			if (p.getReg("endCounter") == 5)
+			{
+				auto hiScore = ScoreState_getScore(gScoreState);
+				auto score = p.getReg("score");
+				if (score > hiScore)
+				{
+					ScoreState_setScore(gScoreState, score);
+				}
+				p.changeScene("SceneMenu");
+			}
 		}
 	}
 }
@@ -104,4 +124,10 @@ void Master_explosion(ScriptComponent @p)
 			d.setMomentum(-2.8, 0);
 		}
 		p.playSound("Boom", 20.0f, false, 1);
+}
+
+void Master_playerDead(ScriptComponent @p)
+{
+	p.setReg("endCounter", 1);
+	p.log("PLAYER_DEAD");
 }
