@@ -30,7 +30,7 @@ namespace Core
 		ParticlesComponent(CoreEntity *parent, float offsetX, float offsetY,
 			int direction, int arcWidth, int sizeMin, int sizeMax,
 			int lifeMin, int lifeMax, float speedMin, float speedMax, int spawnMin, int spawnMax, int densityCap,
-			int r, int g, int b, int a, const std::string &layer);
+			bool despawnPersist, int r, int g, int b, int a, const std::string &layer);
 		void initialize() override;
 		bool incSpawnCounter();
 		void modCount(int val);
@@ -101,6 +101,10 @@ namespace Core
 		{
 			return m_layer;
 		}
+		bool despawnPersist() const
+		{
+			return m_despawnPersist;
+		}
 	private:
 		sf::Vector2f m_offset;
 		int m_direction;
@@ -115,6 +119,7 @@ namespace Core
 		int m_spawnMax;
 		int m_densityCap;
 		sf::Color m_color;
+		bool m_despawnPersist;
 		std::string m_layer;
 
 		int m_currentSpawnTime;

@@ -29,7 +29,7 @@ Text { <Starting text>, <Font filename>, <Offset X>, <Offset Y>,
 Particles { <Position Offset X>, <Position Offset Y>,
 <Direction in degrees>, <Arc width in degrees>, <Size min>, <Size max>,
 <Life min>, <Life max>, <Speed min>, <Speed max>, <Spawn rate min>, <Spawn rate max>,
-<Density Cap>, <r>, <g>, <b>, <a> }
+<Density Cap>, <Despawn Persist>, <r>, <g>, <b>, <a> }
 
 }
 

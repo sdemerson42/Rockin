@@ -115,8 +115,9 @@ namespace Core
 					std::stoi(data.valuePair[7].value), std::stof(data.valuePair[8].value),
 					std::stof(data.valuePair[9].value), std::stoi(data.valuePair[10].value),
 					std::stoi(data.valuePair[11].value), std::stoi(data.valuePair[12].value),
-					std::stoi(data.valuePair[13].value), std::stoi(data.valuePair[14].value),
-					std::stoi(data.valuePair[15].value), std::stoi(data.valuePair[16].value),
+					("true" == data.valuePair[13].value ? true : false),
+					std::stoi(data.valuePair[14].value), std::stoi(data.valuePair[15].value),
+					std::stoi(data.valuePair[16].value), std::stoi(data.valuePair[17].value),
 					layer);
 			}
 		}

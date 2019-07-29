@@ -5,12 +5,13 @@ namespace Core
 	ParticlesComponent::ParticlesComponent(CoreEntity *parent, float offsetX, float offsetY,
 		int direction, int arcWidth, int sizeMin, int sizeMax,
 		int lifeMin, int lifeMax, float speedMin, float speedMax, int spawnMin, int spawnMax, int densityCap,
-		int r, int g, int b, int a, const std::string &layer) :
+		bool despawnPersist, int r, int g, int b, int a, const std::string &layer) :
 		CoreComponentBase{ parent }, m_offset{ offsetX, offsetY },
 		m_direction{direction}, m_arcWidth{arcWidth},
 		m_sizeMin{sizeMin}, m_sizeMax{sizeMax}, m_lifeMin{lifeMin}, m_lifeMax{lifeMax},
 		m_speedMin{speedMin}, m_speedMax{speedMax}, m_spawnMin{spawnMin}, m_spawnMax{spawnMax},
-		m_densityCap{densityCap}, m_color{r, g, b, a}, m_particleData{ densityCap }, m_particleCount{ 0 },
+		m_densityCap{densityCap}, m_despawnPersist{ despawnPersist },
+		m_color{r, g, b, a}, m_particleData{ densityCap }, m_particleCount{ 0 },
 		m_layer{ layer }
 	{
 		resetSpawnCount();

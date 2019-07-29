@@ -99,7 +99,7 @@ namespace Core
 		for (size_t i = 0; i < sz; ++i)
 		{
 			auto pc = AutoListScene<ParticlesComponent>::alsCurrentGet(i);
-			if (!pc->active()) continue;
+			if ((!pc->active() && !pc->despawnPersist()) || pc->count() == 0) continue;
 			auto &ld = m_layerMap[pc->layer()];
 			ld.particle.push_back(sf::VertexArray{});
 			auto &va = ld.particle.back();
