@@ -4,7 +4,7 @@ Tag{ "Meteor", "Hazard" }
 Render{32.0, 0.0, 32.0, 32.0, "Assets/Textures/sprites.png"}
 Physics{2.0, 2.0, 28.0, 28.0, 0.0, 0.0, 4.0, 1.0, true, false, false}
 Script{ "Meteor", "Scripts/Meteor.as" }
-Particles { 16.0, 16.0, 45, 90, 2, 5, 30, 60, 1.2, 5.5, 2, 5, 10, 252, 132, 3, 255 }
+Particles { 16.0, 16.0, 45, 90, 2, 5, 30, 60, 1.2, 5.5, 2, 5, 10, true, 252, 132, 3, 255 }
 }
 
 SmallMeteor
