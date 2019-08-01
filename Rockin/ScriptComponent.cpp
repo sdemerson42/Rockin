@@ -291,6 +291,72 @@ namespace Core
 		if (rc) rc->setColor(r, g, b, a);
 	}
 
+	void ScriptComponent::createSceneData(const std::string &name, int physWidth, int physHeight, int physCellWidth,
+		int physCellHeight)
+	{
+		NewSceneDataEvent event;
+		event.name = name;
+		event.physWidth = physWidth;
+		event.physHeight = physHeight;
+		event.physCellWidth = physCellWidth;
+		event.physCellHeight = physCellHeight;
+		broadcast(&event);
+	}
+
+	void ScriptComponent::addSceneLayer(const std::string &sceneName, const std::string &layerName, bool isStatic)
+	{
+		AddSceneLayerEvent event;
+		event.sceneName = sceneName;
+		event.layerName = layerName;
+		event.isStatic = isStatic;
+		broadcast(&event);
+	}
+	
+	void ScriptComponent::addSceneEntity(const std::string &sceneName, const std::string &entityName, int count, bool instantSpawn,
+		const std::string &layer, float posX, float posY, bool persist, const CScriptArray &data)
+	{
+		AddSceneEntityEvent event;
+		event.sceneName = sceneName;
+		event.entityName = entityName;
+		event.count = count;
+		event.instantSpawn = instantSpawn;
+		event.layer = layer;
+		event.posX = posX;
+		event.posY = posY;
+		event.persist = persist;
+
+		// Convert data from script array handles
+
+		event.data.reserve(data.GetSize());
+		for (int i = 0; i < data.GetSize(); ++i)
+		{
+			event.data.push_back(*static_cast<const std::string *>(data.At(i)));
+		}
+
+		broadcast(&event);
+	}
+
+	void ScriptComponent::addSceneTilemap(const std::string &sceneName, const std::string &tilesetName, const std::string &layer, int width, int height,
+		const CScriptArray &tiles)
+	{
+		AddSceneTilemapEvent event;
+		event.sceneName = sceneName;
+		event.tilesetName = tilesetName;
+		event.layer = layer;
+		event.width = width;
+		event.height = height;
+
+		// Convert tiles data from script array handle
+
+		event.tiles.reserve(tiles.GetSize());
+		for (int i = 0; i < tiles.GetSize(); ++i)
+		{
+			event.tiles.push_back(*static_cast<const int *>(tiles.At(i)));
+		}
+
+		broadcast(&event);
+	}
+
 	void ScriptComponent::setReg(const std::string &reg, int val)
 	{
 		m_registers[reg] = val;

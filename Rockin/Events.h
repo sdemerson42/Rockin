@@ -97,4 +97,44 @@ namespace Core
 		float x;
 		float y;
 	};
+
+	struct NewSceneDataEvent : public sde::EventBase
+	{
+		std::string name;
+		int physWidth;
+		int physHeight;
+		int physCellWidth;
+		int physCellHeight;
+	};
+
+	struct AddSceneLayerEvent : public sde::EventBase
+	{
+		std::string sceneName;
+		std::string layerName;
+		bool isStatic;
+	};
+
+	struct AddSceneTilemapEvent : public sde::EventBase
+	{
+		std::string sceneName;
+		std::string tilesetName;
+		std::string layer;
+		int width;
+		int height;
+		std::vector<int> tiles;
+	};
+
+	struct AddSceneEntityEvent : public sde::EventBase
+	{
+		std::string sceneName;
+		std::string entityName;
+		int count;
+		bool instantSpawn;
+		std::string layer;
+		float posX;
+		float posY;
+		bool persist;
+		std::vector<std::string> data;
+	};
+
 }

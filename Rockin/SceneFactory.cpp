@@ -15,6 +15,11 @@ namespace Core
 	SceneFactory::SceneFactory(EntityFactory *eFactory, std::vector<std::unique_ptr<CoreEntity>> *eVec) :
 		m_eFactory{ eFactory }, m_eVec{ eVec }
 	{
+		registerFunc(this, &SceneFactory::onAddSceneEntityEvent);
+		registerFunc(this, &SceneFactory::onAddSceneLayerEvent);
+		registerFunc(this, &SceneFactory::onAddSceneTilemapEvent);
+		registerFunc(this, &SceneFactory::onNewSceneData);
+
 		readTilesetData();
 		readScenes();
 	}
@@ -658,5 +663,81 @@ namespace Core
 			Logger::log("Exception thrown while reading tileset data in tileset " + currentTilesetName + ".");
 			throw(e);
 		}
+	}
+
+	void SceneFactory::onNewSceneData(const NewSceneDataEvent *event)
+	{
+		SceneData sd;
+		sd.tilesetData = nullptr;
+		sd.name = event->name;
+		sd.sceneSize.x = event->physWidth;
+		sd.sceneSize.y = event->physHeight;
+		sd.cellSize.x = event->physCellWidth;
+		sd.cellSize.y = event->physCellHeight;
+		m_sceneData.push_back(sd);
+	}
+
+	auto SceneFactory::findScene(const std::string &sceneName)
+	{
+		auto it = std::find_if(std::begin(m_sceneData), std::end(m_sceneData), [&](const SceneData &sd)
+		{
+			return sd.name == sceneName;
+		});
+
+		if (it == std::end(m_sceneData))
+		{
+			CoreException e{ "Scene data not found.", CoreException::ErrCode::missingSceneData };
+			throw(e);
+		}
+
+		return it;
+	}
+
+	void SceneFactory::onAddSceneLayerEvent(const AddSceneLayerEvent *event)
+	{
+		auto it = findScene(event->sceneName);
+
+		LayerData ld;
+		ld.name = event->layerName;
+		ld.isStatic = event->isStatic;
+
+		it->layer.push_back(ld);
+	}
+
+	void SceneFactory::onAddSceneEntityEvent(const AddSceneEntityEvent *event)
+	{
+		auto it = findScene(event->sceneName);
+
+		EntityData ed;
+		ed.active = event->instantSpawn;
+		ed.layer = event->layer;
+		ed.name = event->entityName;
+		ed.persistent = event->persist;
+		ed.persistentCreated = false;
+		ed.total = event->count;
+		ed.x = event->posX;
+		ed.y = event->posY;
+		ed.data = event->data;
+
+		it->entity.push_back(ed);
+	}
+
+	void SceneFactory::onAddSceneTilemapEvent(const AddSceneTilemapEvent *event)
+	{
+		auto it = findScene(event->sceneName);
+		auto tsp = std::find_if(std::begin(m_tilesetData), std::end(m_tilesetData), [&](const TilesetData &td)
+		{
+			return td.name == event->tilesetName;
+		});
+		if (tsp == std::end(m_tilesetData))
+		{
+			CoreException e{ "Tilset data not found.", CoreException::ErrCode::missingTilesetData };
+		}
+
+		it->tilemapLayer = event->layer;
+		it->tilemapSize.x = event->width;
+		it->tilemapSize.y = event->height;
+		it->tilemap = event->tiles;
+		it->tilesetData = &*tsp;
 	}
 }

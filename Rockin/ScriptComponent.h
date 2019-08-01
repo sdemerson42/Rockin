@@ -8,6 +8,7 @@
 #include "Events.h"
 #include <map>
 #include "AutoListScene.h"
+#include "../../add_on/scriptarray/scriptarray.h"
 
 namespace Core
 {
@@ -88,6 +89,14 @@ namespace Core
 		void setRenderScale(float x, float y);
 		void setRenderRotation(float degrees);
 		void setRenderColor(int r, int g, int b, int a);
+
+		void createSceneData(const std::string &name, int physWidth, int physHeight, int physCellWidth,
+			int physCellHeight);
+		void addSceneLayer(const std::string &sceneName, const std::string &layerName, bool isStatic);
+		void addSceneEntity(const std::string &sceneName, const std::string &entityName, int count, bool instantSpawn,
+			const std::string &layer, float posX, float posY, bool persist, const CScriptArray &data);
+		void addSceneTilemap(const std::string &sceneName, const std::string &tilesetName, const std::string &layer, int width, int height,
+			const CScriptArray &tiles);
 
 		void setReg(const std::string &reg, int value);
 		int getReg(const std::string &reg);

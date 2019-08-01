@@ -3,6 +3,7 @@
 
 #include "../../add_on/scriptstdstring/scriptstdstring.h"
 #include "../../add_on/scriptmath/scriptmath.h"
+#include "../../add_on/scriptarray/scriptarray.h"
 
 #include <iostream>
 #include <fstream>
@@ -70,6 +71,7 @@ namespace Core
 
 		RegisterStdString(m_scriptEngine);
 		RegisterScriptMath(m_scriptEngine);
+		RegisterScriptArray(m_scriptEngine, true);
 
 		// Register the Scripting API: Object references, methods, and properties
 
@@ -184,8 +186,20 @@ namespace Core
 			asMETHOD(ScriptComponent, ScriptComponent::setRenderRotation), asCALL_THISCALL);
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void setScript(const string &in, ScriptComponent @sc)",
 			asMETHOD(ScriptComponent, ScriptComponent::setScript), asCALL_THISCALL);
-		auto finalValue = m_scriptEngine->RegisterObjectMethod("ScriptComponent", "ScriptComponent @getScript(const string &in)",
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "ScriptComponent @getScript(const string &in)",
 			asMETHOD(ScriptComponent, ScriptComponent::getScript), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", 
+			"void createSceneData(const string &in, int physWidth, int physHeight, int physCellWidth, int physCellHeight)",
+			asMETHOD(ScriptComponent, ScriptComponent::createSceneData), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", 
+			"void addSceneLayer(const string &in, const string &in, bool isStatic)",
+			asMETHOD(ScriptComponent, ScriptComponent::addSceneLayer), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", 
+			"void addSceneEntity(const string &in, const string &in, int count, bool instantSpawn, const string &in, float posX, float posY, bool persist, const array<string> &in)",
+			asMETHOD(ScriptComponent, ScriptComponent::addSceneEntity), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", 
+			"void addSceneTilemap(const string &in, const string &in, const string &in, int width, int height, const array<int> &tiles)",
+			asMETHOD(ScriptComponent, ScriptComponent::addSceneTilemap), asCALL_THISCALL);
 	}
 
 	void Sim::execute()

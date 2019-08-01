@@ -81,5 +81,14 @@ namespace Core
 		bool readTilemapData(std::istream &ist, SceneData &sd);
 		bool readEntityInitData(std::istream &ist, SceneData &sd);
 		void readTilesetData();
+
+		// Helper methods
+		auto findScene(const std::string &sceneName);
+
+		// Event handler methods
+		void onNewSceneData(const NewSceneDataEvent *event);
+		void onAddSceneLayerEvent(const AddSceneLayerEvent *event);
+		void onAddSceneEntityEvent(const AddSceneEntityEvent *event);
+		void onAddSceneTilemapEvent(const AddSceneTilemapEvent *event);
 	};
 }
