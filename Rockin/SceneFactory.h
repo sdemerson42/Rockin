@@ -87,8 +87,9 @@ namespace Core
 
 		// Event handler methods
 		void onNewSceneData(const NewSceneDataEvent *event);
-		void onAddSceneLayerEvent(const AddSceneLayerEvent *event);
-		void onAddSceneEntityEvent(const AddSceneEntityEvent *event);
-		void onAddSceneTilemapEvent(const AddSceneTilemapEvent *event);
+		void onAddSceneLayer(const AddSceneLayerEvent *event);
+		void onAddSceneEntity(const AddSceneEntityEvent *event);
+		void onAddSceneTilemap(const AddSceneTilemapEvent *event);
+		void onAddSubscene(const AddSubsceneEvent *event);
 	};
 }

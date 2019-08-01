@@ -94,9 +94,12 @@ namespace Core
 			int physCellHeight);
 		void addSceneLayer(const std::string &sceneName, const std::string &layerName, bool isStatic);
 		void addSceneEntity(const std::string &sceneName, const std::string &entityName, int count, bool instantSpawn,
+			const std::string &layer, float posX, float posY, bool persist);
+		void addSceneDataEntity(const std::string &sceneName, const std::string &entityName, int count, bool instantSpawn,
 			const std::string &layer, float posX, float posY, bool persist, const CScriptArray &data);
 		void addSceneTilemap(const std::string &sceneName, const std::string &tilesetName, const std::string &layer, int width, int height,
 			const CScriptArray &tiles);
+		void addSubscene(const std::string &sceneName, const std::string &subsceneName);
 
 		void setReg(const std::string &reg, int value);
 		int getReg(const std::string &reg);

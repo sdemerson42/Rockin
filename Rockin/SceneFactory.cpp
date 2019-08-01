@@ -15,11 +15,12 @@ namespace Core
 	SceneFactory::SceneFactory(EntityFactory *eFactory, std::vector<std::unique_ptr<CoreEntity>> *eVec) :
 		m_eFactory{ eFactory }, m_eVec{ eVec }
 	{
-		registerFunc(this, &SceneFactory::onAddSceneEntityEvent);
-		registerFunc(this, &SceneFactory::onAddSceneLayerEvent);
-		registerFunc(this, &SceneFactory::onAddSceneTilemapEvent);
+		registerFunc(this, &SceneFactory::onAddSceneEntity);
+		registerFunc(this, &SceneFactory::onAddSceneLayer);
+		registerFunc(this, &SceneFactory::onAddSceneTilemap);
+		registerFunc(this, &SceneFactory::onAddSubscene);
 		registerFunc(this, &SceneFactory::onNewSceneData);
-
+	
 		readTilesetData();
 		readScenes();
 	}
@@ -693,7 +694,7 @@ namespace Core
 		return it;
 	}
 
-	void SceneFactory::onAddSceneLayerEvent(const AddSceneLayerEvent *event)
+	void SceneFactory::onAddSceneLayer(const AddSceneLayerEvent *event)
 	{
 		auto it = findScene(event->sceneName);
 
@@ -704,7 +705,7 @@ namespace Core
 		it->layer.push_back(ld);
 	}
 
-	void SceneFactory::onAddSceneEntityEvent(const AddSceneEntityEvent *event)
+	void SceneFactory::onAddSceneEntity(const AddSceneEntityEvent *event)
 	{
 		auto it = findScene(event->sceneName);
 
@@ -722,7 +723,7 @@ namespace Core
 		it->entity.push_back(ed);
 	}
 
-	void SceneFactory::onAddSceneTilemapEvent(const AddSceneTilemapEvent *event)
+	void SceneFactory::onAddSceneTilemap(const AddSceneTilemapEvent *event)
 	{
 		auto it = findScene(event->sceneName);
 		auto tsp = std::find_if(std::begin(m_tilesetData), std::end(m_tilesetData), [&](const TilesetData &td)
@@ -739,5 +740,11 @@ namespace Core
 		it->tilemapSize.y = event->height;
 		it->tilemap = event->tiles;
 		it->tilesetData = &*tsp;
+	}
+
+	void SceneFactory::onAddSubscene(const AddSubsceneEvent *event)
+	{
+		auto it = findScene(event->sceneName);
+		it->subscene.push_back(event->subsceneName);
 	}
 }

@@ -1,1 +1,110 @@
-Coming soon!
+Scripting API
+
+A reference for engine functions callable by a script. All functions must be called from a ScriptComponent reference.
+
+
+
+addSceneDataEntity(const std::string &sceneName, const std::string &entityName, int count, bool instantSpawn, const std::string &layer, float posX, float posY, bool persist, const CScriptArray &data) - Add Entity data to a scene with an array of string initialization data.
+
+addSceneEntity(const std::string &sceneName, const std::string &entityName, int count, bool instantSpawn, const std::string &layer, float posX, float posY, bool persist) - Add Entity data to a scene without initialization data.
+
+addSceneLayer(const std::string &sceneName, const std::string &layerName, bool isStatic) - Add a layer to a scene.
+
+addSceneTilemap(const std::string &sceneName, const std::string &tilesetName, const std::string &layer, int width, int height, const CScriptArray &tiles) - Add tilemap data to a scene.
+
+addSubscene(const std::string &sceneName, const std::string &subsceneName) - Add a subscene to a scene.
+
+changeScene(const std::string &scene) - Close the current scene and load a new scene on the next execution cycle.
+
+changeSubscene(const std::string &scene) - Switch from the current scene to a pre-defined subscene.
+
+createSceneData(const std::string &name, int physWidth, int physHeight, int physCellWidth, int physCellHeight) - Create a new SceneData object which can be used to instantiate a scene.
+
+despawn() - Deactivate the calling object at the end of this cycle.
+
+entityHasTag(CoreEntity *e, const std::string &tag) -> bool - Return true if the specified entity reference has the given tag.
+
+getReg(const std::string &reg) -> int - Get the value of an integer register.
+
+getScript(const std::string &name) -> ScriptComponent * - Get a reference to the ScriptComponent stored under the given name.
+
+getScriptByTag(const std::string &tag) -> ScriptComponent * - Get a reference to the first active ScriptComponent found with the given tag. 
+
+getString(int index) -> const std::string & - Get the string stored at the given index.
+
+input() -> const InputEvent & - Get the current engine input state.
+
+log(const std::string &msg) - Log the given message.
+
+modReg(const std::string &reg, int value) - Modify the given register by this amount.
+
+momentum() -> const sf::Vector2f & - Get the momentum of the calling Entity's PhysicsComponent.
+
+pauseMusic() - Pause currrently playing music.
+
+playAnimation(const std::string &name) - Set the current animation to the animation given.
+
+playMusic(const std::string &fName, float volume, bool loop) - Play the given music selection.
+
+playSound(const std::string &tag, float volume, bool loop, int priority) - Play the given sound.
+
+position() -> const sf::Vector2f & - Get the position of the calling Entity.
+
+randomRange(int min, int eMax) -> int - Get a random integer in the range (min, eMax].
+
+setMomentum(float x, float y) - Set the momentum of the calling Entity's PhysicsComponent.
+
+setPosition(float x, float y) - Set the calling Entity's position.
+
+setReg(const std::string &reg, int value) - Set the register to the given value.
+
+setRenderColor(int r, int g, int b, int a) - Set the calling Entity's RenderComponent to the given color.
+
+setRenderFrame(float x, float y, float w, float h) - Set the calling Entity's RenderComponent to the given rectangle.
+
+setRenderRotation(float degrees) - Set the calling Entity's RenderComponent to the given rotation.
+
+setRenderScale(float x, float y) - Set the calling Entity's RenderComponent to the given scale.
+
+setScript(const std::string &name, ScriptComponent *sc) - Store a reference to the given ScriptComponent keyed to the given name.
+
+setSleep(bool b) - Set the calling script's sleep state.
+
+setString(int index, const std::string &s) - Store the given string at the provided index.
+
+setTextColor(int r, int g, int b, int a) - Set the color of the calling Entity's TextComponent.
+
+setTextSize(int val) - Set the font size of the calling Entity's TextComponent.
+
+setTextString(const std::string &s) - Set the string value of the calling Entity's TextComponent.
+
+setViewCenter(float x, float y) - Center the rendering view for all nonstatic render layers in the currently loaded scene.
+
+spawn(const std::string &tag) -> ScriptComponent * - Instantiate the first available object in the pool with the given tag. No spawn will occur if there are no available objects.
+
+spriteSize() -> const sf::Vector2f & - Get the dimensions of the calling Entity's RenderComponent rectangle.
+
+stopAnimation() - Stop playing the current animation and continue to render the current frame.
+
+stopMusic() - Stop playing the current music selection.
+
+stopSound(const std::string &tag) - Stop playing the given sound on the lowest priority sound channel.
+
+suspend(int cycles) - Stop executing this script and skip the given number of subsequent cycles. If called with no argument, the default number of cycles will be 0. Execution resumes at the next line of code immediately after suspend() was called.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -137,4 +137,10 @@ namespace Core
 		std::vector<std::string> data;
 	};
 
+	struct AddSubsceneEvent : public sde::EventBase
+	{
+		std::string sceneName;
+		std::string subsceneName;
+	};
+
 }

@@ -195,11 +195,17 @@ namespace Core
 			"void addSceneLayer(const string &in, const string &in, bool isStatic)",
 			asMETHOD(ScriptComponent, ScriptComponent::addSceneLayer), asCALL_THISCALL);
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", 
-			"void addSceneEntity(const string &in, const string &in, int count, bool instantSpawn, const string &in, float posX, float posY, bool persist, const array<string> &in)",
+			"void addSceneDataEntity(const string &in, const string &in, int count, bool instantSpawn, const string &in, float posX, float posY, bool persist, const array<string> &in)",
+			asMETHOD(ScriptComponent, ScriptComponent::addSceneDataEntity), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent",
+			"void addSceneEntity(const string &in, const string &in, int count, bool instantSpawn, const string &in, float posX, float posY, bool persist)",
 			asMETHOD(ScriptComponent, ScriptComponent::addSceneEntity), asCALL_THISCALL);
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", 
 			"void addSceneTilemap(const string &in, const string &in, const string &in, int width, int height, const array<int> &tiles)",
 			asMETHOD(ScriptComponent, ScriptComponent::addSceneTilemap), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent",
+			"void addSubscene(const string &in, const string &in)",
+			asMETHOD(ScriptComponent, ScriptComponent::addSubscene), asCALL_THISCALL);
 	}
 
 	void Sim::execute()

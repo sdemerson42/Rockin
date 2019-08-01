@@ -313,6 +313,21 @@ namespace Core
 	}
 	
 	void ScriptComponent::addSceneEntity(const std::string &sceneName, const std::string &entityName, int count, bool instantSpawn,
+		const std::string &layer, float posX, float posY, bool persist)
+	{
+		AddSceneEntityEvent event;
+		event.sceneName = sceneName;
+		event.entityName = entityName;
+		event.count = count;
+		event.instantSpawn = instantSpawn;
+		event.layer = layer;
+		event.posX = posX;
+		event.posY = posY;
+		event.persist = persist;
+		broadcast(&event);
+	}
+
+	void ScriptComponent::addSceneDataEntity(const std::string &sceneName, const std::string &entityName, int count, bool instantSpawn,
 		const std::string &layer, float posX, float posY, bool persist, const CScriptArray &data)
 	{
 		AddSceneEntityEvent event;
@@ -354,6 +369,14 @@ namespace Core
 			event.tiles.push_back(*static_cast<const int *>(tiles.At(i)));
 		}
 
+		broadcast(&event);
+	}
+
+	void ScriptComponent::addSubscene(const std::string &sceneName, const std::string &subsceneName)
+	{
+		AddSubsceneEvent event;
+		event.sceneName = sceneName;
+		event.subsceneName = subsceneName;
 		broadcast(&event);
 	}
 
