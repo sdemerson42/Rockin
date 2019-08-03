@@ -52,6 +52,8 @@ position() -> const sf::Vector2f & - Get the position of the calling Entity.
 
 randomRange(int min, int eMax) -> int - Get a random integer in the range (min, eMax].
 
+readDataFromFile(const string &in) -> array<string> @ - Read whitespace / newline separated data from a file and return a handle to an array<string> containing the data. If the file cannot be opened a null reference will be returned instead and a warning will be logged.
+
 setMomentum(float x, float y) - Set the momentum of the calling Entity's PhysicsComponent.
 
 setPosition(float x, float y) - Set the calling Entity's position.

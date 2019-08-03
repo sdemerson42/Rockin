@@ -31,6 +31,7 @@ namespace Core
 		const std::string &prefix() const;
 		void addRegValue(const std::string &name, int val);
 		void addStringValue(int index, const std::string &s);
+
 		//Accessors
 		bool sleep() const
 		{
@@ -56,6 +57,10 @@ namespace Core
 		{
 			return m_funcCollision;
 		}
+
+		// Script types
+		static asITypeInfo *m_asTypeStringArray;
+
 		// Scripting API
 
 		void log(const std::string &msg);
@@ -100,6 +105,8 @@ namespace Core
 		void addSceneTilemap(const std::string &sceneName, const std::string &tilesetName, const std::string &layer, int width, int height,
 			const CScriptArray &tiles);
 		void addSubscene(const std::string &sceneName, const std::string &subsceneName);
+
+		CScriptArray *readDataFromFile(const std::string &fName);
 
 		void setReg(const std::string &reg, int value);
 		int getReg(const std::string &reg);

@@ -75,6 +75,8 @@ namespace Core
 
 		// Register the Scripting API: Object references, methods, and properties
 
+		ScriptComponent::m_asTypeStringArray = m_scriptEngine->GetTypeInfoByDecl("array<string>");
+
 		m_scriptEngine->RegisterObjectType("ScriptComponent", 0, asOBJ_REF | asOBJ_NOCOUNT);
 		m_scriptEngine->RegisterObjectType("Entity", 0, asOBJ_REF | asOBJ_NOCOUNT);
 		m_scriptEngine->RegisterObjectType("InputEvent", 0, asOBJ_REF | asOBJ_NOCOUNT);
@@ -206,6 +208,8 @@ namespace Core
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent",
 			"void addSubscene(const string &in, const string &in)",
 			asMETHOD(ScriptComponent, ScriptComponent::addSubscene), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "array<string> @readDataFromFile(const string &in)",
+			asMETHOD(ScriptComponent, ScriptComponent::readDataFromFile), asCALL_THISCALL);
 	}
 
 	void Sim::execute()

@@ -1,4 +1,4 @@
-#include <iostream>
+#include <fstream>
 
 #include "ScriptComponent.h"
 #include "TransformComponent.h"
@@ -15,6 +15,7 @@ namespace Core
 {
 	Sim *ScriptComponent::m_sim;
 	InputEvent ScriptComponent::m_input;
+	asITypeInfo *ScriptComponent::m_asTypeStringArray;
 
 	void ScriptComponent::setSim(Sim *sim)
 	{
@@ -378,6 +379,24 @@ namespace Core
 		event.sceneName = sceneName;
 		event.subsceneName = subsceneName;
 		broadcast(&event);
+	}
+
+	CScriptArray *ScriptComponent::readDataFromFile(const std::string &fName)
+	{
+		std::ifstream ifs{ fName };
+		if (!ifs)
+		{
+			Logger::log("WARNING: Script API failed to open file " + fName + ".");
+			return nullptr;
+		}
+
+		auto ary = CScriptArray::Create(m_asTypeStringArray);
+		std::string s;
+		while (ifs >> s)
+		{
+			ary->InsertLast(&s);
+		}
+		return ary;
 	}
 
 	void ScriptComponent::setReg(const std::string &reg, int val)
