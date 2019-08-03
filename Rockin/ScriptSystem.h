@@ -3,6 +3,7 @@
 #include "sde.h"
 #include "angelscript.h"
 #include "Events.h"
+#include <stack>
 
 namespace Core
 {
@@ -23,5 +24,8 @@ namespace Core
 		void execute() override;
 	private:
 		void onCollision(const CollisionEvent *c);
+		void onSetMainScriptFunction(const SetMainScriptFunctionEvent *event);
+
+		std::stack<SetMainScriptFunctionEvent> m_setMainEventStack;
 	};
 }

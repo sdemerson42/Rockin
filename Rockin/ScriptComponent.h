@@ -31,6 +31,7 @@ namespace Core
 		const std::string &prefix() const;
 		void addRegValue(const std::string &name, int val);
 		void addStringValue(int index, const std::string &s);
+		void resetMainScriptFunction(const std::string &funcName);
 
 		//Accessors
 		bool sleep() const
@@ -107,6 +108,8 @@ namespace Core
 		void addSubscene(const std::string &sceneName, const std::string &subsceneName);
 
 		CScriptArray *readDataFromFile(const std::string &fName);
+
+		void setMainFunction(const std::string &funcName);
 
 		void setReg(const std::string &reg, int value);
 		int getReg(const std::string &reg);

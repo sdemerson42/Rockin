@@ -6,6 +6,7 @@ namespace Core
 	ScriptSystem::ScriptSystem()
 	{
 		registerFunc(this, &ScriptSystem::onCollision);
+		registerFunc(this, &ScriptSystem::onSetMainScriptFunction);
 	}
 
 	void ScriptSystem::execute()
@@ -15,7 +16,14 @@ namespace Core
 		{
 			auto sc = AutoListScene<ScriptComponent>::alsCurrentGet(i);
 			if (sc->active() && !sc->sleep() && sc->suspensionCycles() <= 0) sc->contextMain()->Execute();
+			// Post execution
 			if (sc->suspensionCycles() > 0) sc->decSuspensionCycles();
+			while (!m_setMainEventStack.empty())
+			{
+				auto event = m_setMainEventStack.top();
+				sc->resetMainScriptFunction(event.funcName);
+				m_setMainEventStack.pop();
+			}
 		}
 	}
 
@@ -30,5 +38,10 @@ namespace Core
 		context->SetArgObject(1, c->collider);
 		context->SetArgObject(2, c->colliderPhysics);
 		context->Execute();
+	}
+
+	void ScriptSystem::onSetMainScriptFunction(const SetMainScriptFunctionEvent *event)
+	{
+		m_setMainEventStack.push(*event);
 	}
 }

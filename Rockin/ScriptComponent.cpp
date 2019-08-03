@@ -36,11 +36,16 @@ namespace Core
 		
 		std::string sMain = std::string{ "void " + tag + "_main(ScriptComponent @p)" };
 		const char *cMain = sMain.c_str();
-		std::string sCollision = std::string{ "void " + tag + "_onCollision(ScriptComponent @p, Entity @e, PhysicsComponent @c)" };
-		const char *cCollision = sCollision.c_str();
-
 		m_funcMain = mod->GetFunctionByDecl(cMain);
-		m_funcCollision = mod->GetFunctionByDecl(cCollision);
+
+		m_funcCollision = nullptr;
+		auto pc = parent->getComponent<PhysicsComponent>();
+		if (pc)
+		{
+			std::string sCollision = std::string{ "void " + tag + "_onCollision(ScriptComponent @p, Entity @e, PhysicsComponent @c)" };
+			const char *cCollision = sCollision.c_str();
+			m_funcCollision = mod->GetFunctionByDecl(cCollision);
+		}
 
 		m_contextMain = engine->CreateContext();
 		m_contextMain->Prepare(m_funcMain);
@@ -90,9 +95,29 @@ namespace Core
 		m_strings[index] = s;
 	}
 
+	void ScriptComponent::resetMainScriptFunction(const std::string &funcName)
+	{
+		std::string fDecl{ "void " + m_prefix + "_" + funcName + "(ScriptComponent @p)" };
+		auto mod = m_engine->GetModule("Behavior");
+		auto asFunc = mod->GetFunctionByDecl(fDecl.c_str());
+
+		auto mainState = m_contextMain->GetState();
+		if (mainState == asEXECUTION_SUSPENDED || mainState == asEXECUTION_ABORTED) m_contextMain->Abort();
+
+		m_funcMain = asFunc;
+		m_contextMain->Prepare(m_funcMain);
+		m_contextMain->SetArgObject(0, this);
+	}
+
+
+
 
 
 	// Scripting API definitions
+
+
+
+
 
 
 
@@ -397,6 +422,13 @@ namespace Core
 			ary->InsertLast(&s);
 		}
 		return ary;
+	}
+
+	void ScriptComponent::setMainFunction(const std::string &funcName)
+	{
+		SetMainScriptFunctionEvent event;
+		event.funcName = funcName;
+		broadcast(&event);
 	}
 
 	void ScriptComponent::setReg(const std::string &reg, int val)

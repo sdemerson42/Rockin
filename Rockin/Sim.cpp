@@ -210,6 +210,8 @@ namespace Core
 			asMETHOD(ScriptComponent, ScriptComponent::addSubscene), asCALL_THISCALL);
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "array<string> @readDataFromFile(const string &in)",
 			asMETHOD(ScriptComponent, ScriptComponent::readDataFromFile), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void setMainFunction(const string &in)",
+			asMETHOD(ScriptComponent, ScriptComponent::setMainFunction), asCALL_THISCALL);
 	}
 
 	void Sim::execute()
