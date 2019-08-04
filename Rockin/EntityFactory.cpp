@@ -188,6 +188,11 @@ namespace Core
 		builder.BuildModule();
 	}
 
+	CoreEntity *EntityFactory::currentEntity() const
+	{
+		return m_currentEntity;
+	}
+
 	bool EntityFactory::readBlueprint(std::istream &ist, Blueprint &bp)
 	{
 		auto token = Tokenizer::next(ist);

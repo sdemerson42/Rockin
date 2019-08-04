@@ -32,7 +32,8 @@ namespace Core
 		Sim &operator=(const Sim &) = delete;
 		Sim &operator=(Sim &&) = delete;
 		void execute();
-		ScriptComponent *spawn(const std::string &tag);
+		ScriptComponent *spawn(const std::string &tag, bool force = false);
+		ScriptComponent *forceSpawn(const std::string &tag, const std::string &layer);
 	private:
 		void systemsSetup();
 		void scriptEngineSetup();
@@ -43,8 +44,10 @@ namespace Core
 		std::unique_ptr<SceneFactory> m_sceneFactory;
 		sf::RenderWindow m_window;
 		asIScriptEngine *m_scriptEngine;
+		std::string m_currentScene;
 		std::string m_nextScene;
 		bool m_subsceneChange;
+		static const unsigned int m_entityReserveTotal;
 
 		void onChangeScene(const ChangeSceneEvent *cse);
 	};

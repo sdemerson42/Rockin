@@ -25,17 +25,20 @@ namespace Core
 		readScenes();
 	}
 
-	void SceneFactory::buildScene()
+	std::string SceneFactory::buildScene()
 	{
-		if (m_sceneData.size() > 0) buildScene(m_sceneData[0].name);
+		std::string sceneName;
+
+		if (m_sceneData.size() > 0) sceneName = buildScene(m_sceneData[0].name);
 		else
 		{
 			CoreException e{ "WARNING: Default scene data not found.", CoreException::ErrCode::missingDefaultSceneData };
 			throw(e);
 		}
+		return sceneName;
 	}
 
-	void SceneFactory::buildScene(const std::string &sceneName, bool isSubscene)
+	std::string SceneFactory::buildScene(const std::string &sceneName, bool isSubscene)
 	{
 		NewSceneEvent nse;
 
@@ -68,7 +71,7 @@ namespace Core
 		if (sd == std::end(m_sceneData))
 		{
 			Logger::log("WARNING: Scene not found. Construction aborted.");
-			return;
+			return "";
 		}
 
 		// Get layer data
@@ -106,6 +109,7 @@ namespace Core
 		}
 
 		Logger::log(sceneName + " built successfully.");
+		return sceneName;
 	}
 
 	void SceneFactory::createEntities(SceneData &sd, const std::string &sceneName)

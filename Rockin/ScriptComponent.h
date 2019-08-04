@@ -95,6 +95,7 @@ namespace Core
 		void setRenderScale(float x, float y);
 		void setRenderRotation(float degrees);
 		void setRenderColor(int r, int g, int b, int a);
+		ScriptComponent *forceSpawn(const std::string &tag, const std::string &layer);
 
 		void createSceneData(const std::string &name, int physWidth, int physHeight, int physCellWidth,
 			int physCellHeight);

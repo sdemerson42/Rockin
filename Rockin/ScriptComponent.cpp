@@ -431,6 +431,11 @@ namespace Core
 		broadcast(&event);
 	}
 
+	ScriptComponent *ScriptComponent::forceSpawn(const std::string &tag, const std::string &layer)
+	{
+		return m_sim->forceSpawn(tag, layer);
+	}
+
 	void ScriptComponent::setReg(const std::string &reg, int val)
 	{
 		m_registers[reg] = val;

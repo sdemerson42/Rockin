@@ -15,6 +15,8 @@
 
 namespace Core
 {
+	const unsigned int Sim::m_entityReserveTotal{ 500 };
+
 	Sim::Sim(unsigned int w, unsigned int h, const std::string &name) :
 		m_window{ sf::VideoMode{w, h}, name }
 	{
@@ -33,6 +35,10 @@ namespace Core
 
 		m_sceneFactory = std::make_unique<SceneFactory>(m_entityFactory.get(), &m_entity);
 
+		// Reserve space for Entities
+
+		m_entity.reserve(m_entityReserveTotal);
+
 		// Create Systems
 
 		systemsSetup();
@@ -42,7 +48,7 @@ namespace Core
 		m_nextScene = "";
 		m_subsceneChange = false;
 
-		m_sceneFactory->buildScene();
+		m_currentScene = m_sceneFactory->buildScene();
 	
 		Logger::log("Sim successfully constructed. Beginning main loop.");
 	}
@@ -212,6 +218,8 @@ namespace Core
 			asMETHOD(ScriptComponent, ScriptComponent::readDataFromFile), asCALL_THISCALL);
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void setMainFunction(const string &in)",
 			asMETHOD(ScriptComponent, ScriptComponent::setMainFunction), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "ScriptComponent @forceSpawn(const string &in, const string &in)",
+			asMETHOD(ScriptComponent, ScriptComponent::forceSpawn), asCALL_THISCALL);
 	}
 
 	void Sim::execute()
@@ -243,7 +251,7 @@ namespace Core
 
 				if (m_nextScene != "")
 				{
-					if (!m_subsceneChange) m_sceneFactory->buildScene(m_nextScene);
+					if (!m_subsceneChange) m_currentScene = m_sceneFactory->buildScene(m_nextScene);
 					else m_sceneFactory->setSubscene(m_nextScene);
 					m_nextScene = "";
 				}
@@ -255,10 +263,8 @@ namespace Core
 		}
 	}
 
-	ScriptComponent *Sim::spawn(const std::string &tag)
+	ScriptComponent *Sim::spawn(const std::string &tag, bool force)
 	{
-		ScriptComponent *r = nullptr;
-
 		auto iter = std::find_if(std::begin(m_entity), std::end(m_entity), [&](std::unique_ptr<CoreEntity> &up)
 		{
 			return up->hasTag(tag) && !up->active();
@@ -268,14 +274,26 @@ namespace Core
 		{
 			(*iter)->setActive(true);
 			(*iter)->initializeAllComponents();
-			r = (*iter)->getComponent<ScriptComponent>();
+			return (*iter)->getComponent<ScriptComponent>();
 		}
-		else
+		
+		if (!force) Logger::log("WARNING: A script requested a bad spawn. Entity with tag " + tag + " was requested.");
+		return nullptr;
+	}
+
+	ScriptComponent *Sim::forceSpawn(const std::string &tag, const std::string &layer)
+	{
+		auto sc = spawn(tag, true);
+		if (sc) return sc;
+
+		if (m_entity.size() < m_entityReserveTotal)
 		{
-			Logger::log("WARNING: A script requested a bad spawn. Entity with tag " + tag + " was requested.");
+			m_entityFactory->createEntity(tag, true, false, layer, 0.0f, 0.0f, m_currentScene);
+			return m_entityFactory->currentEntity()->getComponent<ScriptComponent>();
 		}
 
-		return r;
+		Logger::log("WARNING: A script requested a bad forced spawn. Entity with tag " + tag + " was requested.");
+		return nullptr;
 	}
 
 	void Sim::onChangeScene(const ChangeSceneEvent *event)

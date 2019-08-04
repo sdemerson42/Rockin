@@ -19,6 +19,7 @@ namespace Core
 			float x = 0.0f, float y = 0.0f, const std::string &subsceneName = "main");
 		void addInitData(const std::vector<std::string> &data);
 		void loadBlueprintData(const std::string &fName);
+		CoreEntity *currentEntity() const;
 	private:
 		enum class BType { Int, Float, Bool, String };
 		struct BPair

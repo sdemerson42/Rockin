@@ -24,6 +24,8 @@ despawn() - Deactivate the calling object at the end of this cycle.
 
 entityHasTag(CoreEntity *e, const std::string &tag) -> bool - Return true if the specified entity reference has the given tag.
 
+forceSpawn(const std::string &tag, const std::string &layer) -> ScriptComponent * - Attempt to spawn an Entity with the given tag from the object pool. If an inactive object is available, it will be spawned as usual without reference to the layer argument. If an existing object is not available and the current Entity count is beneath reserved maximum, a new Entity will be spawned on the provided layer at (0.0, 0.0) and set active. 
+
 getReg(const std::string &reg) -> int - Get the value of an integer register.
 
 getScript(const std::string &name) -> ScriptComponent * - Get a reference to the ScriptComponent stored under the given name.
