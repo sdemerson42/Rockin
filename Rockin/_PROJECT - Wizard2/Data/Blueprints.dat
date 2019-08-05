@@ -1,0 +1,27 @@
+Wizard
+{
+Tag {"Wizard"}
+Render { 32.0, 320.0, 32.0, 32.0, "Assets/Textures/U5.png" }
+Script { "Wizard", "Scripts/Wizard.as" }
+Physics { 2, 2, 28, 28, 0, 0, 100, 0.01, true, false, false }
+Animation { "idle", 1, false, 1, 32, 320, 32, 32 }
+Animation { "walking", 12, true, 4,
+32, 320, 32, 32,
+64, 320, 32, 32,
+32, 320, 32, 32,
+96, 320, 32, 32 }
+}
+
+Fireball
+{
+Tag{"Fireball", "pProj"}
+Render{0.0, 0.0, 16.0, 16.0, "Assets/Textures/U5A.png"}
+Script {"Fireball", "Scripts/Fireball.as"}
+Physics{2.0, 2.0, 12.0, 12.0, 0.0, 0.0, 1.0, 0.0, false, false, false}
+Animation{"default", 5, true, 4,
+0.0, 0.0, 16.0, 16.0,
+0.0, 16.0, 16.0, 16.0
+16.0, 0.0, 16.0, 16.0
+16.0, 16.0, 16.0, 16.0}
+Particles { 8.0, 8.0, 0, 360, 1, 2, 30, 45, 2.5, 5.0, 1, 10, 20, true, 255, 50, 0, 255 }
+}

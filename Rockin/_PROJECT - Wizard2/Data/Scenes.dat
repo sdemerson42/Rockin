@@ -1,0 +1,6 @@
+Test
+{
+Physics { 800, 600, 100, 100 }
+Layer { "main", "static" }
+Entity { "Wizard", 1, true, "main", 400.0, 300.0 }
+}
