@@ -446,9 +446,11 @@ namespace Core
 		return m_registers[reg];
 	}
 
-	void ScriptComponent::modReg(const std::string &reg, int val)
+	int ScriptComponent::modReg(const std::string &reg, int val)
 	{
-		m_registers[reg] += val;
+		auto &ref = m_registers[reg];
+		ref += val;
+		return ref;
 	}
 
 	void ScriptComponent::setString(int index, const std::string &s)

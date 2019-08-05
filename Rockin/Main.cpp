@@ -36,11 +36,12 @@ main() args:
 -logfile <filename> : Specify the name of the logfile produced during runtime.
 Default is "RuntimeLog.txt"
 -console : Send all log messages to console in addition to log file.
+-nologfile : Don't send log messages to a log file.
 */
 
 int main(int argc, char *argv[])
 {
-	const float version = 0.0635f;
+	const float version = 0.0636f;
 
 	// Temporary display window constraints
 	const int windowWidth = 800;
@@ -67,6 +68,11 @@ int main(int argc, char *argv[])
 				{
 					Core::Logger::setLogToConsole(true);
 				}
+
+				if (arg == "-nologfile")
+				{
+					Core::Logger::setFileName("");
+				}
 			}
 		}
 	}
@@ -78,6 +84,7 @@ int main(int argc, char *argv[])
 
 	try
 	{
+		Core::Logger::initialize();
 		Core::Logger::log("-----------Rockin' Version " + std::to_string(version) + " -----------\nStarting execution.");
 
 		// To-do: Replace temporary RNG with something more robust.

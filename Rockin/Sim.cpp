@@ -156,7 +156,7 @@ namespace Core
 			asMETHOD(ScriptComponent, ScriptComponent::setReg), asCALL_THISCALL);
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "int getReg(const string &in)",
 			asMETHOD(ScriptComponent, ScriptComponent::getReg), asCALL_THISCALL);
-		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void modReg(const string &in, int val)",
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "int modReg(const string &in, int val)",
 			asMETHOD(ScriptComponent, ScriptComponent::modReg), asCALL_THISCALL);
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void playAnimation(const string &in)",
 			asMETHOD(ScriptComponent, ScriptComponent::playAnimation), asCALL_THISCALL);

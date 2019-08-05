@@ -13,6 +13,7 @@ namespace Core
 	class Logger
 	{
 	public:
+		static void initialize();
 		static void log(const std::string &message);
 		// Static accessors
 		static void setLogToConsole(bool val)

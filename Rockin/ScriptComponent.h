@@ -114,7 +114,7 @@ namespace Core
 
 		void setReg(const std::string &reg, int value);
 		int getReg(const std::string &reg);
-		void modReg(const std::string &reg, int value);
+		int modReg(const std::string &reg, int value);
 
 		void setString(int index, const std::string &s);
 		const std::string &getString(int index);

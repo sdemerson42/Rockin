@@ -38,7 +38,7 @@ input() -> const InputEvent & - Get the current engine input state.
 
 log(const std::string &msg) - Log the given message.
 
-modReg(const std::string &reg, int value) - Modify the given register by this amount.
+modReg(const std::string &reg, int value) -> int - Modify the given register by this amount. Returns the modified value.
 
 momentum() -> const sf::Vector2f & - Get the momentum of the calling Entity's PhysicsComponent.
 
