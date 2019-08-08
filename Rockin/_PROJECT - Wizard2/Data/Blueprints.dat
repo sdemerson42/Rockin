@@ -1,9 +1,15 @@
+Master
+{
+Tag {"Master"}
+Script {"Master", "Scripts/Master.as"}
+}
+
 Wizard
 {
 Tag {"Wizard"}
-Render { 32.0, 320.0, 32.0, 32.0, "Assets/Textures/U5.png" }
-Script { "Wizard", "Scripts/Wizard.as" }
+Render { 32.0, 320.0, 32.0, 32.0, "Assets/Textures/U5A.png" }
 Physics { 2, 2, 28, 28, 0, 0, 100, 0.01, true, false, false }
+Script { "Wizard", "Scripts/Wizard.as" }
 Animation { "idle", 1, false, 1, 32, 320, 32, 32 }
 Animation { "walking", 12, true, 4,
 32, 320, 32, 32,
@@ -16,8 +22,8 @@ Fireball
 {
 Tag{"Fireball", "pProj"}
 Render{0.0, 0.0, 16.0, 16.0, "Assets/Textures/U5A.png"}
-Script {"Fireball", "Scripts/Fireball.as"}
 Physics{2.0, 2.0, 12.0, 12.0, 0.0, 0.0, 1.0, 0.0, false, false, false}
+Script {"Fireball", "Scripts/Fireball.as"}
 Animation{"default", 5, true, 4,
 0.0, 0.0, 16.0, 16.0,
 0.0, 16.0, 16.0, 16.0
@@ -25,3 +31,12 @@ Animation{"default", 5, true, 4,
 16.0, 16.0, 16.0, 16.0}
 Particles { 8.0, 8.0, 0, 360, 1, 2, 30, 45, 2.5, 5.0, 1, 10, 20, true, 255, 50, 0, 255 }
 }
+
+Exit
+{
+Tag {"Exit"}
+Physics {0.0, 0.0, 32.0, 32.0, 0.0, 0.0, 0.0, 0.0, false, false, false}
+Script {"Exit", "Scripts/Exit.as"}
+}
+
+

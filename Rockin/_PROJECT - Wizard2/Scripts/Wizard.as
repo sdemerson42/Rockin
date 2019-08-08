@@ -1,6 +1,11 @@
 void Wizard_main(ScriptComponent @p)
 {
 	Wizard_setSpell(p, "fireball");
+	
+	if (gMaster.getReg("destx") != 0)
+	{
+		p.setPosition(gMaster.getReg("destx"), gMaster.getReg("desty"));
+	}
 	p.setMainFunction("mainState");
 }
 
@@ -19,6 +24,8 @@ void Wizard_mainState(ScriptComponent @p)
 {
 	while(true)
 	{
+		auto pos = p.position();
+		p.setViewCenter(pos.x, pos.y);
 		// Controls
 
 		auto input = p.input();
