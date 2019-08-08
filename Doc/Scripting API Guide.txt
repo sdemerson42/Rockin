@@ -56,6 +56,10 @@ randomRange(int min, int eMax) -> int - Get a random integer in the range (min, 
 
 readDataFromFile(const string &in) -> array<string> @ - Read whitespace / newline separated data from a file and return a handle to an array<string> containing the data. If the file cannot be opened a null reference will be returned instead and a warning will be logged.
 
+setColliderOffset(float x, float y) - Reposition the calling Entity's PhysicsComponent AABB offset.
+
+setColliderSize(float x, float y) - Set the calling Entity's PhysicsComponent AABB size.
+
 setMainFunction(const std::string &funcName) - On the next cycle, this function will be called as the main entry instead of the currently designated main function (NOTE: funcName must be the name of the function without prefix, return type, or arguments.) Does not override suspension cycles. Aborts execution of the current main function at the end of this cycle if necessary.
 
 setMomentum(float x, float y) - Set the momentum of the calling Entity's PhysicsComponent.

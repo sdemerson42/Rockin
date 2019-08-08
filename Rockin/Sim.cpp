@@ -220,6 +220,10 @@ namespace Core
 			asMETHOD(ScriptComponent, ScriptComponent::setMainFunction), asCALL_THISCALL);
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "ScriptComponent @forceSpawn(const string &in, const string &in)",
 			asMETHOD(ScriptComponent, ScriptComponent::forceSpawn), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void setColliderOffset(float x, float y)",
+			asMETHOD(ScriptComponent, ScriptComponent::setColliderOffset), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void setColliderSize(float x, float y)",
+			asMETHOD(ScriptComponent, ScriptComponent::setColliderSize), asCALL_THISCALL);
 	}
 
 	void Sim::execute()

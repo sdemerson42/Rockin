@@ -436,6 +436,18 @@ namespace Core
 		return m_sim->forceSpawn(tag, layer);
 	}
 
+	void ScriptComponent::setColliderOffset(float x, float y)
+	{
+		auto pc = parent()->getComponent<PhysicsComponent>();
+		if (pc) pc->setBoundingBoxOffset(x, y);
+	}
+
+	void ScriptComponent::setColliderSize(float x, float y)
+	{
+		auto pc = parent()->getComponent<PhysicsComponent>();
+		if (pc) pc->setBoundingBoxSize(x, y);
+	}
+
 	void ScriptComponent::setReg(const std::string &reg, int val)
 	{
 		m_registers[reg] = val;

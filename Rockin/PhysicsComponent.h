@@ -66,6 +66,14 @@ namespace Core
 		{
 			return m_AABBSize;
 		}
+		void setBoundingBoxOffset(float x, float y)
+		{
+			m_AABBOffset = { x, y };
+		}
+		void setBoundingBoxSize(float x, float y)
+		{
+			m_AABBSize = { x, y };
+		}
 		float mass()
 		{
 			return m_mass;
