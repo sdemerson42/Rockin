@@ -54,7 +54,9 @@ position() -> const sf::Vector2f & - Get the position of the calling Entity.
 
 randomRange(int min, int eMax) -> int - Get a random integer in the range (min, eMax].
 
-readDataFromFile(const string &in) -> array<string> @ - Read whitespace / newline separated data from a file and return a handle to an array<string> containing the data. If the file cannot be opened a null reference will be returned instead and a warning will be logged.
+readDataFromFile(const std::string &fileName) -> array<string> @ - Read whitespace / newline separated data from a file and return a handle to an array<string> containing the data. If the file cannot be opened a null reference will be returned instead and a warning will be logged.
+
+removeSceneEntity(const std::string &sceneName, const std::string &entityName) - Remove all Entity spawn data with the given name from the given scene. NOTE: If sceneName is the current scene, calling this method will not remove any currently instanced objects. 
 
 setColliderOffset(float x, float y) - Reposition the calling Entity's PhysicsComponent AABB offset.
 

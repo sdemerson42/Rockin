@@ -148,4 +148,10 @@ namespace Core
 		std::string funcName;
 	};
 
+	struct RemoveSceneEntityEvent : public sde::EventBase
+	{
+		std::string sceneName;
+		std::string entityName;
+	};
+
 }

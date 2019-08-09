@@ -109,6 +109,7 @@ namespace Core
 		void addSceneTilemap(const std::string &sceneName, const std::string &tilesetName, const std::string &layer, int width, int height,
 			const CScriptArray &tiles);
 		void addSubscene(const std::string &sceneName, const std::string &subsceneName);
+		void removeSceneEntity(const std::string &sceneName, const std::string &entityName);
 
 		CScriptArray *readDataFromFile(const std::string &fName);
 

@@ -91,5 +91,6 @@ namespace Core
 		void onAddSceneEntity(const AddSceneEntityEvent *event);
 		void onAddSceneTilemap(const AddSceneTilemapEvent *event);
 		void onAddSubscene(const AddSubsceneEvent *event);
+		void onRemoveSceneEntity(const RemoveSceneEntityEvent *event);
 	};
 }

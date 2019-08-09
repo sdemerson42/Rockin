@@ -1,6 +1,6 @@
 void Wizard_main(ScriptComponent @p)
 {
-	Wizard_setSpell(p, "fireball");
+	Master_wizardInit(gMaster, p);
 	
 	if (gMaster.getReg("destx") != 0)
 	{
@@ -11,6 +11,8 @@ void Wizard_main(ScriptComponent @p)
 
 void Wizard_setSpell(ScriptComponent @p, string spellName)
 {
+	p.setReg("spell", -1);
+
 	if (spellName == "fireball")
 	{
 		p.setReg("spell", 0);
@@ -73,6 +75,9 @@ void Wizard_move(ScriptComponent @p, const InputEvent &input)
 
 void Wizard_shoot(ScriptComponent @p, const InputEvent &input)
 {
+	int spellIndex = p.getReg("spell");
+	if (spellIndex == -1) return;
+
 	auto coolCounter = p.getReg("spellCoolCounter");
 	auto counterTarget = p.getReg("spellCool");
 	if (coolCounter < counterTarget)
@@ -98,12 +103,18 @@ void Wizard_shoot(ScriptComponent @p, const InputEvent &input)
 	float mag = sqrt(shootX **2 + shootY ** 2);
 	shootX = shootX / mag * speed;
 	shootY = shootY / mag * speed;
-	auto handle = p.forceSpawn("Fireball", "main");
-	if (handle !is null)
+	
+	// Fireball
+
+	if (spellIndex == 0)
 	{
-		auto pos = p.position();
-		handle.setPosition(pos.x + 8.0, pos.y + 8.0);
-		handle.setMomentum(shootX, shootY);
+		auto handle = p.forceSpawn("Fireball", "main");
+		if (handle !is null)
+		{
+			auto pos = p.position();
+			handle.setPosition(pos.x + 8.0, pos.y + 8.0);
+			handle.setMomentum(shootX, shootY);
+		}
 	}
 
 	p.setReg("spellCoolCounter", 0);

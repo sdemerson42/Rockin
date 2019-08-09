@@ -20,6 +20,7 @@ namespace Core
 		registerFunc(this, &SceneFactory::onAddSceneTilemap);
 		registerFunc(this, &SceneFactory::onAddSubscene);
 		registerFunc(this, &SceneFactory::onNewSceneData);
+		registerFunc(this, &SceneFactory::onRemoveSceneEntity);
 	
 		readTilesetData();
 		readScenes();
@@ -750,5 +751,19 @@ namespace Core
 	{
 		auto it = findScene(event->sceneName);
 		it->subscene.push_back(event->subsceneName);
+	}
+
+	void SceneFactory::onRemoveSceneEntity(const RemoveSceneEntityEvent *event)
+	{
+		auto it = findScene(event->sceneName);
+
+		for (int i = 0; i < it->entity.size(); ++i)
+		{
+			auto &ed = it->entity[i];
+			if (ed.name == event->entityName)
+			{
+				it->entity.erase(std::begin(it->entity) + i--);
+			}
+		}
 	}
 }

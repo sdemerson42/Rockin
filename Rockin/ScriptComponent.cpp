@@ -448,6 +448,14 @@ namespace Core
 		if (pc) pc->setBoundingBoxSize(x, y);
 	}
 
+	void ScriptComponent::removeSceneEntity(const std::string &sceneName, const std::string &entityName)
+	{
+		RemoveSceneEntityEvent event;
+		event.sceneName = sceneName;
+		event.entityName = entityName;
+		broadcast(&event);
+	}
+
 	void ScriptComponent::setReg(const std::string &reg, int val)
 	{
 		m_registers[reg] = val;
