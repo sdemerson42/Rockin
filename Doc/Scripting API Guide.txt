@@ -2,7 +2,7 @@ Scripting API
 
 A reference for engine functions callable by a script. All functions must be called from a ScriptComponent reference.
 
-
+AddSceneBase(const std::string &sceneName, const std::string &baseName) - Add a base scene for a currently existing scene to inherit from on next instantiation.
 
 addSceneDataEntity(const std::string &sceneName, const std::string &entityName, int count, bool instantSpawn, const std::string &layer, float posX, float posY, bool persist, const CScriptArray &data) - Add Entity data to a scene with an array of string initialization data.
 

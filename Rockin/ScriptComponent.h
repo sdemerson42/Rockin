@@ -110,6 +110,7 @@ namespace Core
 			const CScriptArray &tiles);
 		void addSubscene(const std::string &sceneName, const std::string &subsceneName);
 		void removeSceneEntity(const std::string &sceneName, const std::string &entityName);
+		void addSceneBase(const std::string &sceneName, const std::string &baseName);
 
 		CScriptArray *readDataFromFile(const std::string &fName);
 

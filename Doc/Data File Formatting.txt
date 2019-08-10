@@ -78,7 +78,10 @@ PersistentEntity { <Entity tag>, <Number to construct>, <Spawn at start of scene
 
 Data { <Tag or integer key>, <value>... }
 
+Base { <Name of base sceene> }		// See note on base scenes below...
 
 }
+
+NOTE: If you would like a number of scenes to all contain a common pool of entities and/or subscenes you can declare a base scene for those scenes to inherit from. A base scene should only contain Entity data and Subscene data, unless the base scene itself will be built at some point during the game.
 
 

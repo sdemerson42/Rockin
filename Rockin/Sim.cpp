@@ -226,6 +226,8 @@ namespace Core
 			asMETHOD(ScriptComponent, ScriptComponent::setColliderSize), asCALL_THISCALL);
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void removeSceneEntity(const string &in, const string &in)",
 			asMETHOD(ScriptComponent, ScriptComponent::removeSceneEntity), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void addSceneBase(const string &in, const string &in)",
+			asMETHOD(ScriptComponent, ScriptComponent::addSceneBase), asCALL_THISCALL);
 	}
 
 	void Sim::execute()

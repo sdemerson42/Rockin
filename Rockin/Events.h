@@ -142,6 +142,12 @@ namespace Core
 		std::string sceneName;
 		std::string subsceneName;
 	};
+
+	struct AddSceneBaseEvent : public sde::EventBase
+	{
+		std::string sceneName;
+		std::string baseName;
+	};
 	
 	struct SetMainScriptFunctionEvent : public sde::EventBase
 	{

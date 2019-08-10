@@ -8,6 +8,7 @@
 #include "sde.h"
 #include "TilesetData.h"
 #include <map>
+#include <set>
 
 namespace Core
 {
@@ -61,6 +62,7 @@ namespace Core
 		std::vector<SceneData> m_sceneData;
 		std::vector<TilesetData> m_tilesetData;
 		std::map<std::string, NewSceneEvent> m_newSceneEventMap;
+		std::map<std::string, std::set<std::string>> m_inheritanceData;
 
 		// References to existing objects in Sim
 		EntityFactory *m_eFactory;
@@ -81,6 +83,7 @@ namespace Core
 		bool readTilemapData(std::istream &ist, SceneData &sd);
 		bool readEntityInitData(std::istream &ist, SceneData &sd);
 		void readTilesetData();
+		void combineInhenitanceData();
 
 		// Helper methods
 		auto findScene(const std::string &sceneName);
@@ -92,5 +95,6 @@ namespace Core
 		void onAddSceneTilemap(const AddSceneTilemapEvent *event);
 		void onAddSubscene(const AddSubsceneEvent *event);
 		void onRemoveSceneEntity(const RemoveSceneEntityEvent *event);
+		void onAddSceneBase(const AddSceneBaseEvent *event);
 	};
 }

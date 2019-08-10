@@ -21,6 +21,7 @@ namespace Core
 		registerFunc(this, &SceneFactory::onAddSubscene);
 		registerFunc(this, &SceneFactory::onNewSceneData);
 		registerFunc(this, &SceneFactory::onRemoveSceneEntity);
+		registerFunc(this, &SceneFactory::onAddSceneBase);
 	
 		readTilesetData();
 		readScenes();
@@ -319,6 +320,7 @@ namespace Core
 				break;
 			m_sceneData.push_back(sd);
 		}
+		combineInhenitanceData();
 	}
 
 	bool SceneFactory::readSceneDataTokens(std::istream &ist, SceneData &sd)
@@ -366,6 +368,14 @@ namespace Core
 			else if ("Data" == token)
 			{
 				if (!readEntityInitData(ist, sd)) return false;
+			}
+			else if ("Base" == token)
+			{
+				token = Tokenizer::next(ist);
+				if (!checkDataFormatting(token, "{", badSubsceneMsg)) return false;
+				m_inheritanceData[sd.name].insert(Tokenizer::next(ist));
+				token = Tokenizer::next(ist);
+				if (!checkDataFormatting(token, "}", badSubsceneMsg)) return false;
 			}
 			else if ("}" != token)
 			{
@@ -671,6 +681,48 @@ namespace Core
 		}
 	}
 
+	void SceneFactory::combineInhenitanceData()
+	{
+		for (const auto &pr : m_inheritanceData)
+		{
+			auto derivedName = pr.first;
+			std::string errMsg{ "Exception thrown while combining scene inheritance data for scene " + derivedName + "." };
+			auto derivedIter = std::find_if(std::begin(m_sceneData), std::end(m_sceneData), [&](const SceneData &sd)
+			{
+				return sd.name == derivedName;
+			});
+			if (derivedIter == std::end(m_sceneData))
+			{
+				CoreException e{ errMsg.c_str(), CoreException::ErrCode::badSceneInheritanceData };
+				throw(e);
+			}
+
+			for (const auto &baseName : pr.second)
+			{
+				auto baseIter = std::find_if(std::begin(m_sceneData), std::end(m_sceneData), [&](const SceneData &sd)
+				{
+					return sd.name == baseName;
+				});
+				if (baseIter == std::end(m_sceneData))
+				{
+					CoreException e{ errMsg.c_str(), CoreException::ErrCode::badSceneInheritanceData };
+					throw(e);
+				}
+				// Add base data to derived data. Currently this feature only supports inheriting
+				// Entity data and subscene data.
+				for (const auto &ed : baseIter->entity)
+				{
+					derivedIter->entity.push_back(ed);
+				}
+				for (const auto &sub : baseIter->subscene)
+				{
+					derivedIter->subscene.push_back(sub);
+				}
+			}
+		}
+		m_inheritanceData.clear();
+	}
+
 	void SceneFactory::onNewSceneData(const NewSceneDataEvent *event)
 	{
 		SceneData sd;
@@ -765,5 +817,11 @@ namespace Core
 				it->entity.erase(std::begin(it->entity) + i--);
 			}
 		}
+	}
+
+	void SceneFactory::onAddSceneBase(const AddSceneBaseEvent *event)
+	{
+		m_inheritanceData[event->sceneName].insert(event->baseName);
+		combineInhenitanceData();
 	}
 }

@@ -406,6 +406,14 @@ namespace Core
 		broadcast(&event);
 	}
 
+	void ScriptComponent::addSceneBase(const std::string &sceneName, const std::string &baseName)
+	{
+		AddSceneBaseEvent event;
+		event.sceneName = sceneName;
+		event.baseName = baseName;
+		broadcast(&event);
+	}
+
 	CScriptArray *ScriptComponent::readDataFromFile(const std::string &fName)
 	{
 		std::ifstream ifs{ fName };

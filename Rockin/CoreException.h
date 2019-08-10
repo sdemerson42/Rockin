@@ -24,6 +24,6 @@ namespace Core
 
 		enum ErrCode{badLogFile = 1, badToken = 2, badBlueprintFile = 3,
 		missingDefaultSceneData = 4, missingSceneData = 5, missingSubsceneData = 6,
-		missingTilesetData = 7};
+		missingTilesetData = 7, badSceneInheritanceData = 8};
 	};
 }
