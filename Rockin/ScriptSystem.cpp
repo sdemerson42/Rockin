@@ -21,7 +21,7 @@ namespace Core
 			while (!m_setMainEventStack.empty())
 			{
 				auto event = m_setMainEventStack.top();
-				sc->resetMainScriptFunction(event.funcName);
+				event.scriptComponent->resetMainScriptFunction(event.funcName);
 				m_setMainEventStack.pop();
 			}
 		}

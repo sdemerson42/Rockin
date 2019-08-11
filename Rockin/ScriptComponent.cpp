@@ -1,11 +1,6 @@
 #include <fstream>
 
-#include "ScriptComponent.h"
-#include "TransformComponent.h"
-#include "PhysicsComponent.h"
-#include "AnimationComponent.h"
-#include "RenderComponent.h"
-#include "TextComponent.h"
+#include "Components.h"
 #include "Sim.h"
 #include "CoreEntity.h"
 #include "Events.h"
@@ -435,6 +430,7 @@ namespace Core
 	void ScriptComponent::setMainFunction(const std::string &funcName)
 	{
 		SetMainScriptFunctionEvent event;
+		event.scriptComponent = this;
 		event.funcName = funcName;
 		broadcast(&event);
 	}
@@ -462,6 +458,35 @@ namespace Core
 		event.sceneName = sceneName;
 		event.entityName = entityName;
 		broadcast(&event);
+	}
+
+	void ScriptComponent::setComponentActive(const std::string &compName, bool state)
+	{
+		if ("particles" == compName)
+		{
+			auto p = parent()->getComponent<ParticlesComponent>();
+			if (p) p->setActive(state);
+		}
+		if ("physics" == compName)
+		{
+			auto p = parent()->getComponent<PhysicsComponent>();
+			if (p) p->setActive(state);
+		}
+		if ("script" == compName)
+		{
+			auto p = parent()->getComponent<ScriptComponent>();
+			if (p) p->setActive(state);
+		}
+		if ("text" == compName)
+		{
+			auto p = parent()->getComponent<TextComponent>();
+			if (p) p->setActive(state);
+		}
+		if ("render" == compName)
+		{
+			auto p = parent()->getComponent<RenderComponent>();
+			if (p) p->setActive(state);
+		}
 	}
 
 	void ScriptComponent::setReg(const std::string &reg, int val)

@@ -151,6 +151,7 @@ namespace Core
 	
 	struct SetMainScriptFunctionEvent : public sde::EventBase
 	{
+		ScriptComponent *scriptComponent;
 		std::string funcName;
 	};
 

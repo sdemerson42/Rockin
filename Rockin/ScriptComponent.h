@@ -98,6 +98,7 @@ namespace Core
 		ScriptComponent *forceSpawn(const std::string &tag, const std::string &layer);
 		void setColliderSize(float x, float y);
 		void setColliderOffset(float x, float y);
+		void setComponentActive(const std::string &compName, bool state);
 
 		void createSceneData(const std::string &name, int physWidth, int physHeight, int physCellWidth,
 			int physCellHeight);

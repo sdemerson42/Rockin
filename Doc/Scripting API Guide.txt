@@ -62,6 +62,8 @@ setColliderOffset(float x, float y) - Reposition the calling Entity's PhysicsCom
 
 setColliderSize(float x, float y) - Set the calling Entity's PhysicsComponent AABB size.
 
+void setComponentActive(const std::string &compName, bool state) - Set the given component to the given active state, if present. Accepted strings are "particles", "physics", "script", "text", "render."
+
 setMainFunction(const std::string &funcName) - On the next cycle, this function will be called as the main entry instead of the currently designated main function (NOTE: funcName must be the name of the function without prefix, return type, or arguments.) Does not override suspension cycles. Aborts execution of the current main function at the end of this cycle if necessary.
 
 setMomentum(float x, float y) - Set the momentum of the calling Entity's PhysicsComponent.
