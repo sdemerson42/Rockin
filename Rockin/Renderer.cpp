@@ -238,7 +238,7 @@ namespace Core
 			int tileY = event->tilesetData->tileSize.y;
 
 			m_tilemapRenderTexture.create(mapX * tileX, mapY * tileY);
-			m_tilemapRenderTexture.clear();
+			m_tilemapRenderTexture.clear(sf::Color::Transparent);
 			sf::VertexArray va;
 			va.setPrimitiveType(sf::Quads);
 
