@@ -489,6 +489,22 @@ namespace Core
 		}
 	}
 
+	int ScriptComponent::tileAtPosition(float x, float y) const
+	{
+		const auto &tiles = m_sim->tiles();
+		const auto &tileSize = m_sim->tileSize();
+		const auto &tilemapSize = m_sim->tilemapSize();
+
+		if (tileSize.x == 0 || tileSize.y == 0 || tilemapSize.x == 0) return -1;
+
+		int px = (int)x / tileSize.x;
+		int py = (int)y / tileSize.y;
+		int ti = px + py * tilemapSize.x;
+
+		if (ti < tiles.size()) return tiles[ti];
+		return -1;
+	}
+
 	void ScriptComponent::setReg(const std::string &reg, int val)
 	{
 		m_registers[reg] = val;

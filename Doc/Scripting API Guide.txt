@@ -106,8 +106,7 @@ stopSound(const std::string &tag) - Stop playing the given sound on the lowest p
 
 suspend(int cycles) - Stop executing this script and skip the given number of subsequent cycles. If called with no argument, the default number of cycles will be 0. Execution resumes at the next line of code immediately after suspend() was called.
 
-
-
+tileAtPosition(float x, float y) -> int - Given a 2D position, return the tile value located on the current tilemap that the point falls within. Will return -1 if there is no tilemap in the current scene or the point falls outside the tilemap.
 
 
 

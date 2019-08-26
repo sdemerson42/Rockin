@@ -34,6 +34,9 @@ namespace Core
 		void execute();
 		ScriptComponent *spawn(const std::string &tag, bool force = false);
 		ScriptComponent *forceSpawn(const std::string &tag, const std::string &layer);
+		const sf::Vector2i &tilemapSize() const;
+		const sf::Vector2i &tileSize() const;
+		const std::vector<int> &tiles() const;
 	private:
 		void systemsSetup();
 		void scriptEngineSetup();
@@ -48,7 +51,11 @@ namespace Core
 		std::string m_nextScene;
 		bool m_subsceneChange;
 		static const unsigned int m_entityReserveTotal;
+		sf::Vector2i m_tilemapSize;
+		sf::Vector2i m_tileSize;
+		std::vector<int> m_tiles;
 
-		void onChangeScene(const ChangeSceneEvent *cse);
+		void onChangeScene(const ChangeSceneEvent *event);
+		void onNewScene(const NewSceneEvent *event);
 	};
 }

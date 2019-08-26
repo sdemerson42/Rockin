@@ -21,6 +21,7 @@ namespace Core
 		m_window{ sf::VideoMode{w, h}, name }
 	{
 		registerFunc(this, &Sim::onChangeScene);
+		registerFunc(this, &Sim::onNewScene);
 
 		// Create and prepare script engine
 
@@ -230,6 +231,8 @@ namespace Core
 			asMETHOD(ScriptComponent, ScriptComponent::addSceneBase), asCALL_THISCALL);
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void setComponentActive(const string &in, bool state)",
 			asMETHOD(ScriptComponent, ScriptComponent::setComponentActive), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "int tileAtPosition(float x, float y)",
+			asMETHOD(ScriptComponent, ScriptComponent::tileAtPosition), asCALL_THISCALL);
 	}
 
 	void Sim::execute()
@@ -306,9 +309,34 @@ namespace Core
 		return nullptr;
 	}
 
+	const sf::Vector2i &Sim::tilemapSize() const
+	{
+		return m_tilemapSize;
+	}
+
+	const sf::Vector2i &Sim::tileSize() const
+	{
+		return m_tileSize;
+	}
+
+	const std::vector<int> &Sim::tiles() const
+	{
+		return m_tiles;
+	}
+
 	void Sim::onChangeScene(const ChangeSceneEvent *event)
 	{
 		m_nextScene = event->sceneName;
 		m_subsceneChange = event->subscene;
+	}
+
+	void Sim::onNewScene(const NewSceneEvent *event)
+	{
+		if (event->tilesetData)
+		{
+			m_tiles = event->tilemap;
+			m_tilemapSize = event->tilemapSize;
+			m_tileSize = event->tilesetData->tileSize;
+		}
 	}
 }

@@ -99,6 +99,7 @@ namespace Core
 		void setColliderSize(float x, float y);
 		void setColliderOffset(float x, float y);
 		void setComponentActive(const std::string &compName, bool state);
+		int tileAtPosition(float x, float y) const;
 
 		void createSceneData(const std::string &name, int physWidth, int physHeight, int physCellWidth,
 			int physCellHeight);
