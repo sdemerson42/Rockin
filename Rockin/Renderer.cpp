@@ -202,12 +202,85 @@ namespace Core
 			if (m_tilemapLayer == layerName)
 			{
 				if (ld.isStatic) m_window->setView(m_window->getDefaultView());
-				else m_window->setView(m_view);
+				else
+				{
+					m_window->setView(m_view);
+					buildTilemapTexture(viewL, viewR, viewT, viewB);
+				}
 				m_window->draw(m_tilemapSprite);
 			}
 		}
-	
 		m_window->display();
+	}
+
+	void Renderer::buildTilemapTexture(float vl, float vr, float vt, float vb, bool force)
+	{
+		if (!force)
+		{
+			// Do we need a rebuild?
+			if (vl >= m_viewL && vr <= m_viewR && vt >= m_viewT && vb <= m_viewB) return;
+		}
+
+		int mapX = m_tilemapSize.x;
+		int mapY = m_tilemapSize.y;
+		int tileX = m_tileSize.x;
+		int tileY = m_tileSize.y;
+
+		m_tilemapRenderTexture.create(m_tilemapCellSize, m_tilemapCellSize);
+		m_tilemapRenderTexture.clear(sf::Color::Transparent);
+		sf::VertexArray va;
+		va.setPrimitiveType(sf::Quads);
+
+		// Calculate tile quad
+
+		int tl = (int)m_view.getCenter().x - (m_tilemapCellSize / 2);
+		float offsetX = m_view.getCenter().x - ((float)m_tilemapCellSize / 2.0f);
+		tl /= tileX;
+		offsetX -= (float)tl * (float)tileX;
+		int tr = tl + m_tilemapCellSize / tileX;
+		int tt = (int)m_view.getCenter().y - (m_tilemapCellSize / 2);
+		float offsetY = m_view.getCenter().y - ((float)m_tilemapCellSize / 2.0f);
+		tt /= tileY;
+		offsetY -= (float)tt * (float)tileY;
+		int tb = tt + m_tilemapCellSize / tileY;
+
+		int x = 0;
+		int y = 0;
+		for (int j = tt; j < tb; ++j)
+		{
+			for (int i = tl; i < tr; ++i)
+			{
+				if (i >= 0 && i < mapX && j >=0 && j < mapY)
+				{
+					int tVal = m_tilemap[j * mapX + i];
+					int tx = (tVal % (m_tilesetTextureSize.x / tileX)) * tileX;
+					int ty = (tVal / (m_tilesetTextureSize.x / tileX)) * tileY;
+
+					va.append(sf::Vertex{ sf::Vector2f{ (float)x, (float)y }, sf::Vector2f{ (float)tx, (float)ty } });
+					va.append(sf::Vertex{ sf::Vector2f{ (float)x + (float)tileX, (float)y },
+						sf::Vector2f{ (float)tx + (float)tileX, (float)ty } });
+					va.append(sf::Vertex{ sf::Vector2f{ (float)x + (float)tileX, (float)y + (float)tileY },
+						sf::Vector2f{ (float)tx + (float)tileX, (float)ty + (float)tileY } });
+					va.append(sf::Vertex{ sf::Vector2f{ (float)x, (float)y + (float)tileY },
+						sf::Vector2f{ (float)tx, (float)ty + (float)tileY } });
+				}
+
+				x = (x + tileX) % m_tilemapCellSize;
+				if (x == 0) y += tileY;
+			}
+		}
+
+		m_states.texture = &m_tilemapTexture;
+		m_tilemapRenderTexture.draw(va, m_states);
+		m_tilemapRenderTexture.display();
+
+		m_tilemapSprite.setTexture(m_tilemapRenderTexture.getTexture(), true);
+		m_tilemapSprite.setPosition((int)m_view.getCenter().x - (m_tilemapCellSize / 2) - offsetX, (int)m_view.getCenter().y - (m_tilemapCellSize / 2) - offsetY);
+
+		m_viewL = m_tilemapSprite.getPosition().x;
+		m_viewR = m_viewL + m_tilemapCellSize;
+		m_viewT = m_tilemapSprite.getPosition().y;
+		m_viewB = m_viewT + m_tilemapCellSize;
 	}
 
 	void Renderer::onNewScene(const NewSceneEvent *event)
@@ -231,41 +304,20 @@ namespace Core
 		if (event->tilesetData)
 		{
 			m_tilemapTexture.loadFromFile(event->tilesetData->texture);
-
-			int mapX = event->tilemapSize.x;
-			int mapY = event->tilemapSize.y;
-			int tileX = event->tilesetData->tileSize.x;
-			int tileY = event->tilesetData->tileSize.y;
-
-			m_tilemapRenderTexture.create(mapX * tileX, mapY * tileY);
-			m_tilemapRenderTexture.clear(sf::Color::Transparent);
-			sf::VertexArray va;
-			va.setPrimitiveType(sf::Quads);
-
-			for (int i = 0; i < event->tilemap.size(); ++i)
-			{
-				int tVal = event->tilemap[i];
-				int x = (i % mapX) * tileX;
-				int y = (i / mapX) * tileY;
-				int tx = (tVal % (event->tilesetData->textureSize.x / tileX)) * tileX;
-				int ty = (tVal / (event->tilesetData->textureSize.x / tileX)) * tileY;
-
-				va.append(sf::Vertex{ sf::Vector2f{(float)x, (float)y}, sf::Vector2f{(float)tx, (float)ty} });
-				va.append(sf::Vertex{ sf::Vector2f{ (float)x + (float)tileX, (float)y },
-					sf::Vector2f{ (float)tx + (float)tileX, (float)ty } });
-				va.append(sf::Vertex{ sf::Vector2f{ (float)x + (float)tileX, (float)y + (float)tileY },
-					sf::Vector2f{ (float)tx + (float)tileX, (float)ty + (float)tileY } });
-				va.append(sf::Vertex{ sf::Vector2f{ (float)x, (float)y + (float)tileY },
-					sf::Vector2f{ (float)tx, (float)ty + (float)tileY } });
-			}
-
-			m_states.texture = &m_tilemapTexture;
-			m_tilemapRenderTexture.draw(va, m_states);
-			m_tilemapRenderTexture.display();
-
-			m_tilemapSprite.setTexture(m_tilemapRenderTexture.getTexture(), true);
-
+			m_tilemapSize = event->tilemapSize;
+			m_tileSize = event->tilesetData->tileSize;
+			m_tilemap = event->tilemap;
 			m_tilemapLayer = event->tilemapLayer;
+			m_tilesetTextureSize = event->tilesetData->textureSize;
+			// TEMP
+			m_tilemapBoundsTile = 0;
+
+			m_view.setCenter(m_view.getSize().x / 2.0f, m_view.getSize().y / 2.0f);
+			float viewL = m_view.getCenter().x - m_view.getSize().x / 2.0f;
+			float viewR = m_view.getCenter().x + m_view.getSize().x / 2.0f;
+			float viewT = m_view.getCenter().y - m_view.getSize().y / 2.0f;
+			float viewB = m_view.getCenter().y + m_view.getSize().y / 2.0f;
+			buildTilemapTexture(viewL, viewR, viewT, viewB, true);
 		}
 		else
 		{

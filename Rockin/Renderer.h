@@ -20,6 +20,7 @@ namespace Core
 	public:
 		Renderer(sf::RenderWindow *window, float vx, float vy, float vw, float vh);
 		void execute() override;
+		void buildTilemapTexture(float vl, float vr, float vt, float vb, bool force = false);
 	private:
 		sf::RenderWindow *m_window;
 		sf::RenderStates m_states;
@@ -46,6 +47,17 @@ namespace Core
 		sf::Texture m_tilemapTexture;
 		sf::Sprite m_tilemapSprite;
 		std::string m_tilemapLayer;
+		sf::Vector2i m_tilemapSize;
+		sf::Vector2i m_tileSize;
+		std::vector<int> m_tilemap;
+		int m_tilemapBoundsTile;
+		const int m_tilemapCellSize = 3200;
+		sf::Vector2i m_tilesetTextureSize;
+
+		float m_viewL;
+		float m_viewR;
+		float m_viewT;
+		float m_viewB;
 
 		void onNewScene(const NewSceneEvent *event);
 		void onSetCenter(const SetViewCenterEvent *event);
