@@ -1,3 +1,4 @@
+#include "Sim.h"
 #include "Renderer.h"
 #include "RenderComponent.h"
 #include "TransformComponent.h"
@@ -9,11 +10,13 @@
 
 namespace Core
 {
-	Renderer::Renderer(sf::RenderWindow *window, float vx, float vy, float vw, float vh) :
-		m_window{ window }, m_view{ sf::FloatRect{vx, vy, vw, vh} }
+	Renderer::Renderer(Sim *sim, sf::RenderWindow *window, float vx, float vy, float vw, float vh) :
+		m_sim{ sim }, m_window{ window }, m_view{ sf::FloatRect{vx, vy, vw, vh} }, m_tilemap{ &m_sim->tiles() },
+		m_tilemapEditFlag{ false }
 	{
 		registerFunc(this, &Renderer::onNewScene);
 		registerFunc(this, &Renderer::onSetCenter);
+		registerFunc(this, &Renderer::onTilemapEdit);
 	}
 
 	void Renderer::execute()
@@ -201,11 +204,19 @@ namespace Core
 
 			if (m_tilemapLayer == layerName)
 			{
+				bool built = false;
+				if (m_tilemapEditFlag)
+				{
+					m_tilemapEditFlag = false;
+					buildTilemapTexture(viewL, viewR, viewT, viewB, *m_tilemap, true);
+					built = true;
+				}
 				if (ld.isStatic) m_window->setView(m_window->getDefaultView());
 				else
 				{
 					m_window->setView(m_view);
-					buildTilemapTexture(viewL, viewR, viewT, viewB);
+					if (!built)
+						buildTilemapTexture(viewL, viewR, viewT, viewB, *m_tilemap);
 				}
 				m_window->draw(m_tilemapSprite);
 			}
@@ -213,7 +224,7 @@ namespace Core
 		m_window->display();
 	}
 
-	void Renderer::buildTilemapTexture(float vl, float vr, float vt, float vb, bool force)
+	void Renderer::buildTilemapTexture(float vl, float vr, float vt, float vb, const std::vector<int> &tiles, bool force)
 	{
 		if (!force)
 		{
@@ -252,7 +263,7 @@ namespace Core
 			{
 				if (i >= 0 && i < mapX && j >=0 && j < mapY)
 				{
-					int tVal = m_tilemap[j * mapX + i];
+					int tVal = tiles[j * mapX + i];
 					int tx = (tVal % (m_tilesetTextureSize.x / tileX)) * tileX;
 					int ty = (tVal / (m_tilesetTextureSize.x / tileX)) * tileY;
 
@@ -306,7 +317,6 @@ namespace Core
 			m_tilemapTexture.loadFromFile(event->tilesetData->texture);
 			m_tilemapSize = event->tilemapSize;
 			m_tileSize = event->tilesetData->tileSize;
-			m_tilemap = event->tilemap;
 			m_tilemapLayer = event->tilemapLayer;
 			m_tilesetTextureSize = event->tilesetData->textureSize;
 			// TEMP
@@ -317,7 +327,7 @@ namespace Core
 			float viewR = m_view.getCenter().x + m_view.getSize().x / 2.0f;
 			float viewT = m_view.getCenter().y - m_view.getSize().y / 2.0f;
 			float viewB = m_view.getCenter().y + m_view.getSize().y / 2.0f;
-			buildTilemapTexture(viewL, viewR, viewT, viewB, true);
+			buildTilemapTexture(viewL, viewR, viewT, viewB, event->tilemap, true);
 		}
 		else
 		{
@@ -328,5 +338,10 @@ namespace Core
 	void Renderer::onSetCenter(const SetViewCenterEvent *event)
 	{
 		m_view.setCenter(event->x, event->y);
+	}
+
+	void Renderer::onTilemapEdit(const TilemapEditEvent *event)
+	{
+		m_tilemapEditFlag = true;
 	}
 }

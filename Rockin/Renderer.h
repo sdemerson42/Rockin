@@ -9,6 +9,8 @@
 
 namespace Core
 {
+	class Sim;
+
 	/*
 	Renderer - Stores textures and processes state from TextComponents and RenderComponents
 	to draw the current scene. When processing components the Renderer sorts by layers and
@@ -18,10 +20,11 @@ namespace Core
 	class Renderer : public sde::ISystem
 	{
 	public:
-		Renderer(sf::RenderWindow *window, float vx, float vy, float vw, float vh);
+		Renderer(Sim *sim, sf::RenderWindow *window, float vx, float vy, float vw, float vh);
 		void execute() override;
-		void buildTilemapTexture(float vl, float vr, float vt, float vb, bool force = false);
+		void buildTilemapTexture(float vl, float vr, float vt, float vb, const std::vector<int> &tiles, bool force = false);
 	private:
+		Sim *m_sim;
 		sf::RenderWindow *m_window;
 		sf::RenderStates m_states;
 		sf::View m_view;
@@ -49,10 +52,11 @@ namespace Core
 		std::string m_tilemapLayer;
 		sf::Vector2i m_tilemapSize;
 		sf::Vector2i m_tileSize;
-		std::vector<int> m_tilemap;
+		std::vector<int> *m_tilemap;
 		int m_tilemapBoundsTile;
 		const int m_tilemapCellSize = 3200;
 		sf::Vector2i m_tilesetTextureSize;
+		bool m_tilemapEditFlag;
 
 		float m_viewL;
 		float m_viewR;
@@ -61,5 +65,6 @@ namespace Core
 
 		void onNewScene(const NewSceneEvent *event);
 		void onSetCenter(const SetViewCenterEvent *event);
+		void onTilemapEdit(const TilemapEditEvent *event);
 	};
 }

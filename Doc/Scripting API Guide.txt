@@ -92,6 +92,10 @@ setTextSize(int val) - Set the font size of the calling Entity's TextComponent.
 
 setTextString(const std::string &s) - Set the string value of the calling Entity's TextComponent.
 
+setTile(int x, int y, int tile)
+setTile(float x, float y, int tile)
+setTile(int index, int tile) - Set the tile at the given index in the current scene to the tile value. Overloads allow a tile position to be specified by integer tilemap coordinates, float world position, or tile array index.
+
 setViewCenter(float x, float y) - Center the rendering view for all nonstatic render layers in the currently loaded scene.
 
 spawn(const std::string &tag) -> ScriptComponent * - Instantiate the first available object in the pool with the given tag. No spawn will occur if there are no available objects.

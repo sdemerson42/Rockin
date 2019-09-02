@@ -161,4 +161,8 @@ namespace Core
 		std::string entityName;
 	};
 
+	struct TilemapEditEvent : public sde::EventBase
+	{
+	};
+
 }

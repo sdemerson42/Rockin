@@ -36,7 +36,7 @@ namespace Core
 		ScriptComponent *forceSpawn(const std::string &tag, const std::string &layer);
 		const sf::Vector2i &tilemapSize() const;
 		const sf::Vector2i &tileSize() const;
-		const std::vector<int> &tiles() const;
+		std::vector<int> &tiles();
 	private:
 		void systemsSetup();
 		void scriptEngineSetup();

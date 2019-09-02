@@ -505,6 +505,56 @@ namespace Core
 		return -1;
 	}
 
+	void ScriptComponent::setTile(float posx, float posy, int tile)
+	{
+		auto &tiles = m_sim->tiles();
+		const auto &tileSize = m_sim->tileSize();
+		const auto &tilemapSize = m_sim->tilemapSize();
+
+		if (tileSize.x == 0 || tileSize.y == 0 || tilemapSize.x == 0) return;
+
+		int px = (int)posx / tileSize.x;
+		int py = (int)posy / tileSize.y;
+		int ti = px + py * tilemapSize.x;
+
+		if (ti >= tiles.size()) return;
+		tiles[ti] = tile;
+		
+		TilemapEditEvent event;
+		broadcast(&event);
+	}
+
+	void ScriptComponent::setTile(int tx, int ty, int tile)
+	{
+		auto &tiles = m_sim->tiles();
+		const auto &tileSize = m_sim->tileSize();
+		const auto &tilemapSize = m_sim->tilemapSize();
+
+		if (tileSize.x == 0 || tileSize.y == 0 || tilemapSize.x == 0) return;
+
+		int ti = tx + ty * tilemapSize.x;
+
+		if (ti >= tiles.size()) return;
+		tiles[ti] = tile;
+
+		TilemapEditEvent event;
+		broadcast(&event);
+	}
+
+	void ScriptComponent::setTile(int tpos, int tile)
+	{
+		auto &tiles = m_sim->tiles();
+		const auto &tileSize = m_sim->tileSize();
+		const auto &tilemapSize = m_sim->tilemapSize();
+
+		if (tileSize.x == 0 || tileSize.y == 0 || tilemapSize.x == 0 || tpos >= tiles.size()) return;
+
+		tiles[tpos] = tile;
+
+		TilemapEditEvent event;
+		broadcast(&event);
+	}
+
 	void ScriptComponent::setReg(const std::string &reg, int val)
 	{
 		m_registers[reg] = val;

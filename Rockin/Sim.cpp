@@ -67,7 +67,7 @@ namespace Core
 		m_system.push_back(std::make_unique<SoundSystem>());
 		m_system.push_back(std::make_unique<Animator>());
 		m_system.push_back(std::make_unique<Particles>());
-		m_system.push_back(std::make_unique<Renderer>(&m_window, 0.0f, 0.0f, m_window.getSize().x, m_window.getSize().y));
+		m_system.push_back(std::make_unique<Renderer>(this, &m_window, 0.0f, 0.0f, m_window.getSize().x, m_window.getSize().y));
 	}
 
 	void Sim::scriptEngineSetup()
@@ -233,6 +233,12 @@ namespace Core
 			asMETHOD(ScriptComponent, ScriptComponent::setComponentActive), asCALL_THISCALL);
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "int tileAtPosition(float x, float y)",
 			asMETHOD(ScriptComponent, ScriptComponent::tileAtPosition), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void setTile(float x, float y, int tile)",
+			asMETHODPR(ScriptComponent, ScriptComponent::setTile, (float, float, int), void), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void setTile(int x, int y, int tile)",
+			asMETHODPR(ScriptComponent, ScriptComponent::setTile, (int, int, int), void), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void setTile(int tpos, int tile)",
+			asMETHODPR(ScriptComponent, ScriptComponent::setTile, (int, int), void), asCALL_THISCALL);
 	}
 
 	void Sim::execute()
@@ -319,7 +325,7 @@ namespace Core
 		return m_tileSize;
 	}
 
-	const std::vector<int> &Sim::tiles() const
+	std::vector<int> &Sim::tiles()
 	{
 		return m_tiles;
 	}
