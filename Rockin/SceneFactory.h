@@ -96,5 +96,6 @@ namespace Core
 		void onAddSubscene(const AddSubsceneEvent *event);
 		void onRemoveSceneEntity(const RemoveSceneEntityEvent *event);
 		void onAddSceneBase(const AddSceneBaseEvent *event);
+		void onTilesetDataQuery(const TilesetDataQueryEvent *event);
 	};
 }

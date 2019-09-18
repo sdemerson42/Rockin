@@ -27,6 +27,7 @@ namespace Core
 		~ScriptComponent();
 		static void setSim(Sim *sim);
 		static void setInput(const InputEvent *ie);
+		static void setTilesetData(TilesetData *tsd);
 		void initialize() override;
 		const std::string &prefix() const;
 		void addRegValue(const std::string &name, int val);
@@ -61,6 +62,8 @@ namespace Core
 
 		// Script types
 		static asITypeInfo *m_asTypeStringArray;
+		static asITypeInfo *m_asTypeIntArray;
+		static asITypeInfo *m_asTypeScriptReferenceArray;
 
 		// Scripting API
 
@@ -103,6 +106,10 @@ namespace Core
 		void setTile(float posx, float posy, int tile);
 		void setTile(int tx, int ty, int tile);
 		void setTile(int tpos, int tile);
+		CScriptArray *blockedTiles(const std::string &tilesetName);
+		CScriptArray *getAllScriptsByTag(const std::string &tag);
+		std::string tag();
+		bool entityActive();
 
 		void createSceneData(const std::string &name, int physWidth, int physHeight, int physCellWidth,
 			int physCellHeight);
@@ -138,6 +145,7 @@ namespace Core
 		asIScriptFunction *m_funcCollision;
 		static InputEvent m_input;
 		static Sim *m_sim;
+		static TilesetData *m_tilesetQueryData;
 		std::string m_prefix;
 
 		// Script state

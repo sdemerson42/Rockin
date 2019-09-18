@@ -165,4 +165,8 @@ namespace Core
 	{
 	};
 
+	struct TilesetDataQueryEvent : public sde::EventBase 
+	{
+		std::string tilesetName;
+	};
 }

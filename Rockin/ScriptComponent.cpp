@@ -11,6 +11,9 @@ namespace Core
 	Sim *ScriptComponent::m_sim;
 	InputEvent ScriptComponent::m_input;
 	asITypeInfo *ScriptComponent::m_asTypeStringArray;
+	asITypeInfo *ScriptComponent::m_asTypeIntArray;
+	asITypeInfo *ScriptComponent::m_asTypeScriptReferenceArray;
+	TilesetData *ScriptComponent::m_tilesetQueryData;
 
 	void ScriptComponent::setSim(Sim *sim)
 	{
@@ -20,6 +23,11 @@ namespace Core
 	void ScriptComponent::setInput(const InputEvent *event)
 	{
 		m_input = *event;
+	}
+
+	void ScriptComponent::setTilesetData(TilesetData *tsd)
+	{
+		m_tilesetQueryData = tsd;
 	}
 
 	ScriptComponent::ScriptComponent(CoreEntity *parent, asIScriptEngine *engine, const std::string &tag) :
@@ -553,6 +561,47 @@ namespace Core
 
 		TilemapEditEvent event;
 		broadcast(&event);
+	}
+
+	CScriptArray *ScriptComponent::blockedTiles(const std::string &tilesetName)
+	{
+		TilesetDataQueryEvent event;
+		event.tilesetName = tilesetName;
+		broadcast(&event);
+
+		auto ary = CScriptArray::Create(m_asTypeIntArray);
+		if (m_tilesetQueryData)
+		{
+			for (auto val : m_tilesetQueryData->staticTile)
+				ary->InsertLast(&val);
+		}
+		return ary;
+	}
+
+	CScriptArray *ScriptComponent::getAllScriptsByTag(const std::string &tag)
+	{
+		auto ary = CScriptArray::Create(m_asTypeScriptReferenceArray);
+		auto sz = AutoListScene<ScriptComponent>::alsCurrentSize();
+		for (int i = 0; i < sz; ++i)
+		{
+			auto sc = AutoListScene<ScriptComponent>::alsCurrentGet(i);
+			if (sc->parent()->hasTag(tag))
+				ary->InsertLast(&sc);
+		}
+		return ary;
+	}
+
+	std::string ScriptComponent::tag()
+	{
+		auto tags = parent()->getTags();
+
+		if (tags.empty()) return "";
+		return tags[0];
+	}
+
+	bool ScriptComponent::entityActive()
+	{
+		return parent()->active();
 	}
 
 	void ScriptComponent::setReg(const std::string &reg, int val)

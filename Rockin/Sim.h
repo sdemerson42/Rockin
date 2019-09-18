@@ -52,8 +52,8 @@ namespace Core
 		bool m_subsceneChange;
 		static const unsigned int m_entityReserveTotal;
 		sf::Vector2i m_tilemapSize;
-		sf::Vector2i m_tileSize;
 		std::vector<int> m_tiles;
+		TilesetData *m_tilesetData;
 
 		void onChangeScene(const ChangeSceneEvent *event);
 		void onNewScene(const NewSceneEvent *event);

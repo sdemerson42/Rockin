@@ -22,6 +22,7 @@ namespace Core
 		registerFunc(this, &SceneFactory::onNewSceneData);
 		registerFunc(this, &SceneFactory::onRemoveSceneEntity);
 		registerFunc(this, &SceneFactory::onAddSceneBase);
+		registerFunc(this, &SceneFactory::onTilesetDataQuery);
 	
 		readTilesetData();
 		readScenes();
@@ -823,5 +824,17 @@ namespace Core
 	{
 		m_inheritanceData[event->sceneName].insert(event->baseName);
 		combineInhenitanceData();
+	}
+
+	void SceneFactory::onTilesetDataQuery(const TilesetDataQueryEvent *event)
+	{
+		TilesetData *response = nullptr;
+		auto p = std::find_if(std::begin(m_tilesetData), std::end(m_tilesetData), [&](TilesetData &tsd)
+		{
+			return tsd.name == event->tilesetName;
+		});
+
+		if (p != std::end(m_tilesetData)) response = &*p;
+		ScriptComponent::setTilesetData(response);
 	}
 }

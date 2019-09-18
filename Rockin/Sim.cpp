@@ -82,13 +82,15 @@ namespace Core
 
 		// Register the Scripting API: Object references, methods, and properties
 
-		ScriptComponent::m_asTypeStringArray = m_scriptEngine->GetTypeInfoByDecl("array<string>");
-
 		m_scriptEngine->RegisterObjectType("ScriptComponent", 0, asOBJ_REF | asOBJ_NOCOUNT);
 		m_scriptEngine->RegisterObjectType("Entity", 0, asOBJ_REF | asOBJ_NOCOUNT);
 		m_scriptEngine->RegisterObjectType("InputEvent", 0, asOBJ_REF | asOBJ_NOCOUNT);
 		m_scriptEngine->RegisterObjectType("Vector2f", 0, asOBJ_REF | asOBJ_NOCOUNT);
 		m_scriptEngine->RegisterObjectType("PhysicsComponent", 0, asOBJ_REF | asOBJ_NOCOUNT);
+
+		ScriptComponent::m_asTypeStringArray = m_scriptEngine->GetTypeInfoByDecl("array<string>");
+		ScriptComponent::m_asTypeIntArray = m_scriptEngine->GetTypeInfoByDecl("array<int>");
+		ScriptComponent::m_asTypeScriptReferenceArray = m_scriptEngine->GetTypeInfoByDecl("array<ScriptComponent @>");
 
 		m_scriptEngine->RegisterObjectMethod("Entity", "bool hasTag(const string &in) const",
 			asMETHOD(CoreEntity, hasTag), asCALL_THISCALL);
@@ -239,6 +241,14 @@ namespace Core
 			asMETHODPR(ScriptComponent, ScriptComponent::setTile, (int, int, int), void), asCALL_THISCALL);
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "void setTile(int tpos, int tile)",
 			asMETHODPR(ScriptComponent, ScriptComponent::setTile, (int, int), void), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "array<int> @blockedTiles(const string &in)",
+			asMETHOD(ScriptComponent, ScriptComponent::blockedTiles), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "array<ScriptComponent @> @getAllScriptsByTag(const string &in)",
+			asMETHOD(ScriptComponent, ScriptComponent::getAllScriptsByTag), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "string tag()",
+			asMETHOD(ScriptComponent, ScriptComponent::tag), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "bool entityActive()",
+			asMETHOD(ScriptComponent, ScriptComponent::entityActive), asCALL_THISCALL);
 	}
 
 	void Sim::execute()
@@ -322,7 +332,7 @@ namespace Core
 
 	const sf::Vector2i &Sim::tileSize() const
 	{
-		return m_tileSize;
+		return m_tilesetData->tileSize;
 	}
 
 	std::vector<int> &Sim::tiles()
@@ -342,7 +352,7 @@ namespace Core
 		{
 			m_tiles = event->tilemap;
 			m_tilemapSize = event->tilemapSize;
-			m_tileSize = event->tilesetData->tileSize;
+			m_tilesetData = event->tilesetData;
 		}
 	}
 }

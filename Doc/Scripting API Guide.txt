@@ -14,6 +14,8 @@ addSceneTilemap(const std::string &sceneName, const std::string &tilesetName, co
 
 addSubscene(const std::string &sceneName, const std::string &subsceneName) - Add a subscene to a scene.
 
+blockedTiles(const std::string &tilesetName) -> array<int> - Given the name of a tileset, return an array containing all statically blocked tiles in that tileset.
+
 changeScene(const std::string &scene) - Close the current scene and load a new scene on the next execution cycle.
 
 changeSubscene(const std::string &scene) - Switch from the current scene to a pre-defined subscene.
@@ -21,6 +23,8 @@ changeSubscene(const std::string &scene) - Switch from the current scene to a pr
 createSceneData(const std::string &name, int physWidth, int physHeight, int physCellWidth, int physCellHeight) - Create a new SceneData object which can be used to instantiate a scene.
 
 despawn() - Deactivate the calling object at the end of this cycle.
+
+entityActive() -> bool - Return the active state of the calling script's owning entity.
 
 entityHasTag(CoreEntity *e, const std::string &tag) -> bool - Return true if the specified entity reference has the given tag.
 
@@ -30,7 +34,9 @@ getReg(const std::string &reg) -> int - Get the value of an integer register.
 
 getScript(const std::string &name) -> ScriptComponent * - Get a reference to the ScriptComponent stored under the given name.
 
-getScriptByTag(const std::string &tag) -> ScriptComponent * - Get a reference to the first active ScriptComponent found with the given tag. 
+getScriptByTag(const std::string &tag) -> ScriptComponent * - Get a reference to the first active ScriptComponent found with the given tag.
+
+getAllScriptsByTag(const std::string &tag) -> array<ScriptComponent *> - Get an array containing all scripts containing the given tag in the current scene. 
 
 getString(int index) -> const std::string & - Get the string stored at the given index.
 
@@ -61,6 +67,8 @@ removeSceneEntity(const std::string &sceneName, const std::string &entityName) -
 setColliderOffset(float x, float y) - Reposition the calling Entity's PhysicsComponent AABB offset.
 
 setColliderSize(float x, float y) - Set the calling Entity's PhysicsComponent AABB size.
+
+tag() -> std::string - Return the first tag in the owning Entity's tag container. If no tags exist return empty string.
 
 void setComponentActive(const std::string &compName, bool state) - Set the given component to the given active state, if present. Accepted strings are "particles", "physics", "script", "text", "render."
 
