@@ -89,7 +89,7 @@ namespace Core
 				Collision collision{ a, b };
 				if (detectCollision(&collision))
 				{
-					if (a->solid() && b->solid())
+					if ((a->solid() && b->solid()) && !ignoreTag(b, a))
 					{
 						adjustMomentum(&collision);
 						applyCorrection(&collision);
@@ -181,6 +181,21 @@ namespace Core
 		return false;
 	}
 
+	bool Physics::ignoreTag(PhysicsComponent *a, PhysicsComponent *b)
+	{
+		auto &aTag = a->parent()->getTags();
+		for (const auto &tag : aTag)
+		{
+			if (b->hasIgnoreTag(tag)) return true;
+		}
+		auto &bTag = b->parent()->getTags();
+		for (const auto &tag : bTag)
+		{
+			if (a->hasIgnoreTag(tag)) return true;
+		}
+		return false;
+	}
+
 	void Physics::processStatics(std::vector<PhysicsComponent *> &sv, std::vector<PhysicsComponent *> &nsv)
 	{
 		// For collisions involving static objects,
@@ -213,7 +228,7 @@ namespace Core
 				if (aBoxPos.x + aSize.x > bBoxPos.x && aBoxPos.x < bBoxPos.x + bSize.x &&
 					aBoxPos.y + aSize.y > bBoxPos.y && aBoxPos.y < bBoxPos.y + bSize.y)
 				{
-					if (a->solid())
+					if (a->solid() && !ignoreTag(b, a))
 					{
 						if (a->momentum().x > 0.0f)
 						{
@@ -261,7 +276,7 @@ namespace Core
 				if (aBoxPos.x + aSize.x > bBoxPos.x && aBoxPos.x < bBoxPos.x + bSize.x &&
 					aBoxPos.y + aSize.y > bBoxPos.y && aBoxPos.y < bBoxPos.y + bSize.y)
 				{
-					if (a->solid())
+					if (a->solid() && !ignoreTag(b, a))
 					{
 						if (a->momentum().y > 0.0f)
 						{

@@ -3,6 +3,8 @@
 #include "CoreComponentBase.h"
 #include "SFML\Graphics.hpp"
 #include "AutoListScene.h"
+#include <vector>
+#include <algorithm>
 
 namespace Core
 {
@@ -86,6 +88,16 @@ namespace Core
 		{
 			return m_elasticity;
 		}
+		// General methods
+		void addIgnoreTag(const std::string &tag)
+		{
+			m_ignoreTag.push_back(tag);
+		}
+		bool hasIgnoreTag(const std::string &tag)
+		{
+			auto p = std::find(std::begin(m_ignoreTag), std::end(m_ignoreTag), tag);
+			return p != std::end(m_ignoreTag);
+		}
 	private:
 		bool m_static;
 		bool m_solid;
@@ -96,5 +108,6 @@ namespace Core
 		float m_mass;
 		float m_inverseMass;
 		float m_elasticity;
+		std::vector<std::string> m_ignoreTag;
 	};
 }

@@ -17,6 +17,9 @@ Physics { <AABB x offset>, <AABB y offset>, <AABB width>, <AABB height>,
 <Momentum x>, <Momentum y>, <Mass>, <Restitution>, <solid = true>, <static = false>,
 <noCollision = false> }
 
+PhysicsIgnore { <Tag>... }
+NOTE: PhysicsIgnore must be preceeded by a Physics descriptor.
+
 Script { <Function prefix>, <Script filename> }
  
 Animation { <Animation name>, <Sim frames per animation frame>, <looping>,

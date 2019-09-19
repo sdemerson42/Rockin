@@ -52,6 +52,7 @@ namespace Core
 		void adjustMomentum(Collision *c);
 		void applyCorrection(Collision *c);
 		bool detectCollision(Collision *c);
+		bool ignoreTag(PhysicsComponent *a, PhysicsComponent *b);
 		void processStatics(std::vector<PhysicsComponent *> &sv, std::vector<PhysicsComponent *> &nsv);
 		void sendCollisionEvents();
 		void proxPlace(PhysicsComponent *pc, std::vector<std::vector<std::vector<PhysicsComponent *>>> &proxMap);

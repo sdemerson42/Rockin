@@ -56,6 +56,17 @@ namespace Core
 				auto alsp = cv[cv.size()-1];
 				alsp->alsMoveRef(subsceneName);
 			}
+			else if ("PhysicsIgnore" == data.component)
+			{
+				auto pc = e->getComponent<PhysicsComponent>();
+				if (pc)
+				{
+					for (const auto &vp : data.valuePair)
+					{
+						pc->addIgnoreTag(vp.value);
+					}
+				}
+			}
 			else if ("Render" == data.component)
 			{
 				e->addComponent<RenderComponent>(e, std::stof(data.valuePair[0].value), std::stof(data.valuePair[1].value),
