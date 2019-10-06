@@ -249,6 +249,8 @@ namespace Core
 			asMETHOD(ScriptComponent, ScriptComponent::tag), asCALL_THISCALL);
 		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "bool entityActive()",
 			asMETHOD(ScriptComponent, ScriptComponent::entityActive), asCALL_THISCALL);
+		m_scriptEngine->RegisterObjectMethod("ScriptComponent", "const Vector2f &physicsCenter()",
+			asMETHOD(ScriptComponent, ScriptComponent::physicsCenter), asCALL_THISCALL);
 	}
 
 	void Sim::execute()

@@ -50,6 +50,8 @@ momentum() -> const sf::Vector2f & - Get the momentum of the calling Entity's Ph
 
 pauseMusic() - Pause currrently playing music.
 
+physicsCenter() -> const sf::Vector2f &- Get the world coordinates of the center of this object's AABB.
+
 playAnimation(const std::string &name) - Set the current animation to the animation given.
 
 playMusic(const std::string &fName, float volume, bool loop) - Play the given music selection.

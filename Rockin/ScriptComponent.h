@@ -110,6 +110,7 @@ namespace Core
 		CScriptArray *getAllScriptsByTag(const std::string &tag);
 		std::string tag();
 		bool entityActive();
+		const sf::Vector2f &physicsCenter();
 
 		void createSceneData(const std::string &name, int physWidth, int physHeight, int physCellWidth,
 			int physCellHeight);
@@ -155,6 +156,7 @@ namespace Core
 		std::map<std::string, int> m_registers;
 		std::map<int, std::string> m_strings;
 		std::map<std::string, ScriptComponent *> m_scripts;
+		sf::Vector2f m_physicsCenter;
 		sf::Vector2f m_defaultVector2f;
 	};
 }

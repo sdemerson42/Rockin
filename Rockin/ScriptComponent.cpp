@@ -604,6 +604,21 @@ namespace Core
 		return parent()->active();
 	}
 
+	const sf::Vector2f &ScriptComponent::physicsCenter()
+	{
+		auto pc = parent()->getComponent<PhysicsComponent>();
+		if (!pc) return m_defaultVector2f;
+
+		auto pos = parent()->position();
+		auto offset = pc->boundingBoxOffset();
+		auto size = pc->boundingBoxSize();
+		m_physicsCenter.x = pos.x + offset.x + size.x / 2.0f;
+		m_physicsCenter.y = pos.y + offset.y + size.y / 2.0f;
+		return m_physicsCenter;
+	}
+
+
+
 	void ScriptComponent::setReg(const std::string &reg, int val)
 	{
 		m_registers[reg] = val;
